@@ -1475,7 +1475,7 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	const unsigned char* src = static_cast<const unsigned char*>(data);
 	const size_t pixels = static_cast<size_t>(width) * static_cast<size_t>(height);
 	std::vector<unsigned char> rgba(pixels * 4);
-	// Whether this image can trip mesh3d.frag's cutout test, which discards at an
+	// Whether this image can trip color_frag.glsl's cutout test, which discards at an
 	// alpha of 0.5. Found here because the loop below already touches every texel;
 	// a separate pass would double the cost of an upload to learn the same thing.
 	// The threshold is the shader's, expressed in bytes.
@@ -2870,7 +2870,7 @@ void gVKRenderEngine::init() {
     // post-process chain. It goes through gShader like any application shader, so
     // it is compiled from the same fbo_vert/fbo_frag sources - their Vulkan branch
     // - wherever a compiler is linked in, and falls back to the SPIR-V built from
-    // graphics/shaders/vk/fbo.* where one is not. Created here and not in
+    // graphics/shaders/fbo_*.glsl where one is not. Created here and not in
     // initVulkan because it needs the pipelines that initVulkan builds.
     fboshader = new gShader();
     gvkloadingfboshader = true;
@@ -3113,7 +3113,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		}
 		gVKShadowPush shadowpush{};
 		// The light's matrix is folded into the model matrix on the CPU; see
-		// shadow3d.vert for why the three are not sent separately.
+		// shadowmap_vert.glsl for why the three are not sent separately.
 		shadowpush.lightmodel = shadowlightmatrix * model;
 
 		const VkIndexType shadowindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;

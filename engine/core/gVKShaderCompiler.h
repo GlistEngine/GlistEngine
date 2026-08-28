@@ -5,7 +5,7 @@
  * can be edited and seen without rebuilding the engine. This is a development
  * aid: engine/CMakeLists.txt only defines GVK_RUNTIME_SHADERS for Debug builds
  * on machines that have libshaderc, and only then is the source directory of
- * graphics/shaders/vk baked in as GVK_VK_SHADER_SOURCE_DIR.
+ * graphics/shaders baked in as GVK_VK_SHADER_SOURCE_DIR.
  *
  * When the feature is off - every Release build, and any machine without
  * shaderc - these functions report that nothing is available and the pipelines
@@ -41,7 +41,14 @@ long long gvkShaderFileTimestamp(const std::string& fileName);
 // Compiles one shader source to SPIR-V. Returns false, with the compiler's
 // diagnostics logged, when the file cannot be read or does not compile - the
 // caller is expected to keep using whatever it had.
+// define names one macro to set while compiling, or is empty for none. It exists
+// because the shader sources are shared with the OpenGL backend and one of them -
+// the coloured-geometry shader, which OpenGL draws both its 2D primitives and its
+// 3D meshes with - is compiled twice under different markers. Kept identical to
+// what gen_vk_shaders.cmake passes glslc, so a hot reloaded shader is the shader
+// the release build would have used.
 bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits stage,
+		const std::string& define,
 		std::vector<uint32_t>& spirv);
 
 // Compiles GLSL held in memory rather than read from the shader directory, for

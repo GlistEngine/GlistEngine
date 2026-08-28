@@ -4,7 +4,7 @@
  * Reads a compiled SPIR-V module back and reports what the shader expects from
  * the pipeline: its vertex inputs, its push constant block and its descriptor
  * bindings. gVKPipeline uses this instead of repeating those declarations in
- * C++, so editing a .vert/.frag under graphics/shaders/vk is enough - the
+ * C++, so editing a shader under graphics/shaders is enough - the
  * pipeline layout follows the shader on its own.
  *
  * This is a deliberately small reflector: it understands the subset of SPIR-V

@@ -676,7 +676,7 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	//
 	// Guarded on the layout actually declaring a set rather than assumed: the
 	// reflection that builds this layout only sees the sampler while the shader
-	// still reads it, so an edit to shadow3d.frag that stops sampling - live shader
+	// still reads it, so an edit to shadowmap_frag.glsl that stops sampling - live shader
 	// reload makes that a runtime possibility, not just a build-time one - leaves a
 	// layout with no sets, and binding one into it crashes the driver.
 	if(ctx.hasShadowDescriptorSetLayout() && diffuseSet != VK_NULL_HANDLE

@@ -19,6 +19,6 @@ if ! command -v "$GLSLC" >/dev/null 2>&1; then
 fi
 
 SHDIR="$(cd "$(dirname "$0")" && pwd)"
-OUT="$(cd "$SHDIR/../../../core" && pwd)/gVKShaders.h"
+OUT="$(cd "$SHDIR/../../core" && pwd)/gVKShaders.h"
 
 exec cmake -DGLSLC="$GLSLC" -DSHADER_DIR="$SHDIR" -DOUT="$OUT" -P "$SHDIR/gen_vk_shaders.cmake"

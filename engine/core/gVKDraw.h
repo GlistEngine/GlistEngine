@@ -151,7 +151,7 @@ void gvkReset2DBatch();
 // compiled out, which is what lets a tile based GPU reject its fragments on depth
 // before shading them; it must only be false where the caller knows that for
 // certain, because a cutout material drawn through it would render its holes
-// opaque. See GVK_CUTOUT in mesh3d.frag.
+// opaque. See GVK_CUTOUT in color_frag.glsl.
 void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
 		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,

@@ -16,7 +16,7 @@
 // The shader's light array is a fixed size, so a mismatch here would quietly drop
 // lights or read past the end of the block.
 static_assert(GVK_MAX_LIGHTS == GLIST_MAX_LIGHTS,
-		"GVK_MAX_LIGHTS must match GLIST_MAX_LIGHTS and the array size in mesh3d.frag");
+		"GVK_MAX_LIGHTS must match GLIST_MAX_LIGHTS and the array size in color_frag.glsl");
 // The Vulkan light layout is meant to be the OpenGL one; if the shared struct is
 // ever reshaped, this catches it at compile time rather than as wrong shading.
 static_assert(sizeof(gVKLightData) == sizeof(gRenderer::gSceneLightData),

@@ -40,23 +40,26 @@ enum {
 struct gvkStageSource {
 	const char* file;
 	VkShaderStageFlagBits stage;
+	// The macro this stage is compiled with, empty for none - see gen_vk_shaders.cmake,
+	// which passes glslc the same one when it bakes the SPIR-V below.
+	const char* define;
 	const uint32_t* embedded;
 	size_t embeddedsize;
 };
 
 static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
-	{"color2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_color2d_vert, sizeof(gvkspv_color2d_vert)},
-	{"color2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag)},
-	{"image2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert)},
-	{"image2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
-	{"mesh3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_mesh3d_vert, sizeof(gvkspv_mesh3d_vert)},
-	{"mesh3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_mesh3d_frag, sizeof(gvkspv_mesh3d_frag)},
-	{"mesh3dpbr.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_mesh3dpbr_vert, sizeof(gvkspv_mesh3dpbr_vert)},
-	{"mesh3dpbr.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_mesh3dpbr_frag, sizeof(gvkspv_mesh3dpbr_frag)},
-	{"shadow3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_shadow3d_vert, sizeof(gvkspv_shadow3d_vert)},
-	{"shadow3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_shadow3d_frag, sizeof(gvkspv_shadow3d_frag)},
-	{"skybox3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_skybox3d_vert, sizeof(gvkspv_skybox3d_vert)},
-	{"skybox3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_skybox3d_frag, sizeof(gvkspv_skybox3d_frag)},
+	{"color_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "VULKAN2D", gvkspv_color2d_vert, sizeof(gvkspv_color2d_vert)},
+	{"color_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "VULKAN2D", gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag)},
+	{"image_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert)},
+	{"image_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
+	{"color_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "VULKAN3D", gvkspv_mesh3d_vert, sizeof(gvkspv_mesh3d_vert)},
+	{"color_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "VULKAN3D", gvkspv_mesh3d_frag, sizeof(gvkspv_mesh3d_frag)},
+	{"pbr_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_mesh3dpbr_vert, sizeof(gvkspv_mesh3dpbr_vert)},
+	{"pbr_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_mesh3dpbr_frag, sizeof(gvkspv_mesh3dpbr_frag)},
+	{"shadowmap_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_shadow3d_vert, sizeof(gvkspv_shadow3d_vert)},
+	{"shadowmap_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_shadow3d_frag, sizeof(gvkspv_shadow3d_frag)},
+	{"skybox_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_skybox3d_vert, sizeof(gvkspv_skybox3d_vert)},
+	{"skybox_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_skybox3d_frag, sizeof(gvkspv_skybox3d_frag)},
 };
 
 // The gVertex layout, written out rather than reflected from the shader.
@@ -66,7 +69,7 @@ static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 // built to match the shader. A 3D mesh is the other way round - gVertex is a fixed
 // C++ struct that gVbo uploads as-is, and the shader is merely one consumer of it.
 // Deriving the offsets from the shader would mean that dropping an unused attribute
-// from mesh3d.vert silently shifts every following one and renders garbage. So the
+// from color_vert.glsl silently shifts every following one and renders garbage. So the
 // buffer's own layout is stated here, and the static_asserts below make the compiler
 // check it against the struct rather than trusting this comment.
 //
@@ -146,7 +149,7 @@ struct gvkPipelineOptions {
 	// polygon with its slope taken into account, so it holds regardless.
 	bool depthbias = false;
 	// Builds a copy of the fragment stage with specialization constant 0 set to zero,
-	// which is how mesh3d.frag is told that this pipeline's draws cannot discard. See
+	// which is how color_frag.glsl is told that this pipeline's draws cannot discard. See
 	// the constant's comment there for why that is worth a whole second pipeline: a
 	// shader containing any discard loses early depth rejection on tile based mobile
 	// GPUs, for every mesh drawn through it. The default copy keeps the constant at
@@ -206,7 +209,7 @@ static bool gvkLoadShaderSet(gvkShaderSet& set, bool requireSource) {
 	const bool runtime = gvkRuntimeShadersAvailable();
 	for(int i = 0; i < GVK_STAGE_COUNT; i++) {
 		const gvkStageSource& source = gvkstagesources[i];
-		if(runtime && gvkCompileShaderFile(source.file, source.stage, set.spirv[i])) continue;
+		if(runtime && gvkCompileShaderFile(source.file, source.stage, source.define, set.spirv[i])) continue;
 		if(requireSource) return false;
 		set.spirv[i].assign(source.embedded, source.embedded + source.embeddedsize / sizeof(uint32_t));
 	}

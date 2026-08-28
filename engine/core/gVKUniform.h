@@ -29,7 +29,7 @@
 inline constexpr int GVK_MAX_LIGHTS = 8;
 
 /*
- * One light, laid out to match the Light struct in mesh3d.frag under std140. The
+ * One light, laid out to match the Light struct in color_frag.glsl under std140. The
  * alignas values are what produce that layout: a vec3 aligns to 16 bytes even
  * though it occupies 12, which is the rule that trips up hand-written UBO structs.
  *
@@ -113,7 +113,7 @@ struct gVKMeshPush {
 };
 
 /*
- * The push constant block of the PBR pipeline, matching mesh3dpbr.*. Smaller than
+ * The push constant block of the PBR pipeline, matching pbr_vert/pbr_frag. Smaller than
  * the one above because a PBR material carries no colours - everything comes from
  * the maps, or from the shader's defaults where a map is absent.
  */
@@ -126,7 +126,7 @@ struct gVKPbrPush {
 };
 
 /*
- * The push constant block of the shadow pipeline, matching shadow3d.*. lightmodel is
+ * The push constant block of the shadow pipeline, matching shadowmap_vert/_frag. lightmodel is
  * lightProjection * lightView * model already multiplied out, so the depth pass needs
  * no matrices of its own.
  */

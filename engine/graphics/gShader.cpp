@@ -185,6 +185,15 @@ std::array<std::string, 2> splitString(const std::string& str) {
 	return result;
 }
 
+// Rewrites every define this pass carries into one line of shader source. Plain
+// text substitution, which is why the markers are named the way they are: a short
+// one would rewrite the middle of an unrelated identifier on its way past.
+static void applyDefines(std::string& line, const std::unordered_map<std::string, std::string>& defines) {
+	for (const auto& entry : defines) {
+		line = gReplaceAll(line, entry.first, entry.second);
+	}
+}
+
 std::string gShader::preprocessShader(const std::string& shaderCode, std::unordered_map<std::string, std::string> defines) {
 	std::stringstream buffer;
 	std::string line;
@@ -204,6 +213,12 @@ std::string gShader::preprocessShader(const std::string& shaderCode, std::unorde
 			in_else = true;
 		} else if (in_if && startsWith(line, "#endif")) {
 			for (std::string& out_line : lines) {
+				// Substituted here rather than only on the lines outside a block.
+				// Leaving a block's contents alone meant a define was silently
+				// ignored exactly where a shader most often needs one: the whole
+				// OpenGL half of a shared shader lives inside #if OPENGL, and
+				// GLIST_MAX_LIGHTS reached the driver as a bare identifier.
+				applyDefines(out_line, defines);
 				buffer << out_line << '\n';
 			}
 			in_if = false;
@@ -219,11 +234,7 @@ std::string gShader::preprocessShader(const std::string& shaderCode, std::unorde
 			std::array<std::string, 2> split = splitString(text);
 			defines[split[0]] = split[1];
 		} else {
-			for (auto& entry : defines) {
-				auto& from = entry.first;
-				auto& to = entry.second;
-				line = gReplaceAll(line, from, to);
-			}
+			applyDefines(line, defines);
 			buffer << line << '\n';
 		}
 	}
@@ -250,6 +261,18 @@ std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType
 	if(renderer != nullptr && renderer->isVulkan()) {
 		map.insert(std::pair<std::string, std::string>("VULKAN", ""));
 	} else {
+		// OPENGL alongside the exact dialect, because most of what a shared shader
+		// has to say to OpenGL it says to both of them: the declarations that differ
+		// from Vulkan's - a sampler without a binding, a uniform outside a block -
+		// are identical on desktop and ES. Writing those twice is what a marker per
+		// dialect and no marker for the pair would force, and #if handles no
+		// alternatives, so the shared name is the way to say it once. GLES and
+		// GLCORE remain for what genuinely differs between the two.
+		//
+		// Named OPENGL rather than GL because these names are also substituted as
+		// plain text: a two letter one would rewrite GLIST_MAX_LIGHTS on its way
+		// past.
+		map.insert(std::pair<std::string, std::string>("OPENGL", ""));
 #if defined(GLIST_OPENGLES)
 		map.insert(std::pair<std::string, std::string>("GLES", ""));
 #else

@@ -708,7 +708,7 @@ endif()
 
 
 ########## VULKAN SHADER HOT RELOAD ##########
-# A development build can compile engine/graphics/shaders/vk/*.vert|frag to
+# A development build can compile the engine's shader sources to
 # SPIR-V while the app runs, so saving a shader shows up without rebuilding.
 # It needs libshaderc, which is not linked into a release build: there the
 # shaders come from the SPIR-V committed in core/gVKShaders.h. Both paths run
@@ -752,7 +752,7 @@ if(Lib_Vulkan AND (GLIST_VK_SHADER_HOT_RELOAD OR CMAKE_BUILD_TYPE STREQUAL "Debu
 	if(GLIST_SHADERC_FOUND)
 		target_compile_definitions(GlistEngine PRIVATE
 			GVK_RUNTIME_SHADERS
-			GVK_VK_SHADER_SOURCE_DIR="${ENGINE_DIR}/graphics/shaders/vk")
+			GVK_VK_SHADER_SOURCE_DIR="${ENGINE_DIR}/graphics/shaders")
 		message(STATUS "Vulkan shader hot reload enabled (${GLIST_SHADERC_ORIGIN})")
 	else()
 		message(STATUS "shaderc not found; Vulkan shaders come from the committed SPIR-V")
@@ -779,7 +779,7 @@ if(Lib_Vulkan)
 		find_program(GLIST_GLSLC glslc HINTS /opt/homebrew/bin /usr/local/bin)
 	endif()
 	if(GLIST_GLSLC)
-		set(GVK_SHADER_DIR ${ENGINE_DIR}/graphics/shaders/vk)
+		set(GVK_SHADER_DIR ${ENGINE_DIR}/graphics/shaders)
 		# The generator is a CMake script rather than a shell script so this works
 		# the same on Windows, macOS and Linux.
 		# The rule's output is a stamp in the build directory rather than the header
@@ -796,22 +796,20 @@ if(Lib_Vulkan)
 				-P ${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/gVKShaders.stamp
 			DEPENDS
-				${GVK_SHADER_DIR}/color2d.vert
-				${GVK_SHADER_DIR}/color2d.frag
-				${GVK_SHADER_DIR}/image2d.vert
-				${GVK_SHADER_DIR}/image2d.frag
-				${GVK_SHADER_DIR}/mesh3d.vert
-				${GVK_SHADER_DIR}/mesh3d.frag
-				${GVK_SHADER_DIR}/mesh3dpbr.vert
-				${GVK_SHADER_DIR}/mesh3dpbr.frag
-				${GVK_SHADER_DIR}/shadow3d.vert
-				${GVK_SHADER_DIR}/shadow3d.frag
-				${GVK_SHADER_DIR}/skybox3d.vert
-				${GVK_SHADER_DIR}/skybox3d.frag
-				${GVK_SHADER_DIR}/fbo.vert
-				${GVK_SHADER_DIR}/fbo.frag
+				${ENGINE_DIR}/graphics/shaders/color_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/color_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/image_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/image_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/pbr_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/pbr_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/shadowmap_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/shadowmap_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/skybox_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/skybox_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/fbo_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/fbo_frag.glsl
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
-			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
+			COMMENT "Regenerating gVKShaders.h from the engine shader sources"
 			VERBATIM)
 		add_custom_target(GlistVKShaders DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gVKShaders.stamp)
 		add_dependencies(GlistEngine GlistVKShaders)

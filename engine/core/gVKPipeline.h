@@ -8,7 +8,7 @@
  * Nothing about those layouts is written out here: the vertex attributes, the
  * push constant range and the descriptor bindings are all reflected out of the
  * compiled SPIR-V by gVKReflect, so the shader sources under
- * graphics/shaders/vk are the only place the interface is declared. Editing a
+ * graphics/shaders are the only place the interface is declared. Editing a
  * shader is enough - the pipeline follows.
  *
  * The entry points gvkCreateGraphicsPipelines / gvkReloadGraphicsPipelines /
