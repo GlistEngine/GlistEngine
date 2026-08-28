@@ -121,7 +121,7 @@ unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 		return id;
 	}
 
-	skymapslot = GL_TEXTURE0;
+	skymapslot = 0;
 	skymapint = 0;
 
 	renderer->enableCubeMap();
@@ -145,7 +145,7 @@ unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 	renderer->getSkyboxShader()->setInt("skymap", skymapint);
 
 	if(ispbr) generatePbrMaps();
-	renderer->unbindSkyTexture(0);
+	renderer->unbindSkyTexture();
 
     return id;
 }
@@ -164,7 +164,7 @@ void gSkybox::loadSkybox(gImage* images) {
 		return;
 	}
 
-	skymapslot = GL_TEXTURE0;
+	skymapslot = 0;
 	skymapint = 0;
 
 	renderer->enableCubeMap();
@@ -185,7 +185,7 @@ void gSkybox::loadSkybox(gImage* images) {
 
 	if(ispbr) generatePbrMaps();
 
-	renderer->unbindSkyTexture(0);
+	renderer->unbindSkyTexture();
 }
 
 void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights, std::array<void*, 6> rawdata, std::array<bool, 6> ishdr) {
@@ -201,7 +201,7 @@ void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights
 		return;
 	}
 
-	skymapslot = GL_TEXTURE0;
+	skymapslot = 0;
 	skymapint = 0;
 
 	renderer->enableCubeMap();
@@ -241,7 +241,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 		return;
 	}
 
-	skymapslot = GL_TEXTURE0;
+	skymapslot = 0;
 	skymapint = 0;
 
 	renderer->enableCubeMap();
@@ -315,7 +315,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	}
 
 	ishdr = true;
-	skymapslot = GL_TEXTURE0;
+	skymapslot = 0;
 	skymapint = 0;
 //	glActiveTexture(skymapslot);
 //	glGenTextures(1, &id);
@@ -399,7 +399,7 @@ void gSkybox::generatePbrMaps() {
 	irradianceShader->use();
 	irradianceShader->setInt("environmentMap", 0);
 	irradianceShader->setMat4("projection", captureProjection);
-	renderer->bindSkyTexture(id, GL_TEXTURE0);
+	renderer->bindSkyTexture(id, 0);
 
 	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
 	renderer->bindFramebuffer(captureFBO);
@@ -427,7 +427,7 @@ void gSkybox::generatePbrMaps() {
 	prefilterShader->use();
 	prefilterShader->setInt("environmentMap", 0);
 	prefilterShader->setMat4("projection", captureProjection);
-	renderer->bindSkyTexture(id, GL_TEXTURE0);
+	renderer->bindSkyTexture(id, 0);
 
 	renderer->bindFramebuffer(captureFBO);
 	unsigned int maxMipLevels = 5;
@@ -502,9 +502,9 @@ void gSkybox::bindPbrMaps() {
 	pbrShader->use();
 	pbrShader->setMat4("view", renderer->getViewMatrix());
 	pbrShader->setVec3("camPos", renderer->getCameraPosition());
-	renderer->bindSkyTexture(irradianceMap, GL_TEXTURE0);
-	renderer->bindSkyTexture(prefilterMap, GL_TEXTURE1);
-	renderer->bindTexture(brdfLUTTexture, GL_TEXTURE2 - GL_TEXTURE0);
+	renderer->bindSkyTexture(irradianceMap, 0);
+	renderer->bindSkyTexture(prefilterMap, 1);
+	renderer->bindTexture(brdfLUTTexture, 2);
 }
 
 unsigned int gSkybox::uploadVulkanFace(int faceWidth, int faceHeight, void* pixels, bool hdr) {
