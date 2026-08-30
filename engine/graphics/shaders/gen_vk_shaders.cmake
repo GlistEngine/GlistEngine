@@ -42,7 +42,8 @@ set(GVK_SHADERS
 	gvkspv_skybox3d_vert  skybox_vert.glsl    vertex   -
 	gvkspv_skybox3d_frag  skybox_frag.glsl    fragment -
 	gvkspv_fbo_vert       fbo_vert.glsl       vertex   -
-	gvkspv_fbo_frag       fbo_frag.glsl       fragment -)
+	gvkspv_fbo_frag       fbo_frag.glsl       fragment -
+	gvkspv_magnifier_frag  magnifier_frag.glsl  fragment -)
 
 set(GVK_HEADER "/*
  * gVKShaders.h
@@ -162,9 +163,15 @@ foreach(i RANGE 0 ${GVK_LAST} 4)
 	get_filename_component(GVK_OUT_DIR "${OUT}" DIRECTORY)
 	set(GVK_TEMP "${GVK_OUT_DIR}/.gvk_${name}.glsl")
 	file(WRITE "${GVK_TEMP}" "${GVK_STRIPPED}")
+		# gMagnifier sets its uniform-block members by name through gShader.
+	# Keep OpMemberName reflection data in its embedded SPIR-V.
+	set(GVK_OPTIMIZATION "-O")
+	if(name STREQUAL "gvkspv_magnifier_frag")
+		set(GVK_OPTIMIZATION "")
+	endif()
 
 	execute_process(
-		COMMAND "${GLSLC}" --target-env=vulkan1.2 -O -std=${GVK_STD} -fshader-stage=${stage}
+		COMMAND "${GLSLC}" --target-env=vulkan1.2 ${GVK_OPTIMIZATION} -std=${GVK_STD} -fshader-stage=${stage}
 				${GVK_DEFINE_ARG} "${GVK_TEMP}" -mfmt=c -o -
 		OUTPUT_VARIABLE spirv
 		ERROR_VARIABLE glslcerror

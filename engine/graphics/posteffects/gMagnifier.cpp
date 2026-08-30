@@ -19,7 +19,10 @@ gMagnifier::gMagnifier(float radius, float zoom, float softness) {
 	this->softness = softness > 0.0f ? softness : 0.1f;
 
 	shader = new gShader();
+
+	renderer->setBuiltinShaderType(gRenderer::BUILTINSHADER_MAGNIFIER);
 	shader->loadProgram(getVertSrc(), getFragSrc());
+	renderer->setBuiltinShaderType(gRenderer::BUILTINSHADER_NONE);
 
 	use();
 }

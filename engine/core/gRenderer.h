@@ -157,6 +157,12 @@ public:
 		gSceneLightData lights[GLIST_MAX_LIGHTS];
 	};
 
+	enum BuiltinShaderType {
+		BUILTINSHADER_NONE = 0,
+		BUILTINSHADER_FBO,
+		BUILTINSHADER_MAGNIFIER
+	};
+
 	enum SceneDataFlags {
 		ENABLE_SSAO = 0b0001,
 		ENABLE_FOG = 0b0010,
@@ -594,6 +600,9 @@ public:
 	virtual void setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
 		(void)vertexPath;
 		(void)fragmentPath;
+	}
+	virtual void setBuiltinShaderType(BuiltinShaderType type) {
+		(void)type;
 	}
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
 	virtual void setBool(GLuint uniformloc, bool value) = 0;

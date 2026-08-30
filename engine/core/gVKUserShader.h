@@ -55,7 +55,7 @@ inline constexpr gVKUserShaderId GVK_NO_USER_SHADER = 0;
 
 // Shaders the engine builds through this path rather than as a pipeline of its
 // own, and which therefore have to work in a build that links no shader compiler.
-// There is one: gFbo's screen resolve, the pass that ends a post-process chain.
+// These currently include gFbo's screen resolve and gMagnifier.
 // Its SPIR-V is compiled at build time from graphics/shaders/fbo_vert.glsl and
 // fbo_frag.glsl and lives in gVKShaders.h, and is used when compiling is not
 // possible.
@@ -63,6 +63,7 @@ inline constexpr gVKUserShaderId GVK_NO_USER_SHADER = 0;
 enum gvkBuiltinShader {
 	GVK_BUILTIN_NONE = 0,
 	GVK_BUILTIN_FBO,
+	GVK_BUILTIN_MAGNIFIER,
 };
 
 // Compiles and builds one shader from GLSL held in memory. sourcePath, when the

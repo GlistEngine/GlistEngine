@@ -1066,7 +1066,8 @@ static std::string gvkshaderfragmentpath;
 // SPIR-V compiled at build time. Without that fallback a release build - which
 // links no shader compiler - would have no way to build it, and every
 // post-process chain would end in nothing being drawn.
-static bool gvkloadingfboshader = false;
+static gRenderer::BuiltinShaderType gvkbuiltinshadertype =
+		gRenderer::BUILTINSHADER_NONE;
 
 // The backend in use, so the texture resolver gVKUserShader calls can reach the
 // texture registry. There is one render engine per run - gRenderObject creates it
@@ -1126,7 +1127,11 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 			vertexSource != nullptr ? vertexSource : "",
 			fragmentSource != nullptr ? fragmentSource : "",
 			gvkshadervertexpath, gvkshaderfragmentpath,
-			gvkloadingfboshader ? GVK_BUILTIN_FBO : GVK_BUILTIN_NONE);
+			gvkbuiltinshadertype == gRenderer::BUILTINSHADER_FBO
+					? GVK_BUILTIN_FBO
+					: gvkbuiltinshadertype == gRenderer::BUILTINSHADER_MAGNIFIER
+							? GVK_BUILTIN_MAGNIFIER
+							: GVK_BUILTIN_NONE);
 	return static_cast<GLuint>(id);
 #else
 	(void) vertexSource; (void) fragmentSource; (void) geometrySource;
@@ -1137,6 +1142,10 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 void gVKRenderEngine::setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
 	gvkshadervertexpath = vertexPath;
 	gvkshaderfragmentpath = fragmentPath;
+}
+
+void gVKRenderEngine::setBuiltinShaderType(BuiltinShaderType type) {
+	gvkbuiltinshadertype = type;
 }
 
 void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {
@@ -2873,9 +2882,9 @@ void gVKRenderEngine::init() {
     // graphics/shaders/fbo_*.glsl where one is not. Created here and not in
     // initVulkan because it needs the pipelines that initVulkan builds.
     fboshader = new gShader();
-    gvkloadingfboshader = true;
+    setBuiltinShaderType(BUILTINSHADER_FBO);
     fboshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcFboFragment());
-    gvkloadingfboshader = false;
+    setBuiltinShaderType(BUILTINSHADER_NONE);
 
     createPrimitiveMeshes();
 }
