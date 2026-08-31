@@ -81,10 +81,9 @@ private:
 	int linenum, columnnum;
 	std::vector<Entry> guicontrols;
 	bool bordersenabled;
-	float* lineprs;
-	float* columnprs;
-	float* linetprs;
-	float* columntprs;
+	std::vector<float> lineprs, columnprs;
+	// Cumulative sums of the above, tprs[i] is the start of slot i.
+	std::vector<float> linetprs, columntprs;
 	bool resizable;
 	int resizecolumn, resizeline;
 	int resizex, resizey;
@@ -104,6 +103,7 @@ private:
 	int indexOf(int line, int column) const;
 
 	void checkSpaces();
+	static void updateTotals(const std::vector<float>& prs, std::vector<float>& tprs);
 };
 
 #endif /* UI_GGUISIZER_H_ */

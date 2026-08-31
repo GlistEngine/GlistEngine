@@ -24,10 +24,6 @@ gGUISizer::gGUISizer() {
 	alignvertically = false;
 	haslocalbackgroundcolor = false;
 	isbackgroundimageenabled = false;
-	lineprs = nullptr;
-	columnprs = nullptr;
-	linetprs = nullptr;
-	columntprs = nullptr;
 	setSize(1, 1);
 }
 
@@ -105,39 +101,10 @@ void gGUISizer::setSize(int lineNum, int columnNum) {
 		guicontrols.push_back({nullptr, false});
 	}
 
-	delete lineprs;
-	lineprs = new float[linenum];
-	for(int i = 0; i < linenum; i++) {
-		lineprs[i] = 1.0f / (float)linenum;
-	}
-
-	delete columnprs;
-	columnprs = new float[columnnum];
-	for(int i = 0; i < columnnum; i++) {
-		columnprs[i] = 1.0f / (float)columnnum;
-	}
-
-	delete linetprs;
-	linetprs = new float[linenum + 1];
-	linetprs[0] = 0.0f;
-	linetprs[linenum] = 1.0f;
-	for(int i = 1; i < linenum; i++) {
-		linetprs[i] = 0.0f;
-		for(int j = 0; j < i; j++) {
-			linetprs[i] += lineprs[j];
-		}
-	}
-
-	delete columntprs;
-	columntprs = new float[columnnum + 1];
-	columntprs[0] = 0.0f;
-	columntprs[columnnum] = 1.0f;
-	for(int i = 1; i < columnnum; i++) {
-		columntprs[i] = 0.0f;
-		for(int j = 0; j < i; j++) {
-			columntprs[i] += columnprs[j];
-		}
-	}
+	lineprs.assign(linenum, 1.0f / (float)linenum);
+	columnprs.assign(columnnum, 1.0f / (float)columnnum);
+	updateTotals(lineprs, linetprs);
+	updateTotals(columnprs, columntprs);
 }
 
 int gGUISizer::getLineNum() {
@@ -149,41 +116,21 @@ int gGUISizer::getColumnNum() {
 }
 
 void gGUISizer::setLineProportions(float* proportions) {
-	delete lineprs;
-	lineprs = new float[linenum];
-	for(int i = 0; i < linenum; i++) {
-		lineprs[i] = proportions[i];
-	}
-
-	delete linetprs;
-	linetprs = new float[linenum + 1];
-	linetprs[0] = 0.0f;
-	linetprs[linenum] = 1.0f;
-	for(int i = 1; i < linenum; i++) {
-		linetprs[i] = 0.0f;
-		for(int j = 0; j < i; j++) {
-			linetprs[i] += lineprs[j];
-		}
-	}
+	lineprs.assign(proportions, proportions + linenum);
+	updateTotals(lineprs, linetprs);
 }
 
 void gGUISizer::setColumnProportions(float* proportions) {
-	delete columnprs;
-	columnprs = new float[columnnum];
-	for(int i = 0; i < columnnum; i++) {
-		columnprs[i] = proportions[i];
-	}
+	columnprs.assign(proportions, proportions + columnnum);
+	updateTotals(columnprs, columntprs);
+}
 
-	delete columntprs;
-	columntprs = new float[columnnum + 1];
-	columntprs[0] = 0.0f;
-	columntprs[columnnum] = 1.0f;
-	for(int i = 1; i < columnnum; i++) {
-		columntprs[i] = 0.0f;
-		for(int j = 0; j < i; j++) {
-			columntprs[i] += columnprs[j];
-		}
+void gGUISizer::updateTotals(const std::vector<float>& prs, std::vector<float>& tprs) {
+	tprs.assign(prs.size() + 1, 0.0f);
+	for(size_t i = 0; i < prs.size(); i++) {
+		tprs[i + 1] = tprs[i] + prs[i];
 	}
+	tprs.back() = 1.0f;
 }
 
 void gGUISizer::setSlotPadding(int padding, int height) {
@@ -325,7 +272,7 @@ void gGUISizer::checkSpaces() {
 			}
 			if(!isspace) lineprs[li] *= ldiffratio;
 		}
-		setLineProportions(lineprs);
+		updateTotals(lineprs, linetprs);
 	}
 
 	if(!spacecolumnno.empty()) {
@@ -346,7 +293,7 @@ void gGUISizer::checkSpaces() {
 			}
 			if(!isspace) columnprs[li] *= cdiffratio;
 		}
-		setColumnProportions(columnprs);
+		updateTotals(columnprs, columntprs);
 	}
 }
 
@@ -605,13 +552,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 		}
 		columnprs[resizecolumn] -= prdiff;
 		columnprs[resizecolumn - 1] += prdiff;
-		for(int i = 1; i < columnnum; i++) {
-			columntprs[i] = 0.0f;
-			for(int j = 0; j < i; j++) {
-				columntprs[i] += columnprs[j];
-			}
-		}
-
+		updateTotals(columnprs, columntprs);
 
 		for (int column = resizecolumn - 1; column <= resizecolumn; column++) {
 			for (int line = 0; line < linenum; line++) {
@@ -636,10 +577,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 		}
 		lineprs[resizeline] -= prdiff;
 		lineprs[resizeline - 1] += prdiff;
-		for(int i = 1; i < linenum; i++) {
-			linetprs[i] = 0.0f;
-			for(int j = 0; j < i; j++) linetprs[i] += lineprs[j];
-		}
+		updateTotals(lineprs, linetprs);
 
 		for (int line = resizeline - 1; line <= resizeline; line++) {
 			for (int column = 0; column < columnnum; column++) {
@@ -676,12 +614,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 		}
 		columnprs[resizecolumn] -= prdiff;
 		columnprs[resizecolumn - 1] += prdiff;
-		for(int i = 1; i < columnnum; i++) {
-			columntprs[i] = 0.0f;
-			for(int j = 0; j < i; j++) {
-				columntprs[i] += columnprs[j];
-			}
-		}
+		updateTotals(columnprs, columntprs);
 
 		for (int column = resizecolumn - 1; column <= resizecolumn; column++) {
 			for (int line = 0; line < linenum; line++) {
@@ -703,10 +636,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 		if(linetprs[resizeline] + prdiff > linetprs[resizeline + 1] - 0.02f) prdiff = (linetprs[resizeline + 1] - 0.02f) - linetprs[resizeline];
 		lineprs[resizeline] -= prdiff;
 		lineprs[resizeline - 1] += prdiff;
-		for(int i = 1; i < linenum; i++) {
-			linetprs[i] = 0.0f;
-			for(int j = 0; j < i; j++) linetprs[i] += lineprs[j];
-		}
+		updateTotals(lineprs, linetprs);
 
 		for (int line = resizeline - 1; line <= resizeline; line++) {
 			for (int column = 0; column < columnnum; column++) {
