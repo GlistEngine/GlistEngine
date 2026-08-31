@@ -11,6 +11,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
 #include "stb/stb_image_write.h"
+#include "gFile.h"
 #include "gHttpFile.h"
 #ifdef ANDROID
 #include "gAndroidUtil.h"

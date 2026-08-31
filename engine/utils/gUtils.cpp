@@ -7,6 +7,7 @@
 
 #include "gUtils.h"
 #include "gImage.h"
+#include "gFile.h"
 #include "gHttpFile.h"
 #include <sys/time.h>
 #include <limits>
