@@ -122,7 +122,7 @@ layout(push_constant) uniform Push {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
-    // x is shininess; the rest is padding kept so the block stays vec4 aligned.
+    // x shininess, y map bitfield, zw texture tiling.
     vec4 misc;
 } pc;
 
@@ -177,7 +177,7 @@ void main() {
     // so mesh3d.frag redoes the Gram-Schmidt per fragment where it is needed.
     vTangent = normalmatrix * aTangent;
     vColor = aColor;
-    vTexCoords = aTexCoords;
+    vTexCoords = aTexCoords * pc.misc.zw;
 
     vFragPosLightSpace = scene.lightmatrix * vec4(vFragPos, 1.0);
 }

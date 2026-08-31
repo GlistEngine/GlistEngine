@@ -27,11 +27,12 @@
  * Where the SPIR-V comes from:
  *   - shaderc, when the build has it (desktop development builds). GLSL goes in
  *     as the application wrote it and comes out compiled, hot reload included.
- *   - a .spv file beside the source otherwise, which is every mobile build and
- *     every release. shaderc is a large dependency and is not linked into those,
- *     so the shader is compiled ahead of time by glslc and shipped next to the
- *     GLSL - the same arrangement the engine's own shaders use through
- *     gVKShaders.h.
+ *   - glslang, when a desktop release has its runtime libraries. This compiles
+ *     source-only shaders once when the application constructs the effect.
+ *   - a .spv file beside the source otherwise. This is the mobile path and the
+ *     fallback for a desktop system without either compiler: the shader is
+ *     compiled ahead of time by glslc and shipped next to the GLSL - the same
+ *     arrangement the engine's own shaders use through gVKShaders.h.
  */
 
 #pragma once

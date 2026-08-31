@@ -13,6 +13,9 @@
 #include <fstream>
 #include <sstream>
 #include <sys/stat.h>
+#elif defined(GVK_RUNTIME_GLSLANG)
+#include <glslang/Include/glslang_c_interface.h>
+#include <glslang/Public/resource_limits_c.h>
 #endif
 
 bool gvkRuntimeShadersAvailable() {
@@ -178,6 +181,105 @@ bool gvkCompileShaderSource(const std::string& source, VkShaderStageFlagBits sta
 		return false;
 	}
 	spirv.assign(result.cbegin(), result.cend());
+	return !spirv.empty();
+}
+
+#elif defined(GVK_RUNTIME_GLSLANG)
+
+bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits stage,
+		const std::string& define, std::vector<uint32_t>& spirv) {
+	// Release builds use committed SPIR-V for the engine pipelines. glslang is
+	// linked here for already-preprocessed gShader source, not for hot reload.
+	(void)fileName;
+	(void)stage;
+	(void)define;
+	(void)spirv;
+	return false;
+}
+
+bool gvkCompileShaderSource(const std::string& source, VkShaderStageFlagBits stage,
+		const std::string& debugName, std::vector<uint32_t>& spirv) {
+	if(source.empty()) return false;
+
+	glslang_stage_t language;
+	switch(stage) {
+	case VK_SHADER_STAGE_VERTEX_BIT: language = GLSLANG_STAGE_VERTEX; break;
+	case VK_SHADER_STAGE_FRAGMENT_BIT: language = GLSLANG_STAGE_FRAGMENT; break;
+	case VK_SHADER_STAGE_GEOMETRY_BIT: language = GLSLANG_STAGE_GEOMETRY; break;
+	case VK_SHADER_STAGE_COMPUTE_BIT: language = GLSLANG_STAGE_COMPUTE; break;
+	default:
+		gLoge("gVKShaderCompiler") << "Unsupported shader stage for " << debugName;
+		return false;
+	}
+
+	// Use glslang's C ABI here. Linux distributions commonly build glslang with
+	// libstdc++ while GlistEngine uses libc++; passing C++ objects over that boundary
+	// would make an otherwise valid Linux build fail to link. Initialisation is
+	// process-wide and thread-safe after this static has run. Deliberately do not
+	// finalise it: shaders may be constructed during static teardown, and the OS
+	// releases the compiler library after the engine is gone.
+	static const bool glslangready = glslang_initialize_process() != 0;
+	if(!glslangready) {
+		gLoge("gVKShaderCompiler") << "glslang initialisation failed for " << debugName;
+		return false;
+	}
+
+	glslang_input_t input{};
+	input.language = GLSLANG_SOURCE_GLSL;
+	input.stage = language;
+	input.client = GLSLANG_CLIENT_VULKAN;
+	input.client_version = GLSLANG_TARGET_VULKAN_1_2;
+	input.target_language = GLSLANG_TARGET_SPV;
+	input.target_language_version = GLSLANG_TARGET_SPV_1_5;
+	input.code = source.c_str();
+	input.default_version = 450;
+	input.default_profile = GLSLANG_CORE_PROFILE;
+	input.force_default_version_and_profile = false;
+	input.forward_compatible = false;
+	input.messages = static_cast<glslang_messages_t>(
+			GLSLANG_MSG_SPV_RULES_BIT | GLSLANG_MSG_VULKAN_RULES_BIT);
+	input.resource = glslang_default_resource();
+
+	glslang_shader_t* shader = glslang_shader_create(&input);
+	if(shader == nullptr) {
+		gLoge("gVKShaderCompiler") << "Could not create a glslang shader for " << debugName;
+		return false;
+	}
+	if(!glslang_shader_preprocess(shader, &input) || !glslang_shader_parse(shader, &input)) {
+		gLoge("gVKShaderCompiler") << debugName << ": " << glslang_shader_get_info_log(shader);
+		glslang_shader_delete(shader);
+		return false;
+	}
+
+	glslang_program_t* program = glslang_program_create();
+	if(program == nullptr) {
+		gLoge("gVKShaderCompiler") << "Could not create a glslang program for " << debugName;
+		glslang_shader_delete(shader);
+		return false;
+	}
+	glslang_program_add_shader(program, shader);
+	if(!glslang_program_link(program, input.messages)) {
+		gLoge("gVKShaderCompiler") << debugName << ": " << glslang_program_get_info_log(program);
+		glslang_program_delete(program);
+		glslang_shader_delete(shader);
+		return false;
+	}
+
+	// The default generator retains OpName/OpMemberName, which reflection needs in
+	// order to implement gShader's name-based uniform setters.
+	glslang_program_SPIRV_generate(program, language);
+	const size_t wordcount = glslang_program_SPIRV_get_size(program);
+	if(wordcount > 0) {
+		spirv.resize(wordcount);
+		glslang_program_SPIRV_get(program, spirv.data());
+	}
+	const char* messages = glslang_program_SPIRV_get_messages(program);
+	if(wordcount == 0 && messages != nullptr && messages[0] != '\0') {
+		gLoge("gVKShaderCompiler") << debugName << ": " << messages;
+	}
+
+	glslang_program_delete(program);
+	glslang_shader_delete(shader);
 	return !spirv.empty();
 }
 

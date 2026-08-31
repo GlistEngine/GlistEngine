@@ -281,6 +281,7 @@ public:
 		glm::vec4 diffuse{1.0f};
 		glm::vec4 specular{1.0f};
 		float shininess = 0.5f;
+		glm::vec2 texturetiling{1.0f, 1.0f};
 		// Texture ids as gTexture hands them out, or 0 for "this mesh has no map of
 		// that kind". A diffuse map replaces the ambient and diffuse colours rather
 		// than tinting them, matching what the OpenGL shader does.

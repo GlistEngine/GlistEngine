@@ -37,6 +37,13 @@ struct gVKRetiredBuffer {
 };
 static std::vector<gVKRetiredBuffer> gvkretiredmeshbuffers;
 
+// A VkDeviceMemory object per tiny buffer exhausts the driver's allocation-count
+// limit in scenes which create short-lived lines/bullets without destroying their
+// gVbo. Keep those bytes on the CPU and copy them into the already mapped frame
+// arena when they are actually drawn. Four KiB keeps the recurring copy small but
+// covers the 96-byte allocations a busy scene can produce thousands of times.
+static constexpr VkDeviceSize GVK_MESH_ARENA_RESIDENT_LIMIT = 4 * 1024;
+
 // A buffer retired while frame N was being recorded can still be read by frame N
 // and by the frames already in flight behind it. Once the frame counter has moved
 // on by more than the number of frames in flight, every submission that could name
@@ -83,7 +90,15 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 	// Set aside rather than freed; see gvkretiredmeshbuffers above for why. The same
 	// applies to slots being replaced by larger ones: the frame being recorded may
 	// already have bound them.
-	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
+	if(buf.isarenaresident) {
+		// A retained small buffer owns only its CPU bytes. buf.buffer may currently
+		// name the context-owned frame arena and must not enter the retired list.
+		buf.buffer = VK_NULL_HANDLE;
+		buf.memory = VK_NULL_HANDLE;
+		buf.arenabuffer = VK_NULL_HANDLE;
+		buf.arenadata.clear();
+		buf.isarenaresident = false;
+	} else if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
 		// The retired list counts frames, which is the right measure for a command
 		// buffer that still names this buffer - but a staging copy into it may not
 		// have been submitted at all yet, and no number of frames makes unsubmitted
@@ -94,11 +109,16 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 		buf.buffer = VK_NULL_HANDLE;
 		buf.memory = VK_NULL_HANDLE;
 	}
+	const bool sharedslots = GVK_MAX_FRAMES_IN_FLIGHT > 1
+			&& buf.slotbuffers[0] != VK_NULL_HANDLE
+			&& buf.slotbuffers[0] == buf.slotbuffers[1];
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		if(buf.slotbuffers[i] == VK_NULL_HANDLE) continue;
-		if(buf.slotmapped[i] != nullptr) vkUnmapMemory(device, buf.slotmemories[i]);
-		gvkretiredmeshbuffers.push_back({buf.slotbuffers[i], buf.slotmemories[i],
-				ctx.getMeshGeneration()});
+		if(!sharedslots || i == 0) {
+			if(buf.slotmapped[i] != nullptr) vkUnmapMemory(device, buf.slotmemories[i]);
+			gvkretiredmeshbuffers.push_back({buf.slotbuffers[i], buf.slotmemories[i],
+					ctx.getMeshGeneration()});
+		}
 		buf.slotbuffers[i] = VK_NULL_HANDLE;
 		buf.slotmemories[i] = VK_NULL_HANDLE;
 		buf.slotmapped[i] = nullptr;
@@ -109,9 +129,36 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 	// draws settles after one allocation instead of reallocating on each. Without it
 	// a gRectangle alternating between filled and outlined - four indices then five -
 	// rebuilt both its buffers twice a frame, and every rebuild drained the device.
-	const VkDeviceSize capacity = std::max<VkDeviceSize>(size + size / 2, 256);
+	const VkDeviceSize requestedcapacity = std::max<VkDeviceSize>(size + size / 2, 256);
+	const VkDeviceSize capacity = isIndex ? requestedcapacity
+			: (requestedcapacity + 255) & ~VkDeviceSize(255);
 	const VkBufferUsageFlags usage = isIndex ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT
 			: VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+	if(!isIndex) {
+		const VkDeviceSize totalsize = capacity * GVK_MAX_FRAMES_IN_FLIGHT;
+		if(!gvkCreateBuffer(ctx, totalsize, usage,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				buf.slotbuffers[0], buf.slotmemories[0],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
+			gLoge("gVKMeshBuffer") << "Could not create a host visible " << totalsize
+					<< " byte buffer for a mesh that updates every frame.";
+			gvkDestroyMeshBuffer(ctx, buf);
+			return false;
+		}
+		void* mapped = nullptr;
+		if(vkMapMemory(device, buf.slotmemories[0], 0, totalsize, 0, &mapped) != VK_SUCCESS) {
+			gLoge("gVKMeshBuffer") << "vkMapMemory failed for a per-frame mesh buffer.";
+			gvkDestroyMeshBuffer(ctx, buf);
+			return false;
+		}
+		for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
+			buf.slotbuffers[i] = buf.slotbuffers[0];
+			buf.slotmemories[i] = buf.slotmemories[0];
+			buf.slotmapped[i] = static_cast<unsigned char*>(mapped) + capacity * i;
+			buf.slotversion[i] = 0;
+		}
+	} else {
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		if(!gvkCreateBuffer(ctx, capacity, usage,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -130,6 +177,7 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 		}
 		// Nothing written yet, so no slot holds any version of the data.
 		buf.slotversion[i] = 0;
+	}
 	}
 
 	buf.isdynamic = true;
@@ -152,10 +200,37 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		return true;
 	}
 
-	const bool wasallocated = buf.isdynamic || buf.buffer != VK_NULL_HANDLE;
+	const bool wasallocated = buf.isdynamic || buf.isarenaresident || buf.buffer != VK_NULL_HANDLE;
 	const bool rolechanged = wasallocated && buf.isindex != isIndex;
 	const bool shapechanged = wasallocated && (buf.size != size || buf.isindex != isIndex);
 
+	// Tiny static and transient buffers share the frame arena instead of consuming a
+	// separate Vulkan memory allocation each. Reuploads simply replace the retained
+	// bytes; resolve below gives every frame its own safe GPU-visible slice.
+	if(!isIndex && !buf.isdynamic && size <= GVK_MESH_ARENA_RESIDENT_LIMIT
+			&& (buf.isarenaresident || !wasallocated)) {
+		buf.isarenaresident = true;
+		buf.isindex = isIndex;
+		buf.size = size;
+		buf.capacity = size;
+		const unsigned char* bytes = static_cast<const unsigned char*>(data);
+		buf.arenadata.assign(bytes, bytes + static_cast<size_t>(size));
+		buf.arenabuffer = VK_NULL_HANDLE;
+		buf.arenaoffset = 0;
+		buf.arenageneration = 0;
+		buf.buffer = VK_NULL_HANDLE;
+		return true;
+	}
+
+	if(ctx.isFrameActive()) {
+	// Mesh builders commonly upload positions, then normals/UVs into the same VBO
+	// during setup. No command buffer can observe those intermediate versions, so
+	// they remain a static staging upload. Only a rewrite while a frame is being
+	// recorded proves that the application needs independently writable frame slots.
+	// Promoting setup uploads made nearly every model dynamic, exhausted the
+	// driver's allocation budget and eventually left the level with no drawable
+	// mesh buffers.
+	//
 	// The second upload is the signal that this mesh rewrites its own vertices -
 	// CPU skinning does it on every animation frame. Staging such a buffer means a
 	// device local copy per update, and because the copy is submitted to the
@@ -172,6 +247,7 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 	// also destroyed buffers the command buffer being recorded still referenced.
 	if(!buf.isdynamic && wasallocated && !rolechanged) {
 		if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
+	}
 	}
 
 	if(buf.isdynamic) {
@@ -268,6 +344,21 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 
 VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize& outOffset) {
 	outOffset = 0;
+	if(buf.isarenaresident) {
+		if(buf.arenabuffer != VK_NULL_HANDLE && buf.arenageneration == ctx.getMeshGeneration()) {
+			outOffset = buf.arenaoffset;
+			return buf.arenabuffer;
+		}
+		if(buf.arenadata.empty()) return VK_NULL_HANDLE;
+		const VkDeviceSize offset = ctx.pushMeshData(buf.arenadata.data(), buf.size);
+		if(offset == VK_WHOLE_SIZE) return VK_NULL_HANDLE;
+		buf.arenabuffer = ctx.getCurrentMeshArena();
+		buf.arenaoffset = offset;
+		buf.arenageneration = ctx.getMeshGeneration();
+		buf.buffer = buf.arenabuffer;
+		outOffset = offset;
+		return buf.arenabuffer;
+	}
 	if(!buf.isdynamic) return buf.buffer;
 
 	// The slice this mesh was last uploaded into, as long as it belongs to the frame
@@ -311,13 +402,31 @@ VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize&
 		if(buf.slotmapped[i] != nullptr && buf.slotversion[i] > buf.slotversion[freshest]) freshest = i;
 	}
 
-	buf.buffer = buf.slotbuffers[freshest];
+	const bool sharedslots = !buf.isindex && GVK_MAX_FRAMES_IN_FLIGHT > 1
+			&& buf.slotbuffers[0] == buf.slotbuffers[1];
+	if(sharedslots) outOffset = buf.capacity * freshest;
+	buf.buffer = sharedslots ? buf.slotbuffers[0] : buf.slotbuffers[freshest];
 	return buf.buffer;
 }
 
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE) return;
+
+	if(buf.isarenaresident) {
+		// buf.buffer may point at the context-owned arena after a resolve; it is not
+		// this mesh's VkBuffer and must never be destroyed here.
+		buf.buffer = VK_NULL_HANDLE;
+		buf.memory = VK_NULL_HANDLE;
+		buf.arenabuffer = VK_NULL_HANDLE;
+		buf.arenadata.clear();
+		buf.isarenaresident = false;
+		buf.isdynamic = false;
+		buf.version = 0;
+		buf.size = 0;
+		buf.capacity = 0;
+		return;
+	}
 
 	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
 		// A static buffer is the destination of a staging copy that may be recorded
@@ -333,17 +442,21 @@ void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 		buf.memory = VK_NULL_HANDLE;
 	}
 
-	// The mapped slots are freed rather than unmapped first: freeing the memory
-	// they belong to unmaps them, and the pointers go away with it.
+	const bool sharedslots = GVK_MAX_FRAMES_IN_FLIGHT > 1
+			&& buf.slotbuffers[0] != VK_NULL_HANDLE
+			&& buf.slotbuffers[0] == buf.slotbuffers[1];
+	if(sharedslots && buf.slotmapped[0] != nullptr) {
+		vkUnmapMemory(device, buf.slotmemories[0]);
+	}
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
-		if(buf.slotbuffers[i] != VK_NULL_HANDLE) {
+		if(buf.slotbuffers[i] != VK_NULL_HANDLE && (!sharedslots || i == 0)) {
 			vkDestroyBuffer(device, buf.slotbuffers[i], nullptr);
-			buf.slotbuffers[i] = VK_NULL_HANDLE;
 		}
-		if(buf.slotmemories[i] != VK_NULL_HANDLE) {
+		if(buf.slotmemories[i] != VK_NULL_HANDLE && (!sharedslots || i == 0)) {
 			vkFreeMemory(device, buf.slotmemories[i], nullptr);
-			buf.slotmemories[i] = VK_NULL_HANDLE;
 		}
+		buf.slotbuffers[i] = VK_NULL_HANDLE;
+		buf.slotmemories[i] = VK_NULL_HANDLE;
 		buf.slotmapped[i] = nullptr;
 		buf.slotversion[i] = 0;
 	}

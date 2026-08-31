@@ -864,9 +864,10 @@ bool gvkCreateShadowPipeline(gVKContext& ctx) {
 	options.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
 	options.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
 	options.instancestride = GVK_MESH3D_INSTANCE_STRIDE;
-	// The only pipeline that wants it: this is the pass whose depths are compared
-	// against later, so this is where the offset belongs.
-	options.depthbias = true;
+	// Match the OpenGL shadow pass: receiver-side bias in color_frag.glsl is the
+	// only offset. Applying an additional raster depth bias here shifts the stored
+	// caster depth and changes both contact shadows and peter-panning by backend.
+	options.depthbias = false;
 
 	// One target only, and at one sample: the shadow map is a depth-only image that
 	// is sampled and compared against, never displayed, so multisampling it would

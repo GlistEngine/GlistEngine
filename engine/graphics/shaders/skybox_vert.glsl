@@ -38,7 +38,11 @@ layout(location = 0) out vec2 vTexCoords;
 
 void main() {
     vTexCoords = aTexCoords;
-    gl_Position = pc.viewprojection * vec4(aPos, 1.0);
+    // Match the OpenGL skybox path: pin every face to the far plane. The quads
+    // sit 200 units from the camera while a typical camera clips at 100, so using
+    // the projected z directly removes the whole skybox and exposes black clear.
+    vec4 pos = pc.viewprojection * vec4(aPos, 1.0);
+    gl_Position = pos.xyww;
 }
 #endif
 

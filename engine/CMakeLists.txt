@@ -719,8 +719,8 @@ endif()
 # On by default in Debug builds where shaderc is present. Multi-config
 # generators leave CMAKE_BUILD_TYPE empty, so those need -DGLIST_VK_SHADER_HOT_RELOAD=ON.
 option(GLIST_VK_SHADER_HOT_RELOAD "Compile the Vulkan 2D shaders at run time (needs shaderc)" OFF)
+set(GLIST_SHADERC_FOUND FALSE)
 if(Lib_Vulkan AND (GLIST_VK_SHADER_HOT_RELOAD OR CMAKE_BUILD_TYPE STREQUAL "Debug"))
-	set(GLIST_SHADERC_FOUND FALSE)
 	if(WIN32)
 		# Windows takes its libraries from zbin and nowhere else, exactly like the
 		# Vulkan block above - NO_DEFAULT_PATH keeps a stray shaderc elsewhere on the
@@ -757,6 +757,73 @@ if(Lib_Vulkan AND (GLIST_VK_SHADER_HOT_RELOAD OR CMAKE_BUILD_TYPE STREQUAL "Debu
 		message(STATUS "Vulkan shader hot reload enabled (${GLIST_SHADERC_ORIGIN})")
 	else()
 		message(STATUS "shaderc not found; Vulkan shaders come from the committed SPIR-V")
+	endif()
+endif()
+
+# gShader programs supplied as source (the built-in post effects included) still
+# need a compiler in a Release Vulkan build. Hot reload above deliberately uses
+# shaderc only in development. Link glslang's runtime front-end when available so
+# the same shader text the OpenGL backend consumes can be translated once, when
+# the effect is constructed. Windows takes it from zbin; Linux and macOS use the
+# package supplied by the system package manager. This is not used by the frame
+# loop and does not change the GL compilation path.
+if(Lib_Vulkan AND NOT GLIST_SHADERC_FOUND AND NOT ANDROID AND NOT IOS)
+	set(GLIST_GLSLANG_FOUND FALSE)
+	if(WIN32)
+		find_path(GLIST_GLSLANG_INCLUDE glslang/Public/ShaderLang.h
+			PATHS "${MINGW64_DIR}/include" NO_DEFAULT_PATH)
+		find_library(GLIST_GLSLANG_LIBRARY NAMES glslang
+			PATHS "${MINGW64_DIR}/lib" NO_DEFAULT_PATH)
+		find_library(GLIST_SPIRV_LIBRARY NAMES SPIRV
+			PATHS "${MINGW64_DIR}/lib" NO_DEFAULT_PATH)
+		find_library(GLIST_GLSLANG_RESOURCE_LIBRARY NAMES glslang-default-resource-limits
+			PATHS "${MINGW64_DIR}/lib" NO_DEFAULT_PATH)
+		if(GLIST_GLSLANG_INCLUDE AND GLIST_GLSLANG_LIBRARY AND GLIST_SPIRV_LIBRARY
+				AND GLIST_GLSLANG_RESOURCE_LIBRARY)
+			target_include_directories(GlistEngine PRIVATE "${GLIST_GLSLANG_INCLUDE}")
+			target_link_libraries(GlistEngine PRIVATE
+				"${GLIST_GLSLANG_LIBRARY}"
+				"${GLIST_SPIRV_LIBRARY}"
+				"${GLIST_GLSLANG_RESOURCE_LIBRARY}")
+			set(GLIST_GLSLANG_FOUND TRUE)
+		endif()
+	else()
+		set(GLIST_GLSLANG_TARGETS)
+		find_package(glslang CONFIG QUIET HINTS
+			"${MINGW64_DIR}"
+			"${MINGW64_DIR}/lib/cmake/glslang")
+		if(TARGET glslang::glslang AND TARGET glslang::SPIRV
+				AND TARGET glslang::glslang-default-resource-limits)
+			set(GLIST_GLSLANG_TARGETS
+				glslang::glslang
+				glslang::SPIRV
+				glslang::glslang-default-resource-limits)
+		elseif(TARGET glslang AND TARGET SPIRV
+				AND TARGET glslang-default-resource-limits)
+			# Ubuntu 22.04's glslang 11 package exports the legacy, unnamespaced
+			# targets; newer distributions and Homebrew use the targets above.
+			set(GLIST_GLSLANG_TARGETS
+				glslang
+				SPIRV
+				glslang-default-resource-limits)
+		endif()
+		if(GLIST_GLSLANG_TARGETS)
+			target_link_libraries(GlistEngine PRIVATE ${GLIST_GLSLANG_TARGETS})
+			# The public compiler boundary is C, but a static distro glslang still
+			# needs its own C++ runtime internally when the engine links with libc++.
+			if(LINUX AND "${CMAKE_CXX_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS}"
+					MATCHES "-stdlib=libc\\+\\+")
+				target_link_libraries(GlistEngine PRIVATE stdc++)
+			endif()
+			set(GLIST_GLSLANG_FOUND TRUE)
+		endif()
+	endif()
+
+	if(GLIST_GLSLANG_FOUND)
+		target_compile_definitions(GlistEngine PRIVATE GVK_RUNTIME_GLSLANG)
+		message(STATUS "Vulkan source shaders enabled with glslang")
+	else()
+		message(WARNING "glslang runtime libraries not found; Vulkan source-only gShader and post-process effects will be unavailable; install glslang or ship adjacent precompiled SPIR-V")
 	endif()
 endif()
 

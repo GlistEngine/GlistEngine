@@ -675,6 +675,12 @@ struct gVKContext {
 		recordedpipeline = pipeline;
 		recordeddescriptorlayout = VK_NULL_HANDLE;
 		recordeddescriptorcount = 0;
+		// Binding a pipeline which does not declare one of these dynamic states
+		// invalidates its current value. The next pipeline may declare it again, so
+		// the cache must force all three groups to be emitted after every change.
+		recordeddepthvalid = false;
+		recordedtopologyvalid = false;
+		recordedcullvalid = false;
 		return true;
 	}
 	bool shouldBindDescriptorSets(VkPipelineLayout layout, const VkDescriptorSet* sets, uint32_t count) {

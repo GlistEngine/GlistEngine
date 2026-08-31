@@ -137,9 +137,13 @@ layout(push_constant) uniform Push {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
-    // x shininess, y useDiffuseMap, z useSpecularMap, w useNormalMap.
+    // x shininess, y map bitfield (1 diffuse, 2 specular, 4 normal), zw tiling.
     vec4 misc;
 } pc;
+
+bool useDiffuseMap() { return (int(pc.misc.y + 0.5) & 1) != 0; }
+bool useSpecularMap() { return (int(pc.misc.y + 0.5) & 2) != 0; }
+bool useNormalMap() { return (int(pc.misc.y + 0.5) & 4) != 0; }
 
 // One bilinearly weighted PCF tap. The shadow map is sampled with a NEAREST filter,
 // so a plain lookup snaps to whole texels and the shadow edge comes out as a
@@ -206,7 +210,7 @@ vec3 shadowLightDirection(vec3 worldpos) {
 // instead - sixteen texels, each weighted - and rotates the ring by a per-pixel angle
 // so that whatever aliasing is left lands as fine noise rather than as concentric
 // bands, which the eye reads as a soft edge instead of an artefact.
-float calculateShadow(vec3 normal) {
+float calculateShadowOptimized(vec3 normal) {
     vec3 projCoords = vFragPosLightSpace.xyz / vFragPosLightSpace.w;
     vec2 texelSize = 1.0 / vec2(textureSize(shadowmap, 0));
 
@@ -345,6 +349,29 @@ float calculateShadow(vec3 normal) {
     return (1.0 - lit * 0.25) * edgefade;
 }
 
+// OpenGL-compatible shadow lookup. The light matrix supplied to Vulkan already
+// maps z to 0..1, so only x/y need the clip-to-texture conversion here.
+float calculateShadow(vec3 normal) {
+    vec3 projCoords = vFragPosLightSpace.xyz / vFragPosLightSpace.w;
+    projCoords.xy = projCoords.xy * 0.5 + 0.5;
+    float currentDepth = projCoords.z;
+    vec3 lightDir = normalize(scene.shadowlightpos.xyz - vFragPos);
+    float bias = max(0.05 * (1.0 - dot(normalize(normal), lightDir)), 0.005);
+    vec2 texelSize = 1.0 / vec2(textureSize(shadowmap, 0));
+    int radius = scene.softshadows != 0 ? 2 : 1;
+    float shadow = 0.0;
+    for (int x = -radius; x <= radius; ++x) {
+        for (int y = -radius; y <= radius; ++y) {
+            float depth = texture(shadowmap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > depth ? 1.0 : 0.0;
+        }
+    }
+    float width = float(radius * 2 + 1);
+    shadow /= width * width;
+    if (projCoords.z > 1.0) shadow = 0.0;
+    return shadow;
+}
+
 // The material colours the lighting actually uses, picked once in main(). Passed
 // into the light functions rather than read from the push constant inside them,
 // because a map replaces them and color_frag.glsl resolves that the same way.
@@ -374,7 +401,7 @@ float ambientOcclusionByNormal(vec3 worldnormal) {
 }
 
 vec4 calcAmbLight(Light light, vec4 matAmbient) {
-    return light.ambient * matAmbient * ambientOcclusionByNormal(normalize(vNormal));
+    return light.ambient * matAmbient;
 }
 
 // The specular lobe, for every light type and both the normal-mapped and the plain
@@ -425,14 +452,17 @@ vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir,
     // Not transformed into tangent space, matching color_frag.glsl: a directional
     // light keeps its world-space direction there even when normal mapping is on.
     vec3 lightDir = normalize(-light.direction);
-    // One lobe for both paths now. The old code picked Blinn-Phong while normal
-    // mapped and Phong otherwise, because the OpenGL shader does; neither is a
-    // microfacet model, and the two disagreeing with each other meant the same
-    // material changed character the moment a normal map was attached to it.
     float diff = max(dot(lightDir, normal), 0.0);
-    float spec = specularLobe(normal, viewDir, lightDir);
+    float spec;
+    if (useNormalMap()) {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), pc.misc.x);
+    } else {
+        vec3 reflectDir = reflect(-lightDir, normal);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), pc.misc.x);
+    }
 
-    vec4 ambient = light.ambient * matAmbient * ambientOcclusionByNormal(normalize(vNormal));
+    vec4 ambient = light.ambient * matAmbient;
     vec4 diffuse = light.diffuse * vec4(diff) * matDiffuse * shadowing;
     vec4 specular = light.specular * vec4(spec) * matSpecular * shadowing;
     return ambient + diffuse + specular;
@@ -442,7 +472,7 @@ vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir,
         vec4 matAmbient, vec4 matDiffuse, vec4 matSpecular, float shadowing) {
     vec3 lightDir;
     float distance;
-    if (pc.misc.w > 0.0) {
+    if (useNormalMap()) {
         // A positional light does get moved into tangent space, so the direction and
         // the distance are both measured there.
         vec3 tangentLightPos = tbn * light.position;
@@ -452,12 +482,17 @@ vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir,
         lightDir = normalize(light.position - vFragPos);
         distance = length(light.position - vFragPos);
     }
-    // Which space the direction was measured in is the only thing that differed
-    // between these two branches; the lobe itself is the same one either way.
     float diff = max(dot(normal, lightDir), 0.0);
-    float spec = specularLobe(normal, viewDir, lightDir);
+    float spec;
+    if (useNormalMap()) {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), pc.misc.x);
+    } else {
+        vec3 reflectDir = reflect(-lightDir, normal);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), pc.misc.x);
+    }
 
-    vec4 ambient = light.ambient * matAmbient * ambientOcclusionByNormal(normalize(vNormal));
+    vec4 ambient = light.ambient * matAmbient;
     vec4 diffuse = light.diffuse * diff * matDiffuse * shadowing;
     vec4 specular = light.specular * spec * matSpecular * shadowing;
 
@@ -470,7 +505,7 @@ vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir,
         vec4 matAmbient, vec4 matDiffuse, vec4 matSpecular, float shadowing) {
     vec3 lightDir;
     float distance;
-    if (pc.misc.w > 0.0) {
+    if (useNormalMap()) {
         // A positional light does get moved into tangent space, so the direction and
         // the distance are both measured there.
         vec3 tangentLightPos = tbn * light.position;
@@ -480,12 +515,17 @@ vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir,
         lightDir = normalize(light.position - vFragPos);
         distance = length(light.position - vFragPos);
     }
-    // Which space the direction was measured in is the only thing that differed
-    // between these two branches; the lobe itself is the same one either way.
     float diff = max(dot(normal, lightDir), 0.0);
-    float spec = specularLobe(normal, viewDir, lightDir);
+    float spec;
+    if (useNormalMap()) {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), pc.misc.x);
+    } else {
+        vec3 reflectDir = reflect(-lightDir, normal);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), pc.misc.x);
+    }
 
-    vec4 ambient = light.ambient * matAmbient * ambientOcclusionByNormal(normalize(vNormal));
+    vec4 ambient = light.ambient * matAmbient;
     vec4 diffuse = light.diffuse * diff * matDiffuse * shadowing;
     vec4 specular = light.specular * spec * matSpecular * shadowing;
 
@@ -510,7 +550,7 @@ void main() {
     // direction is the tangent-space one the vertex stage produced.
     vec3 norm;
     vec3 viewDir;
-    if (pc.misc.w > 0.0) {
+    if (useNormalMap()) {
         // Gram-Schmidt, moved here from the vertex stage: the tangent is
         // re-orthogonalised against the normal - interpolation leaves neither
         // normalised nor perpendicular - and the bitangent is their cross product
@@ -554,7 +594,7 @@ void main() {
     // what reaches the lighting below is the surface colour times renderColor.
     vec4 matAmbient;
     vec4 matDiffuse;
-    if (pc.misc.y > 0.0) {
+    if (useDiffuseMap()) {
         vec4 sampled = texture(diffusemap, vTexCoords);
         matAmbient = sampled * pc.ambient;
         matDiffuse = sampled * pc.diffuse;
@@ -568,7 +608,7 @@ void main() {
         matDiffuse = pc.diffuse;
     }
 
-    vec4 matSpecular = pc.misc.z > 0.0 ? texture(specularmap, vTexCoords) * pc.specular : pc.specular;
+    vec4 matSpecular = useSpecularMap() ? texture(specularmap, vTexCoords) * pc.specular : pc.specular;
 
     vec4 result = vec4(0.0);
     bool haslight = false;
