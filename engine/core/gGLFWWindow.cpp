@@ -111,24 +111,23 @@ static void onJoystick(int jid, int action) {
 
 static void onMouseMove(GLFWwindow* window, double xpos, double ypos) {
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (handle) {
-		float x = xpos * handle->getScaleX();
-		float y = ypos * handle->getScaleY();
-		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
-			// y is intentionally divided to width instead of height to get the same aspect ratio
-			x = (handle->getWidth() / 2.0f - x) / handle->getWidth();
-			y = (handle->getHeight() / 2.0f - y) / handle->getWidth();
-		}
-		gMouseMovedEvent event{
-			x, y,
-			handle->getCursorMode()
-		};
-		handle->callEvent(event);
-		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
-			handle->setCursorPos(handle->getWidth() / 2.0f,
-				handle->getHeight() / 2.0f);
-		}
+	if (handle) handle->handleCursorPos(xpos, ypos);
+}
+
+void gGLFWWindow::handleCursorPos(double xpos, double ypos) {
+	float x = xpos * scalex;
+	float y = ypos * scaley;
+	if (cursormode == CURSORMODE_RELATIVE) {
+		// The disabled cursor's virtual position drifts without bound, so the delta is
+		// taken from the previous position in double instead of recentering every event.
+		// y is intentionally divided by width instead of height to get the same aspect ratio.
+		x = -(xpos - lastcursorx) * scalex / getWidth();
+		y = -(ypos - lastcursory) * scaley / getWidth();
 	}
+	lastcursorx = xpos;
+	lastcursory = ypos;
+	gMouseMovedEvent event{x, y, cursormode};
+	callEvent(event);
 }
 
 static void onMouseButton(GLFWwindow* window, int button, int action, int mods) {
@@ -182,6 +181,8 @@ gGLFWWindow::gGLFWWindow() {
 	cursor = new GLFWcursor*[7];
 	scalex = 1.0f;
 	scaley = 1.0f;
+	lastcursorx = 0.0;
+	lastcursory = 0.0;
 }
 
 gGLFWWindow::~gGLFWWindow() {
@@ -208,15 +209,32 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	}
 #endif
 
-#ifdef GVK_VULKAN
+#if defined(GVK_VULKAN) && (GLFW_VERSION_MAJOR > 3 || GLFW_VERSION_MINOR >= 4)
 	// Hand GLFW the loader this engine is already linked against, rather than let it
 	// search for one. Left to itself GLFW dlopens the loader by bare name, which
-	// fails wherever it lives outside the default library search path - Homebrew's
-	// /opt/homebrew/lib on macOS, for one. glfwVulkanSupported() would then report
+	// fails wherever it lives outside the default library search path, such as
+	// Homebrew's /opt/homebrew/lib on macOS. glfwVulkanSupported() would then report
 	// false and the backend below would silently fall back to OpenGL. Must come
 	// before glfwInit(), and is harmless for an OpenGL app: GLFW only ever uses the
-	// pointer for Vulkan calls.
+	// pointer for Vulkan calls. glfwInitVulkanLoader arrived in GLFW 3.4.
 	glfwInitVulkanLoader(vkGetInstanceProcAddr);
+#endif
+
+	// GLEW initialises through GLX, which Wayland does not provide, so the GL
+	// backend has to run on X11 and goes through XWayland in a Wayland session.
+	// Vulkan carries no such constraint and is left on the native platform.
+	// GLFW_PLATFORM arrived in GLFW 3.4; builds older than that are X11 only
+	// anyway, which is why this never came up before.
+#if defined(GLFW_PLATFORM) && defined(__linux__) && !defined(ANDROID)
+	if (appmanager == nullptr || appmanager->getRenderEngine() != G_RENDERER_VK) {
+		if (glfwPlatformSupported(GLFW_PLATFORM_X11)) {
+			glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+		} else {
+			gLogw("gGLFWWindow") << "X11 is not available; the GL backend needs GLX "
+					"and will likely fail to initialise GLEW under Wayland. "
+					"Use the Vulkan backend or install XWayland." << std::endl;
+		}
+	}
 #endif
 
 	// Create glfw
@@ -491,7 +509,8 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 	}
 	case CURSORMODE_RELATIVE: {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		setCursorPos(width / 2.0f, height / 2.0f);
+		// Seed the delta origin so the first event does not report a jump.
+		glfwGetCursorPos(window, &lastcursorx, &lastcursory);
 		break;
 	}
 	}
