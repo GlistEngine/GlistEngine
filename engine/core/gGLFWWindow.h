@@ -95,11 +95,15 @@ public:
 
 	// The Vulkan backend needs the raw handle to create its surface.
 	GLFWwindow* getGLFWWindow() const { return window; }
+	// Called by the GLFW cursor callback with the raw (unscaled) position.
+	void handleCursorPos(double xpos, double ypos);
 
   private:
 	GLFWwindow* window;
 	GLFWcursor** cursor;
 	float scalex, scaley;
+	// Previous virtual cursor position, relative mode reports the delta from it.
+	double lastcursorx, lastcursory;
 
 };
 
