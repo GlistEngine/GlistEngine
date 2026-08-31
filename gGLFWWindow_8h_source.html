@@ -176,16 +176,20 @@ $(document).ready(function(){initNavTree('gGLFWWindow_8h_source.html',''); initR
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="comment">// The Vulkan backend needs the raw handle to create its surface.</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classgGLFWWindow.html#a208cb0c7f4bc785c4e51612f286de723">   97</a></span>    GLFWwindow* <a class="code hl_function" href="classgGLFWWindow.html#a208cb0c7f4bc785c4e51612f286de723">getGLFWWindow</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> window; }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    GLFWwindow* window;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    GLFWcursor** cursor;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">float</span> scalex, scaley;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="comment">// Called by the GLFW cursor callback with the raw (unscaled) position.</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classgGLFWWindow.html#a629ad3f5051434c9f9dad2c716aa67d5">   99</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGLFWWindow.html#a629ad3f5051434c9f9dad2c716aa67d5">handleCursorPos</a>(<span class="keywordtype">double</span> xpos, <span class="keywordtype">double</span> ypos);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    GLFWwindow* window;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    GLFWcursor** cursor;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">float</span> scalex, scaley;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">// Previous virtual cursor position, relative mode reports the delta from it.</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordtype">double</span> lastcursorx, lastcursory;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>};</div>
 </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_CORE_GGLFWWINDOW_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_CORE_GGLFWWINDOW_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseWindow_html"><div class="ttname"><a href="classgBaseWindow.html">gBaseWindow</a></div><div class="ttdef"><b>Definition</b> gBaseWindow.h:29</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html"><div class="ttname"><a href="classgGLFWWindow.html">gGLFWWindow</a></div><div class="ttdef"><b>Definition</b> gGLFWWindow.h:24</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a08b6f75645fdb36da4731759e2a8e604"><div class="ttname"><a href="classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604">gGLFWWindow::getShouldClose</a></div><div class="ttdeci">bool getShouldClose() override</div></div>
@@ -202,6 +206,7 @@ $(document).ready(function(){initNavTree('gGLFWWindow_8h_source.html',''); initR
 <div class="ttc" id="aclassgGLFWWindow_html_a4a4ac8fd6b69fa565f84ad80e74acba4"><div class="ttname"><a href="classgGLFWWindow.html#a4a4ac8fd6b69fa565f84ad80e74acba4">gGLFWWindow::CURSORMODE_RELATIVE</a></div><div class="ttdeci">static constexpr gCursorMode CURSORMODE_RELATIVE</div><div class="ttdef"><b>Definition</b> gGLFWWindow.h:29</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a4c52331fdf52a5dfcab5689f6951193e"><div class="ttname"><a href="classgGLFWWindow.html#a4c52331fdf52a5dfcab5689f6951193e">gGLFWWindow::CURSORMODE_HIDDEN</a></div><div class="ttdeci">static constexpr gCursorMode CURSORMODE_HIDDEN</div><div class="ttdef"><b>Definition</b> gGLFWWindow.h:27</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a5796a0f73e65428f97cfeff5ca737d52"><div class="ttname"><a href="classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52">gGLFWWindow::setTitle</a></div><div class="ttdeci">void setTitle(const std::string &amp;windowTitle) override</div></div>
+<div class="ttc" id="aclassgGLFWWindow_html_a629ad3f5051434c9f9dad2c716aa67d5"><div class="ttname"><a href="classgGLFWWindow.html#a629ad3f5051434c9f9dad2c716aa67d5">gGLFWWindow::handleCursorPos</a></div><div class="ttdeci">void handleCursorPos(double xpos, double ypos)</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a7a5ad603510df5bea81eb9098ef11718"><div class="ttname"><a href="classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718">gGLFWWindow::setWindowSize</a></div><div class="ttdeci">void setWindowSize(int width, int height) override</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a862afff8aabd0f751ef27087dca5c345"><div class="ttname"><a href="classgGLFWWindow.html#a862afff8aabd0f751ef27087dca5c345">gGLFWWindow::~gGLFWWindow</a></div><div class="ttdeci">~gGLFWWindow() override</div></div>
 <div class="ttc" id="aclassgGLFWWindow_html_a88b0793816aa79f3667ac13d6432800e"><div class="ttname"><a href="classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e">gGLFWWindow::setWindowResizable</a></div><div class="ttdeci">void setWindowResizable(bool isResizable) override</div></div>

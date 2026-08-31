@@ -577,7 +577,7 @@ var searchData=
   ['statush_574',['statush',['../classgGUIForm.html#a354630fc731565f65822d883f4e4f8b5',1,'gGUIForm']]],
   ['statusw_575',['statusw',['../classgGUIForm.html#afd54ccfe2eea32982471f3334cd8ff05',1,'gGUIForm']]],
   ['std_576',['std',['../namespacestd.html',1,'']]],
-  ['stop_577',['stop',['../classgSound.html#a9c8c3d88cfdcc97b5e64969607330e84',1,'gSound::stop()'],['../classgThread.html#a8193c562cfc6d5b1ca4f9e3bcec590fb',1,'gThread::stop()'],['../classgTweenAnimation.html#a5d1b5a201733f97ebe690fe08798eb5d',1,'gTweenAnimation::Stop()'],['../classgBaseSound.html#a7e0d6604acec774a109a1c23149839e9',1,'gBaseSound::stop()'],['../classgAppManager.html#a1b0aa3043c4b905a2735e811e36a71f3',1,'gAppManager::stop()'],['../classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff',1,'gBaseApp::stop()']]],
+  ['stop_577',['stop',['../classgBaseSound.html#a7e0d6604acec774a109a1c23149839e9',1,'gBaseSound::stop()'],['../classgSound.html#a9c8c3d88cfdcc97b5e64969607330e84',1,'gSound::stop()'],['../classgThread.html#a8193c562cfc6d5b1ca4f9e3bcec590fb',1,'gThread::stop()'],['../classgAppManager.html#a1b0aa3043c4b905a2735e811e36a71f3',1,'gAppManager::stop()'],['../classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff',1,'gBaseApp::stop()'],['../classgTweenAnimation.html#a5d1b5a201733f97ebe690fe08798eb5d',1,'gTweenAnimation::Stop()']]],
   ['stoprecording_578',['stopRecording',['../classgSoundRecorder.html#a77fa7d7d30b460b3613069b22ed276af',1,'gSoundRecorder']]],
   ['sub_579',['sub',['../structgGUITreelist_1_1Element.html#ac088cd0fb12b222a83e0cbe2f280533b',1,'gGUITreelist::Element']]],
   ['submittomainthread_580',['submitToMainThread',['../classgAppManager.html#a7ec1b448edd49af1edf578955bf11d26',1,'gAppManager']]],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"gVKBuffer_8h.html#a57217d9209c7e42d47ef2fcaa4453b25":[2,0,0,2,15,0],
 "gVKBuffer_8h_source.html":[2,0,0,2,15],
 "gVKCommands_8h.html":[2,0,0,2,16],
 "gVKCommands_8h.html#a1909c4501265107d56aeefbc03603e9b":[2,0,0,2,16,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "structgRenderer_1_1gSceneLightData.html":[1,0,156,3],
 "structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb":[1,0,156,3,10],
 "structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df":[1,0,156,3,9],
-"structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,156,3,8],
-"structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,156,3,6]
+"structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,156,3,8]
 };

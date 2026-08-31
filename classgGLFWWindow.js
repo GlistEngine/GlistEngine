@@ -11,6 +11,7 @@ var classgGLFWWindow =
     [ "getScaleY", "classgGLFWWindow.html#aef8e86de9dec1879057bdd365e3c99c3", null ],
     [ "getShouldClose", "classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604", null ],
     [ "getVulkanInstanceExtensions", "classgGLFWWindow.html#a3dd8b07f41b3422c6adf4ab64b938fdd", null ],
+    [ "handleCursorPos", "classgGLFWWindow.html#a629ad3f5051434c9f9dad2c716aa67d5", null ],
     [ "initialize", "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819", null ],
     [ "isGamepadButtonPressed", "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a", null ],
     [ "isJoystickPresent", "classgGLFWWindow.html#ad61bc4c718fc6a0cb7e88e1470b15122", null ],

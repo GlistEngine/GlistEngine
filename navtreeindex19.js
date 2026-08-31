@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"gLocalization_8h_source.html":[2,0,0,8,6],
 "gMagnifier_8h.html":[2,0,0,4,1,14],
 "gMagnifier_8h_source.html":[2,0,0,4,1,14],
 "gMaterial_8h.html":[2,0,0,4,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050":[2,0,0,8,9,68],
 "gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a":[2,0,0,8,9,43],
 "gUtils_8h_source.html":[2,0,0,8,9],
-"gVKBuffer_8h.html":[2,0,0,2,15],
-"gVKBuffer_8h.html#a57217d9209c7e42d47ef2fcaa4453b25":[2,0,0,2,15,0]
+"gVKBuffer_8h.html":[2,0,0,2,15]
 };
