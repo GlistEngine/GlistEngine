@@ -111,24 +111,23 @@ static void onJoystick(int jid, int action) {
 
 static void onMouseMove(GLFWwindow* window, double xpos, double ypos) {
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (handle) {
-		float x = xpos * handle->getScaleX();
-		float y = ypos * handle->getScaleY();
-		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
-			// y is intentionally divided to width instead of height to get the same aspect ratio
-			x = (handle->getWidth() / 2.0f - x) / handle->getWidth();
-			y = (handle->getHeight() / 2.0f - y) / handle->getWidth();
-		}
-		gMouseMovedEvent event{
-			x, y,
-			handle->getCursorMode()
-		};
-		handle->callEvent(event);
-		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
-			handle->setCursorPos(handle->getWidth() / 2.0f,
-				handle->getHeight() / 2.0f);
-		}
+	if (handle) handle->handleCursorPos(xpos, ypos);
+}
+
+void gGLFWWindow::handleCursorPos(double xpos, double ypos) {
+	float x = xpos * scalex;
+	float y = ypos * scaley;
+	if (cursormode == CURSORMODE_RELATIVE) {
+		// The disabled cursor's virtual position drifts without bound, so the delta is
+		// taken from the previous position in double instead of recentering every event.
+		// y is intentionally divided by width instead of height to get the same aspect ratio.
+		x = -(xpos - lastcursorx) * scalex / getWidth();
+		y = -(ypos - lastcursory) * scaley / getWidth();
 	}
+	lastcursorx = xpos;
+	lastcursory = ypos;
+	gMouseMovedEvent event{x, y, cursormode};
+	callEvent(event);
 }
 
 static void onMouseButton(GLFWwindow* window, int button, int action, int mods) {
@@ -182,6 +181,8 @@ gGLFWWindow::gGLFWWindow() {
 	cursor = new GLFWcursor*[7];
 	scalex = 1.0f;
 	scaley = 1.0f;
+	lastcursorx = 0.0;
+	lastcursory = 0.0;
 }
 
 gGLFWWindow::~gGLFWWindow() {
@@ -497,7 +498,8 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 	}
 	case CURSORMODE_RELATIVE: {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		setCursorPos(width / 2.0f, height / 2.0f);
+		// Seed the delta origin so the first event does not report a jump.
+		glfwGetCursorPos(window, &lastcursorx, &lastcursory);
 		break;
 	}
 	}
