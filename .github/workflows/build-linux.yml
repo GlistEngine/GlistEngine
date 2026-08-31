@@ -25,6 +25,11 @@ jobs:
             libc++abi-14-dev \
             libglew-dev \
             libgl1-mesa-dev \
+            libglfw3-dev \
+            libglm-dev \
+            libfreetype-dev \
+            libassimp-dev \
+            libpng-dev \
             libcurl4-openssl-dev \
             libssl-dev \
             build-essential \
