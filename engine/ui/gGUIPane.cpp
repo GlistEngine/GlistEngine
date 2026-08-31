@@ -27,7 +27,7 @@ gGUIPane::gGUIPane() {
 	previousbutton.setDisabled(true);
 	nextbutton.setTitle("Next");
 	nextbutton.setDisabled(true);
-	buttonsizer.setSize(1, 3);
+	buttonsizer.setSize(1, 4);
 	float columnprs[4] = {0.65f, 0.14f, 0.14f, 0.07};
 	buttonsizer.setColumnProportions(columnprs);
 	buttonsizer.setControl(0, 0, &buttonsizerspace1);
