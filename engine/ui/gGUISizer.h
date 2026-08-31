@@ -82,6 +82,10 @@ private:
 	std::vector<Entry> guicontrols;
 	bool bordersenabled;
 	std::vector<float> lineprs, columnprs;
+	// Proportions as the app designed them, and the size they were first laid
+	// out at. checkSpaces() recomputes from these so shrink/grow round-trips.
+	std::vector<float> designlineprs, designcolumnprs;
+	int designwidth = 0, designheight = 0;
 	// Cumulative sums of the above, tprs[i] is the start of slot i.
 	std::vector<float> linetprs, columntprs;
 	bool resizable;

@@ -103,6 +103,10 @@ void gGUISizer::setSize(int lineNum, int columnNum) {
 
 	lineprs.assign(linenum, 1.0f / (float)linenum);
 	columnprs.assign(columnnum, 1.0f / (float)columnnum);
+	designlineprs = lineprs;
+	designcolumnprs = columnprs;
+	designwidth = 0;
+	designheight = 0;
 	updateTotals(lineprs, linetprs);
 	updateTotals(columnprs, columntprs);
 }
@@ -117,11 +121,15 @@ int gGUISizer::getColumnNum() {
 
 void gGUISizer::setLineProportions(float* proportions) {
 	lineprs.assign(proportions, proportions + linenum);
+	designlineprs = lineprs;
+	designheight = 0;
 	updateTotals(lineprs, linetprs);
 }
 
 void gGUISizer::setColumnProportions(float* proportions) {
 	columnprs.assign(proportions, proportions + columnnum);
+	designcolumnprs = columnprs;
+	designwidth = 0;
 	updateTotals(columnprs, columntprs);
 }
 
@@ -204,96 +212,71 @@ int gGUISizer::detectSizerType() {
 }
 
 void gGUISizer::checkSpaces() {
-	std::vector<int> spacelineno;
-	std::vector<float> spacelineprs;
-	float totalspacelineprs = 0.0f;
-	std::vector<int> spacecolumnno;
-	std::vector<float> spacecolumnprs;
-	float totalspacecolumnprs = 0.0f;
+	// Space controls absorb size changes: the other slots keep the pixel size
+	// they were designed with, the spaces get whatever is left. Everything is
+	// recomputed from the design proportions and the design size, so shrinking
+	// and growing the sizer round-trips without drift or lost layout.
+	std::vector<bool> isspaceline(linenum, false), isspacecolumn(columnnum, false);
+	bool haslinespace = false, hascolumnspace = false;
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-
 			if (control != nullptr && control->countAsSpace()) {
-				// Line check
-				if(linenum > 1) {
-					bool spacelinealreadyfound = false;
-					if(!spacelineno.empty()) {
-						for(int spi = 0; spi < spacelineno.size(); spi++) {
-							if(spacelineno[spi] == line) {
-								spacelinealreadyfound = true;
-								break;
-							}
-						}
-					}
-					if(!spacelinealreadyfound) {
-						spacelineno.push_back(line);
-						spacelineprs.push_back(lineprs[line]);
-						totalspacelineprs += lineprs[line];
-					}
-				}
-
-				// Column check
-				if(columnnum > 1) {
-					bool spacecolumnalreadyfound = false;
-					if(!spacecolumnno.empty()) {
-						for(int spi = 0; spi < spacecolumnno.size(); spi++) {
-							if(spacecolumnno[spi] == column) {
-								spacecolumnalreadyfound = true;
-								break;
-							}
-						}
-					}
-					if(!spacecolumnalreadyfound) {
-						spacecolumnno.push_back(column);
-						spacecolumnprs.push_back(columnprs[column]);
-						totalspacecolumnprs += columnprs[column];
-					}
-				}
+				if (linenum > 1 && !isspaceline[line]) { isspaceline[line] = true; haslinespace = true; }
+				if (columnnum > 1 && !isspacecolumn[column]) { isspacecolumn[column] = true; hascolumnspace = true; }
 			}
 		}
 	}
 
-	if(!spacelineno.empty()) {
-		int lspacenum = spacelineno.size();
-		float ldiffratio = (float)oldheight / (float)height;
-		float newtotalnospaceprs = (1.0f - totalspacelineprs) * ldiffratio;
-		float newtotalspaceprs = 1.0f - newtotalnospaceprs;
-		float lspacediffratio = newtotalspaceprs / totalspacelineprs;
-
+	if (haslinespace && height > 0) {
+		if (designheight <= 0) designheight = oldheight;
+		if ((int)designlineprs.size() != linenum) designlineprs = lineprs;
+		float contentpx = 0.0f, spacebase = 0.0f;
 		for (int li = 0; li < linenum; li++) {
-			bool isspace = false;
-			for (int si = 0; si < lspacenum; si++) {
-				if(li == spacelineno[si]) {
-					lineprs[li] *= lspacediffratio;
-					isspace = true;
-					break;
-				}
+			if (isspaceline[li]) spacebase += designlineprs[li];
+			else contentpx += designlineprs[li] * designheight;
+		}
+		const float fit = (contentpx > (float)height && contentpx > 0.0f) ? (float)height / contentpx : 1.0f;
+		float used = 0.0f;
+		for (int li = 0; li < linenum; li++) {
+			if (!isspaceline[li]) {
+				lineprs[li] = designlineprs[li] * designheight * fit / (float)height;
+				used += lineprs[li];
 			}
-			if(!isspace) lineprs[li] *= ldiffratio;
+		}
+		const float remaining = std::max(0.0f, 1.0f - used);
+		for (int li = 0; li < linenum; li++) {
+			if (isspaceline[li]) {
+				lineprs[li] = spacebase > 0.0f ? remaining * designlineprs[li] / spacebase : 0.0f;
+			}
 		}
 		updateTotals(lineprs, linetprs);
 	}
 
-	if(!spacecolumnno.empty()) {
-		int cspacenum = spacecolumnno.size();
-		float cdiffratio = (float)oldwidth / (float)width;
-		float newtotalnospaceprs = (1.0f - totalspacecolumnprs) * cdiffratio;
-		float newtotalspaceprs = 1.0f - newtotalnospaceprs;
-		float cspacediffratio = newtotalspaceprs / totalspacecolumnprs;
-
-		for (int li = 0; li < columnnum; li++) {
-			bool isspace = false;
-			for (int si = 0; si < cspacenum; si++) {
-				if(li == spacecolumnno[si]) {
-					columnprs[li] *= cspacediffratio;
-					isspace = true;
-					break;
-				}
+	if (hascolumnspace && width > 0) {
+		if (designwidth <= 0) designwidth = oldwidth;
+		if ((int)designcolumnprs.size() != columnnum) designcolumnprs = columnprs;
+		float contentpx = 0.0f, spacebase = 0.0f;
+		for (int ci = 0; ci < columnnum; ci++) {
+			if (isspacecolumn[ci]) spacebase += designcolumnprs[ci];
+			else contentpx += designcolumnprs[ci] * designwidth;
+		}
+		const float fit = (contentpx > (float)width && contentpx > 0.0f) ? (float)width / contentpx : 1.0f;
+		float used = 0.0f;
+		for (int ci = 0; ci < columnnum; ci++) {
+			if (!isspacecolumn[ci]) {
+				columnprs[ci] = designcolumnprs[ci] * designwidth * fit / (float)width;
+				used += columnprs[ci];
 			}
-			if(!isspace) columnprs[li] *= cdiffratio;
+		}
+		const float remaining = std::max(0.0f, 1.0f - used);
+		for (int ci = 0; ci < columnnum; ci++) {
+			if (isspacecolumn[ci]) {
+				columnprs[ci] = spacebase > 0.0f ? remaining * designcolumnprs[ci] / spacebase : 0.0f;
+			}
 		}
 		updateTotals(columnprs, columntprs);
+		{ std::string t; for(int i = 0; i < columnnum; i++) t += gToStr(columnprs[i]) + " "; gLogi("SIZERDBG") << "cols=" << columnnum << " dw=" << designwidth << " oldw=" << oldwidth << " w=" << width << " prs: " << t; }
 	}
 }
 
