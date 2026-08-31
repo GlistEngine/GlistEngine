@@ -787,7 +787,9 @@ std::wstring gFont::s2ws(const std::string& s) const {
 }
 
 float gFont::roundIfRequired(float val) {
-	if (scale > 1) {
+	// Snap to the physical pixel grid at any scale, fractional glyph
+	// positions blur the linear-filtered glyph textures.
+	if (scale > 0) {
 		return std::round(val * scale) / scale;
 	}
 	return val;
