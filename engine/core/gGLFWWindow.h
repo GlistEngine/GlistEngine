@@ -99,6 +99,14 @@ public:
 	// Called by the GLFW cursor callback with the raw (unscaled) position.
 	void handleCursorPos(double xpos, double ypos);
 
+  protected:
+	/**
+	 * Whether the window is created with GLFW_SCALE_TO_MONITOR, so its size
+	 * follows the monitor's content scale. Backends where the surrounding
+	 * platform owns the window size turn this off.
+	 */
+	virtual bool scalesToMonitor() const { return true; }
+
   private:
 	GLFWwindow* window;
 	GLFWcursor** cursor;

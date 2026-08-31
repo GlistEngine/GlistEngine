@@ -8,6 +8,7 @@
 #include "gAppManager.h"
 #include "gInputManager.h"
 #include "gBaseComponent.h"
+#include "gBasePlatform.h"
 #include "gBasePlugin.h"
 #include "gEventHook.h"
 #include "gBaseApp.h"
@@ -24,19 +25,11 @@
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
 #include "gGLFWWindow.h"
 #elif defined(ANDROID)
-#include "gAndroidWindow.h"
-#include "gAndroidCanvas.h"
-#include "gAndroidApp.h"
 #include "gAndroidUtil.h"
 #elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#   include "gIOSWindow.h"
-#   include "gIOSCanvas.h"
-#   include "gIOSApp.h"
-#   include "gIOSMain.h"
+#include "gIOSMain.h"
 #elif defined(EMSCRIPTEN)
 #include "gGLFWWindow.h"
-#include "gWebCanvas.h"
-#include "gWebApp.h"
 #include "emscripten.h"
 #endif
 
@@ -120,7 +113,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     totalupdates = 0;
     totaldraws = 0;
     iswindowfocused = false;
-#ifdef ANDROID
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     deviceorientation = DEVICEORIENTATION_PORTRAIT;
     olddeviceorientation = DEVICEORIENTATION_PORTRAIT;
     delayedresize = false;
@@ -140,13 +133,12 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 	}
 	if(windowMode != G_WINDOWMODE_NONE) {
 		usewindow = true;
-#if defined(ANDROID)
-		window = new gAndroidWindow();
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-        window = new gIOSWindow();
-#else
-		window = new gGLFWWindow();
-#endif
+		if(gBasePlatform::getCurrent() != nullptr) {
+			// Android, iOS and web come from their plugins, see gBasePlatform.
+			window = gBasePlatform::getCurrent()->createWindow();
+		} else {
+			window = new gGLFWWindow();
+		}
 		window->setEventHandler(eventhandler);
 	} else {
 		usewindow = false;
@@ -687,7 +679,7 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
-#if GLIST_ANDROID || GLIST_IOS
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
@@ -933,7 +925,7 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
     return false;
 }
 
-#if GLIST_ANDROID || GLIST_IOS
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
 	deviceorientation = event.getOrientation();
     if(canvasmanager && getCurrentCanvas()) {
