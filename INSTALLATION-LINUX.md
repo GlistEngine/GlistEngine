@@ -5,7 +5,8 @@
 * Debian/Ubuntu:
 
   ```bash
-  sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev \
+  sudo apt-get install git cmake clang-14 libstdc++-12-dev pkg-config libglew-dev \
+    libgl1-mesa-dev libglfw3-dev libglm-dev libfreetype-dev libassimp-dev libpng-dev \
     curl libcurl4-openssl-dev libssl-dev build-essential
   ```
 * Fedora/RPM:
