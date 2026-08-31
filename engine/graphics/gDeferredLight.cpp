@@ -1,7 +1,6 @@
 #include "gDeferredLight.h"
 #include "gRenderer.h"
-#include <GL/glew.h>
-#include<iostream>
+#include <iostream>
 #include "gUtils.h"
 #include "graphics/shaders/deferred_geom_vert.h"
 #include "graphics/shaders/deferred_geom_frag.h"
