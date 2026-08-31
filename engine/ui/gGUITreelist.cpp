@@ -22,7 +22,7 @@ gGUITreelist::gGUITreelist() {
 	flno = firstlineno;
 	selectedno = 0;
 	mousepressedonlist = false;
-	textoffset = (lineh - getFont()->getStringHeight("ae")) / 2 + 1;
+	textoffset = (lineh - getFont()->getAscender() - getFont()->getDescender()) / 2 + getFont()->getDescender();
 	fldy = 0;
 	arrowsize = getFont()->getStringWidth(">");
 	spacesize = getFont()->getStringWidth("  ");
