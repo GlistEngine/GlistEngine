@@ -208,15 +208,32 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	}
 #endif
 
-#ifdef GVK_VULKAN
+#if defined(GVK_VULKAN) && (GLFW_VERSION_MAJOR > 3 || GLFW_VERSION_MINOR >= 4)
 	// Hand GLFW the loader this engine is already linked against, rather than let it
 	// search for one. Left to itself GLFW dlopens the loader by bare name, which
-	// fails wherever it lives outside the default library search path - Homebrew's
-	// /opt/homebrew/lib on macOS, for one. glfwVulkanSupported() would then report
+	// fails wherever it lives outside the default library search path, such as
+	// Homebrew's /opt/homebrew/lib on macOS. glfwVulkanSupported() would then report
 	// false and the backend below would silently fall back to OpenGL. Must come
 	// before glfwInit(), and is harmless for an OpenGL app: GLFW only ever uses the
-	// pointer for Vulkan calls.
+	// pointer for Vulkan calls. glfwInitVulkanLoader arrived in GLFW 3.4.
 	glfwInitVulkanLoader(vkGetInstanceProcAddr);
+#endif
+
+	// GLEW initialises through GLX, which Wayland does not provide, so the GL
+	// backend has to run on X11 and goes through XWayland in a Wayland session.
+	// Vulkan carries no such constraint and is left on the native platform.
+	// GLFW_PLATFORM arrived in GLFW 3.4; builds older than that are X11 only
+	// anyway, which is why this never came up before.
+#if defined(GLFW_PLATFORM) && defined(__linux__) && !defined(ANDROID)
+	if (appmanager == nullptr || appmanager->getRenderEngine() != G_RENDERER_VK) {
+		if (glfwPlatformSupported(GLFW_PLATFORM_X11)) {
+			glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+		} else {
+			gLogw("gGLFWWindow") << "X11 is not available; the GL backend needs GLX "
+					"and will likely fail to initialise GLEW under Wayland. "
+					"Use the Vulkan backend or install XWayland." << std::endl;
+		}
+	}
 #endif
 
 	// Create glfw
