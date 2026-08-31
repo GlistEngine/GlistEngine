@@ -114,7 +114,11 @@ int gGLRenderEngine::getDepthTestType() {
 
 void gGLRenderEngine::enableAlphaBlending() {
 	G_CHECK_GL(glEnable(GL_BLEND));
-	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	// Separate alpha factors keep destination alpha meaningful when rendering
+	// into an FBO: coverage accumulates as a_s + a_d * (1 - a_s). With plain
+	// glBlendFunc the FBO alpha ends up wrong and text composited through an
+	// FBO gets fringes over colored backgrounds.
+	G_CHECK_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	blendmode = BLENDMODE_ALPHA;
 	isalphablendingenabled = true;
 }
@@ -125,9 +129,9 @@ void gGLRenderEngine::setBlendMode(int blendMode) {
 	// later enableAlphaBlending would otherwise start in whatever mode was last
 	// used. Enabling deliberately resets it to ALPHA, so the two agree either way.
 	if(blendMode == BLENDMODE_ADDITIVE) {
-		G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
+		G_CHECK_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	} else {
-		G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+		G_CHECK_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	}
 }
 
