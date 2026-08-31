@@ -554,15 +554,19 @@ elseif(WIN32)
 		${MINGW64_DIR}/include/harfbuzz
 	)
 elseif(LINUX)
-	list(APPEND INC_DIRS
-		${MINGW64_DIR}/include
-		${MINGW64_DIR}/include/freetype2
-		# TODO: FFMPEG
-
-		/usr/include/freetype2
-		/usr/include
-		/usr/local/lib
-	)
+	# The library include directories come from the pkg-config imported targets
+	# below, so that they follow the sysroot when cross compiling. glm is the
+	# exception: it is header only, ships no pkg-config module and has no copy
+	# under libs/, so find it directly and fall back to the toolchain's bundle.
+	# PATHS, not HINTS: HINTS is searched before the standard system
+	# directories, which would make the bundled copy win over the system one.
+	find_path(GLIST_GLM_INCLUDE glm/vec3.hpp PATHS ${MINGW64_DIR}/include)
+	if(NOT GLIST_GLM_INCLUDE)
+		message(FATAL_ERROR
+			"glm headers were not found. Install glm from your package manager "
+			"(libglm-dev on Debian and Ubuntu, glm on Arch).")
+	endif()
+	list(APPEND INC_DIRS ${GLIST_GLM_INCLUDE})
 elseif(APPLE)
 	# Resolve the active SDK at configure time so we work with either full
 	# Xcode or just the Command Line Tools (xcrun returns whichever is set
@@ -576,7 +580,6 @@ elseif(APPLE)
   		${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
   		${SYS_INC_PATH}
   		${SYS_INC_PATH}/freetype2
-		# TODO: FFMPEG
   	)
 	if(DEFINED ENGINE_USE_SYMLINKS)
 		list(APPEND INC_DIRS
@@ -643,16 +646,29 @@ elseif(WIN32)
             ${PLUGIN_LINKDIRS}
     )
 elseif(LINUX)
-	# TODO: FFMPEG
-#	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
-	
-#	execute_process(COMMAND 
-#	    pkg-config --cflags freetype2
-#	    OUTPUT_VARIABLE
-#	    CL_TMP_VAR
-#	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-#	string(STRIP ${CL_TMP_VAR} CL_VAR_1)
-#	add_definitions(${CL_VAR_1})
+	# Resolved through pkg-config like the macOS stack rather than from the
+	# zbin, which only ships x86_64 prebuilts. This keeps the Linux build on
+	# whatever the sysroot provides, so it also works on arm64 and when cross
+	# compiling with PKG_CONFIG_SYSROOT_DIR set.
+	find_package(PkgConfig REQUIRED)
+
+	pkg_check_modules(curl     REQUIRED IMPORTED_TARGET libcurl)
+	pkg_check_modules(freetype REQUIRED IMPORTED_TARGET freetype2)
+	pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
+	pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
+	pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
+	pkg_check_modules(libpng   REQUIRED IMPORTED_TARGET libpng)
+	pkg_check_modules(crypto   REQUIRED IMPORTED_TARGET libcrypto)
+
+	# Mesa ships gl.pc, but the GL vendor libraries do not all agree on that.
+	# Fall back to the plain library name, which the linker resolves out of the
+	# sysroot anyway.
+	pkg_check_modules(gl QUIET IMPORTED_TARGET gl)
+	if(gl_FOUND)
+		set(Lib_GL PkgConfig::gl)
+	else()
+		set(Lib_GL GL)
+	endif()
 
 	find_package(Vulkan QUIET)
 	if(Vulkan_FOUND)
@@ -661,22 +677,6 @@ elseif(LINUX)
 	else()
 		message(STATUS "Vulkan development files not found; Vulkan backend disabled")
 	endif()
-	
-	add_library(glfw SHARED IMPORTED)
-	set_target_properties(glfw PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libglfw.so)
-
-	add_library(assimp SHARED IMPORTED)
-	set_target_properties(assimp PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libassimp.so)
-	
-	add_library(libpng SHARED IMPORTED)
-	set_target_properties(libpng PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libpng.so)
-	
-	add_library(freetype SHARED IMPORTED)
-	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libfreetype.so)
 elseif(APPLE)
     find_package(PkgConfig REQUIRED)
     
@@ -903,17 +903,16 @@ elseif(WIN32)
 	endif()
 elseif(LINUX)
 	list(APPEND LINK_LIBS
-		assimp
-		freetype
-		libpng
-		curl
-		crypto
-		glfw
-		GL
-		GLEW
+		PkgConfig::assimp
+		PkgConfig::freetype
+		PkgConfig::libpng
+		PkgConfig::curl
+		PkgConfig::crypto
+		PkgConfig::glfw
+		${Lib_GL}
+		PkgConfig::glew
 		${Lib_Vulkan}
 		dl
-	# TODO: FFMPEG
 	)
 elseif(APPLE)
 	list(APPEND LINK_LIBS
@@ -926,7 +925,6 @@ elseif(APPLE)
 		${Lib_Vulkan}
 		${Lib_crypto}
 #		${Lib_cpp}
-	# TODO: FFMPEG
 	)
 endif()
 
