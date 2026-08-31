@@ -3,6 +3,15 @@
 //
 
 #include "gGLRenderEngine.h"
+#include <thread>
+
+static std::thread::id glthreadid;
+static void checkGLThread(const char* what) {
+	if(glthreadid != std::thread::id() && std::this_thread::get_id() != glthreadid) {
+		gLoge("gGLRenderEngine") << what << " called off the GL thread!";
+	}
+}
+
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -195,6 +204,7 @@ void gGLRenderEngine::takeScreenshot(gImage& img) {
 
 
 GLuint gGLRenderEngine::genBuffers() {
+	checkGLThread("genBuffers");
 	GLuint buffer;
 	G_CHECK_GL(glGenBuffers(1, &buffer));
 	return buffer;
@@ -232,6 +242,7 @@ void gGLRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int s
 
 // ----- VAO -----l
 GLuint gGLRenderEngine::createVAO() {
+	checkGLThread("createVAO");
 	GLuint vao;
 	G_CHECK_GL(glGenVertexArrays(1, &vao));
 	return vao;
@@ -317,6 +328,7 @@ void gGLRenderEngine::setViewport(int x, int y, int width, int height) {
 
 // ----- Framebuffer -----
 GLuint gGLRenderEngine::createFramebuffer() {
+	checkGLThread("createFramebuffer");
 	GLuint fbo;
 	G_CHECK_GL(glGenFramebuffers(1, &fbo));
 	return fbo;
@@ -654,6 +666,7 @@ void gGLRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4&
 }
 
 GLuint gGLRenderEngine::createTextures() {
+	checkGLThread("createTextures");
 	GLuint id;
 	G_CHECK_GL(glGenTextures(1, &id));
 	return id;
@@ -854,6 +867,7 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 #endif
 
 void gGLRenderEngine::init() {
+	glthreadid = std::this_thread::get_id();
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
 	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
 	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.
