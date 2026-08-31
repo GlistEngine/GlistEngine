@@ -62,6 +62,8 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 					 dpi,
 					 dpi);
 	lineheight = fontsize * 1.43f;
+	ascender = (float)(fontface->size->metrics.ascender >> 6) / scale;
+	descender = (float)(-fontface->size->metrics.descender >> 6) / scale;
 	letterspacing = 1;
 	spacesize = 1;
 	border = 4;
@@ -235,6 +237,9 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
 
 	std::wstring wtext = s2ws(text);
+	// Glyph textures carry a transparent border, place them so the ink sits
+	// exactly on the nominal baseline.
+	const float b = border / scale;
 	const bool useatlas = textrendermode == TextRenderMode::ATLAS && !wtext.empty();
 	if (useatlas) {
 		atlasbuilding = true;
@@ -294,7 +299,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			const CharProperties& p = properties->second;
 			posx += getKerning(c, previous);
 			const float x0 = roundIfRequired(posx + p.leftmargin);
-			const float y0 = roundIfRequired(posy + p.dytop);
+			const float y0 = roundIfRequired(posy + p.dytop - b);
 			const float x1 = x0 + p.texturewidth;
 			const float y1 = y0 + p.textureheight;
 
@@ -358,7 +363,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			const CharProperties& p = charproperties[c];
 			posx += getKerning(c, previous);
 			const float drawx = roundIfRequired(posx + p.leftmargin);
-			const float drawy = roundIfRequired(posy + p.dytop);
+			const float drawy = roundIfRequired(posy + p.dytop - b);
 
 			texture->second->draw(glm::vec2(drawx, drawy), glm::vec2(p.texturewidth, p.textureheight));
 			posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
@@ -398,7 +403,7 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 			if (chartextures.find(c) == chartextures.end() || chartextures[c] == nullptr) continue;
 			posx += getKerning(c, previous);
 			float drawx = roundIfRequired(posx + charproperties[c].leftmargin);
-			float drawy = roundIfRequired(posy - charproperties[c].dytop);
+			float drawy = roundIfRequired(posy - charproperties[c].dytop + border / scale);
 			chartextures[c]->draw(glm::vec2(drawx, drawy),
 								  glm::vec2(charproperties[c].texturewidth, -charproperties[c].textureheight));
 			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
@@ -457,7 +462,7 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 			float kerning = getKerning(c, prevChar);
 			posx -= kerning;
 			float drawx = roundIfRequired(posx - charproperties[c].leftmargin - charproperties[c].texturewidth);
-			float drawy = roundIfRequired(posy + charproperties[c].dytop);
+			float drawy = roundIfRequired(posy + charproperties[c].dytop - border / scale);
 			chartextures[c]->draw(glm::vec2(drawx, drawy),
 								  glm::vec2(-charproperties[c].texturewidth, charproperties[c].textureheight));
 			posx -= charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
@@ -512,6 +517,14 @@ float gFont::getStringHeight(const std::string& text) {
 
 float gFont::getLineHeight() const {
 	return lineheight;
+}
+
+float gFont::getAscender() const {
+	return ascender;
+}
+
+float gFont::getDescender() const {
+	return descender;
 }
 
 const std::string& gFont::getPath() const {
