@@ -500,6 +500,7 @@ set(INC_DIRS
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/miniaudio/include
 	${LIBS_DIR}/sqlite/include
+	${LIBS_DIR}/cxxopts/include
 )
 
 set(ENGINE_INCLUDES
