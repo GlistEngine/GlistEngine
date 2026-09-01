@@ -70,6 +70,12 @@ struct gVKMeshBuffer {
 	// Which usage flag the buffer was created with. A GLuint name carries no type in
 	// OpenGL, the first upload decides it here.
 	bool isindex = false;
+	// Small buffers live as CPU bytes and take a slice from the shared per-frame
+	// mesh arena when drawn. This avoids one VkDeviceMemory allocation for every
+	// tiny transient primitive; desktop drivers commonly cap allocation count long
+	// before either VRAM or system memory is full.
+	bool isarenaresident = false;
+	std::vector<unsigned char> arenadata;
 	// Everything below is unused until a second upload promotes the buffer.
 	bool isdynamic = false;
 	VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};

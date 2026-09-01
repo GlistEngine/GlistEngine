@@ -108,7 +108,7 @@ struct gVKMeshPush {
 	glm::vec4 ambient;
 	glm::vec4 diffuse;
 	glm::vec4 specular;
-	// x is shininess; the rest keeps the block vec4 aligned.
+	// x shininess, y map bitfield (diffuse/specular/normal), zw texture tiling.
 	glm::vec4 misc;
 };
 
@@ -123,6 +123,8 @@ struct gVKPbrPush {
 	// material supplies that map.
 	glm::ivec4 maps0;
 	glm::ivec4 maps1;
+	// xy texture tiling; zw reserved.
+	glm::vec4 params;
 };
 
 /*

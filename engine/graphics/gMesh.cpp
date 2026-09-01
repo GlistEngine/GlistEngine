@@ -438,6 +438,7 @@ void gMesh::drawVulkan3D(const std::vector<glm::mat4>* instanceTransformations, 
 	surface.diffuse = material.getDiffuseColor()->asVec4();
 	surface.specular = material.getSpecularColor()->asVec4();
 	surface.shininess = material.getShininess();
+	surface.texturetiling = texturetiling;
 
 	surface.ispbr = material.isPBR();
 	if(surface.ispbr) {

@@ -880,7 +880,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	vkCmdSetViewport(cmd, 0, 1, &viewport);
 	VkRect2D scissor{};
 	scissor.offset = {0, 0};
-	scissor.extent = {target->width, target->height};
+	scissor.extent = {target->levelWidth(), target->levelHeight()};
 	vkCmdSetScissor(cmd, 0, 1, &scissor);
 
 	vkcontext->passflipsy = false;
@@ -963,6 +963,10 @@ void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum texta
 		if(wasactive) bindFramebuffer(boundframebuffer);
 		return;
 	}
+	// Repeating the attachment call for the level already selected is a no-op.
+	// Retiring its active pass here wiped mip zero before the next bloom level
+	// sampled it and left the command-buffer pass state inconsistent.
+	if(samecolor && level == target->colorlevel) return;
 	target->colorlevel = 0;
 
 	// The pass is built lazily on first bind, so an attachment added after one
@@ -1299,13 +1303,19 @@ void gVKRenderEngine::clearScreen(bool color, bool depth) {
 	// not be replayed here: several scene helpers issue them while sharing a Vulkan
 	// pass, which would erase previously recorded draws and produce flicker.
 	//
-	// A clear that asks for depth and not colour is the exception, and is honoured.
-	// Nothing in the engine issues one to start a pass off - the helpers that share
-	// a pass all ask for colour as well - so it only ever comes from code that means
-	// what glClear(GL_DEPTH_BUFFER_BIT) means: keep the picture, forget how far away
-	// it was. A first person weapon drawn over the world needs exactly that, and
-	// clearing depth cannot disturb what has already been drawn.
-	if(depth && !color && vkcontext != nullptr) gvkClearDepthNow(*vkcontext);
+	// A clear that asks for depth and not colour marks the first-person/overlay
+	// section used by first-person scenes. In the screen pass it has the OpenGL meaning: keep the
+	// picture and forget its depth, so the weapon is drawn over the world. During
+	// the shadow traversal, however, clearing would erase every world caster and
+	// leave only the weapon in the shadow map. Preserve the completed world map and
+	// stop accepting casters until that traversal ends instead.
+	if(depth && !color && vkcontext != nullptr) {
+		if(vkcontext->isShadowPassActive()) shadowcasterrecordingclosed = true;
+		else {
+			gvkClearDepthNow(*vkcontext);
+			firstpersonoverlayactive = true;
+		}
+	}
 	(void) color;
 	(void) depth;
 	#else
@@ -2473,6 +2483,7 @@ bool gVKRenderEngine::beginFrame() {
 	// The new frame writes into a different uniform buffer, so whatever the previous
 	// one gathered does not carry over.
 	sceneuniformswritten = false;
+	firstpersonoverlayactive = false;
 	vkcontext->resetSceneUniformSlots();
 	// Past the previous frame's fence, so anything parked long enough is now free.
 	gvkDrainRetiredPasses(vkcontext, false);
@@ -2658,15 +2669,6 @@ static void gvkHashField(uint64_t& hash, const T& value) {
 	gvkHashValue(hash, &value, sizeof(T));
 }
 
-// Whether reordering this draw among its neighbours can be seen. A mesh that depth
-// tests normally is decided by the depth buffer rather than by when it was
-// submitted, so two of them may swap places freely. One drawn with testing off, or
-// with an ALWAYS compare, is decided purely by sequence - whatever is drawn last
-// wins - so it must stay exactly where the application put it.
-static bool gvkQueuedDrawIsOrderIndependent(bool depthtest, int depthtesttype) {
-	return depthtest && depthtesttype != gRenderer::DEPTHTESTTYPE_ALWAYS;
-}
-
 // Every input canMergeQueuedDraws compares, in one number. Two draws that can merge
 // always produce the same key; two that cannot may collide, which costs a merge that
 // would not have happened anyway once the exact comparison runs.
@@ -2686,6 +2688,7 @@ uint64_t gVKRenderEngine::gvkQueuedDrawKey(const QueuedMeshDraw& draw) {
 	gvkHashField(hash, draw.surface.diffuse);
 	gvkHashField(hash, draw.surface.specular);
 	gvkHashField(hash, draw.surface.shininess);
+	gvkHashField(hash, draw.surface.texturetiling);
 	gvkHashField(hash, draw.surface.diffusemapid);
 	gvkHashField(hash, draw.surface.specularmapid);
 	gvkHashField(hash, draw.surface.normalmapid);
@@ -2701,30 +2704,12 @@ uint64_t gVKRenderEngine::gvkQueuedDrawKey(const QueuedMeshDraw& draw) {
 void gVKRenderEngine::flushQueuedDraws() {
 	if(queuedmeshdraws.empty() || flushingqueueddraws) return;
 
-	// Adjacent draws that agree on everything merge into one instanced draw below.
-	// What used to stop that from firing was interleaving: a scene submits a crate,
-	// a barrel, another crate, and the two crates never meet even though they are
-	// the same mesh with the same material. Sorting by the merge key brings them
-	// together, and the run of identical draws then collapses into a single
-	// vkCmdDraw with an instance count.
-	//
-	// Only where the reordering cannot be seen. Anything order dependent (see above)
-	// is left in place and acts as a barrier: the run before it is sorted, it stays,
-	// and the next run starts after it. The sort is stable, so draws sharing a key
-	// keep their submission order relative to each other.
-	size_t segmentbegin = 0;
-	for(size_t i = 0; i <= queuedmeshdraws.size(); i++) {
-		const bool barrier = i == queuedmeshdraws.size()
-				|| !gvkQueuedDrawIsOrderIndependent(queuedmeshdraws[i].depthtest, queuedmeshdraws[i].depthtesttype);
-		if(!barrier) continue;
-		if(i - segmentbegin > 1) {
-			std::stable_sort(queuedmeshdraws.begin() + segmentbegin, queuedmeshdraws.begin() + i,
-					[](const QueuedMeshDraw& a, const QueuedMeshDraw& b) { return a.mergekey < b.mergekey; });
-		}
-		segmentbegin = i + 1;
-	}
-
 	for(size_t first = 0; first < queuedmeshdraws.size();) {
+		// Preserve submission order, but collapse an adjacent run of the exact same
+		// mesh/material/state into one instanced draw. The old global sort found more
+		// matches by moving draws across one another and broke the scene's visual order;
+		// adjacency gives back the safe part of that optimisation without reordering a
+		// single command.
 		size_t count = 1;
 		while(first + count < queuedmeshdraws.size()
 				&& canMergeQueuedDraws(queuedmeshdraws[first], queuedmeshdraws[first + count])) {
@@ -2751,6 +2736,7 @@ bool gVKRenderEngine::canMergeQueuedDraws(const QueuedMeshDraw& first, const Que
 			&& first.cullingdirection == next.cullingdirection
 			&& samevec4(a.ambient, b.ambient) && samevec4(a.diffuse, b.diffuse)
 			&& samevec4(a.specular, b.specular) && a.shininess == b.shininess
+			&& a.texturetiling == b.texturetiling
 			&& a.diffusemapid == b.diffusemapid && a.specularmapid == b.specularmapid
 			&& a.normalmapid == b.normalmapid && a.ispbr == b.ispbr
 			&& a.albedomapid == b.albedomapid && a.pbrnormalmapid == b.pbrnormalmapid
@@ -3012,6 +2998,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 #ifdef GVK_VULKAN
 	if(vkcontext == nullptr || vertexArrayId == 0 || instanceCount <= 0) return;
 	const bool shadowqueued = vkcontext->isShadowPassActive();
+	if(shadowqueued && shadowcasterrecordingclosed) return;
 	// Snapshot camera and lighting when the first screen mesh arrives, not later
 	// when a state change happens to flush the queue. Otherwise light/shadow changes
 	// made by overlays (such as a muzzle flash) can recolour every mesh that was
@@ -3108,8 +3095,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			if(shadowinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
-			shadowinstances = identityinstancebuffer->buffer;
-			shadowinstancesoffset = 0;
+			shadowinstances = gvkResolveMeshBuffer(*vkcontext, *identityinstancebuffer,
+					shadowinstancesoffset);
+			if(shadowinstances == VK_NULL_HANDLE) return;
 		}
 		gVKShadowPush shadowpush{};
 		// The light's matrix is folded into the model matrix on the CPU; see
@@ -3164,7 +3152,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		// exists. The white texture reads as "nothing was ever closer to the light",
 		// so it casts no shadow even before the shader's flag says not to look.
 		VkDescriptorSet pbrshadowset = VK_NULL_HANDLE;
-		if(vkcontext->hasShadowMap()) pbrshadowset = vkcontext->getShadowDescriptorSet();
+		if(!firstpersonoverlayactive && vkcontext->hasShadowMap()) {
+			pbrshadowset = vkcontext->getShadowDescriptorSet();
+		}
 		if(pbrshadowset == VK_NULL_HANDLE) pbrshadowset = vktextures[whitetextureid]->descriptorset;
 
 		gVKPbrPush pbrpush{};
@@ -3172,6 +3162,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		pbrpush.maps0 = glm::ivec4(surface.albedomapid != 0 ? 1 : 0, surface.pbrnormalmapid != 0 ? 1 : 0,
 				surface.metallicmapid != 0 ? 1 : 0, surface.roughnessmapid != 0 ? 1 : 0);
 		pbrpush.maps1 = glm::ivec4(surface.aomapid != 0 ? 1 : 0, 0, 0, 0);
+		pbrpush.params = glm::vec4(surface.texturetiling, 0.0f, 0.0f);
 
 		VkBuffer pbrinstances = VK_NULL_HANDLE;
 		VkDeviceSize pbrinstancesoffset = 0;
@@ -3182,8 +3173,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			if(pbrinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
-			pbrinstances = identityinstancebuffer->buffer;
-			pbrinstancesoffset = 0;
+			pbrinstances = gvkResolveMeshBuffer(*vkcontext, *identityinstancebuffer,
+					pbrinstancesoffset);
+			if(pbrinstances == VK_NULL_HANDLE) return;
 		}
 
 		const VkIndexType pbrindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
@@ -3203,10 +3195,11 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	const GLuint specularmapid = gvkRegisteredTextureId(vktextures, surface.specularmapid);
 	const GLuint normalmapid = gvkRegisteredTextureId(vktextures, surface.normalmapid);
 
-	push.misc = glm::vec4(surface.shininess,
-			diffusemapid != 0 ? 1.0f : 0.0f,
-			specularmapid != 0 ? 1.0f : 0.0f,
-			normalmapid != 0 ? 1.0f : 0.0f);
+	const int mapflags = (diffusemapid != 0 ? 1 : 0)
+			| (specularmapid != 0 ? 2 : 0)
+			| (normalmapid != 0 ? 4 : 0);
+	push.misc = glm::vec4(surface.shininess, static_cast<float>(mapflags),
+			surface.texturetiling.x, surface.texturetiling.y);
 
 	// renderColor is folded into the material here rather than read from the scene
 	// block, and that is what makes it per draw. The OpenGL shader multiplies its
@@ -3245,7 +3238,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// none, which reads as "nothing was ever closer to the light" and so casts no
 	// shadow - the shader's flag says not to look at it anyway.
 	VkDescriptorSet shadowset = VK_NULL_HANDLE;
-	if(vkcontext->hasShadowMap()) shadowset = vkcontext->getShadowDescriptorSet();
+	if(!firstpersonoverlayactive && vkcontext->hasShadowMap()) {
+		shadowset = vkcontext->getShadowDescriptorSet();
+	}
 	if(shadowset == VK_NULL_HANDLE) shadowset = whiteset;
 	// No alpha fixup here, unlike the 2D path: the 3D pipeline does not blend at all
 	// (see gVKPipeline.cpp), so what the lighting sum leaves in the alpha channel
@@ -3263,8 +3258,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		if(instancebuffer == VK_NULL_HANDLE) return;
 	} else {
 		if(!ensureIdentityInstanceBuffer()) return;
-		instancebuffer = identityinstancebuffer->buffer;
-		instancebufferoffset = 0;
+		instancebuffer = gvkResolveMeshBuffer(*vkcontext, *identityinstancebuffer,
+				instancebufferoffset);
+		if(instancebuffer == VK_NULL_HANDLE) return;
 	}
 
 	// gIndex is what gVbo uploaded, so the index type follows it: 16 bit on Android,
@@ -3555,6 +3551,7 @@ void gVKRenderEngine::releaseShadowMap() {
 bool gVKRenderEngine::beginShadowPass() {
 #ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return false;
+	shadowcasterrecordingclosed = false;
 	// Deliberately does not gather the scene uniforms. This runs before the canvas
 	// has drawn anything, so gCamera::begin() has not set the view and projection
 	// yet - writing the block here would freeze last frame's camera into it, and
@@ -3591,6 +3588,7 @@ void gVKRenderEngine::endShadowPass() {
 	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	gvkEndShadowPass(*vkcontext);
+	shadowcasterrecordingclosed = false;
 	// The scene block is gathered again for the pass that follows, rather than once
 	// for the whole frame. It carries renderColor, which the OpenGL shader applies
 	// to every mesh and which gRenderer::setColor republishes on the spot - so on

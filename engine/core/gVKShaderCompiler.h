@@ -1,17 +1,14 @@
 /*
  * gVKShaderCompiler.h
  *
- * Compiles the Vulkan 2D shaders from their GLSL sources at runtime, so a shader
- * can be edited and seen without rebuilding the engine. This is a development
- * aid: engine/CMakeLists.txt only defines GVK_RUNTIME_SHADERS for Debug builds
- * on machines that have libshaderc, and only then is the source directory of
- * graphics/shaders baked in as GVK_VK_SHADER_SOURCE_DIR.
+ * Compiles Vulkan GLSL to SPIR-V at runtime. In a development build with
+ * shaderc, this also lets an engine shader be edited without rebuilding; only
+ * that configuration bakes graphics/shaders into GVK_VK_SHADER_SOURCE_DIR.
  *
- * When the feature is off - every Release build, and any machine without
- * shaderc - these functions report that nothing is available and the pipelines
- * fall back to the SPIR-V committed in gVKShaders.h. That fallback is the
- * shipping path; runtime compilation never changes what a release renders,
- * because both come from the same sources through the same compiler settings.
+ * Desktop Release builds use glslang for application-provided source such as
+ * post-process effects, while engine pipelines still use the SPIR-V committed
+ * in gVKShaders.h. Without either compiler, file-backed user shaders can fall
+ * back to adjacent .spv files; a source-only shader reports a clear failure.
  */
 
 #pragma once
@@ -27,7 +24,9 @@
 #include <string>
 #include <vector>
 
-// True when shaders can be compiled from source in this build.
+// True when engine shader files can be hot reloaded in this build. Source-only
+// application shaders may still be compiled by the Release glslang path when
+// this reports false.
 bool gvkRuntimeShadersAvailable();
 
 // Directory the .vert / .frag sources are read from; empty when unavailable.

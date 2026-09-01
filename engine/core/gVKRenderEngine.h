@@ -364,6 +364,13 @@ private:
 	// What gShadowMap last told the backend. Fed into the scene uniform block, and
 	// into the depth pass's push constant while the shadow pass is being recorded.
 	bool shadowmapenabled = false;
+	// A depth-only clear issued while recording the shadow traversal marks the
+	// start of a first-person/overlay section. The world recorded before it must
+	// remain in the shadow map, while later meshes must not become shadow casters.
+	bool shadowcasterrecordingclosed = false;
+	// Set by the depth-only clear which starts a first-person overlay. Later meshes
+	// keep lighting but do not receive the world's shadow map.
+	bool firstpersonoverlayactive = false;
 	bool shadowsoft = false;
 	glm::mat4 shadowlightmatrix{1.0f};
 	glm::vec3 shadowlightposition{0.0f};

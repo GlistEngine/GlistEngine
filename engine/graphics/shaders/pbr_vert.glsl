@@ -70,6 +70,7 @@ layout(push_constant) uniform Push {
     // Which maps this material supplies; see mesh3dpbr.frag.
     ivec4 maps0;
     ivec4 maps1;
+    vec4 params;
 } pc;
 
 layout(location = 0) out vec2 vTexCoords;
@@ -84,7 +85,7 @@ void main() {
 
     vec4 world = model * vec4(aPos, 1.0);
     vWorldPos = world.xyz;
-    vTexCoords = aTexCoords;
+    vTexCoords = aTexCoords * pc.params.xy;
     // The cofactor matrix of the model's rotation/scale part, which is the
     // inverse-transpose scaled by the determinant - see mesh3d.vert for the full
     // reasoning. What it replaces here was worse than there: inverting the whole

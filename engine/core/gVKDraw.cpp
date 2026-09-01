@@ -44,7 +44,8 @@ bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
 	std::vector<VkDeviceMemory> memories(frames, VK_NULL_HANDLE);
 	std::vector<void*> mapped(frames, nullptr);
 	for(int i = 0; i < frames; i++) {
-		if(!gvkCreateBuffer(ctx, capacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		if(!gvkCreateBuffer(ctx, capacity,
+				VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				buffers[i], memories[i],
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT

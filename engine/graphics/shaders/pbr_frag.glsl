@@ -88,6 +88,7 @@ layout(push_constant) uniform Push {
     // map is supplied; where it is not, pbr_frag.glsl's defaults are used.
     ivec4 maps0;
     ivec4 maps1;
+    vec4 params;
 } pc;
 
 // Tangent basis from screen-space derivatives rather than a vertex tangent, which
@@ -359,16 +360,6 @@ void main() {
     vec3 N = pc.maps0.y > 0 ? getNormalFromMap() : normalize(vNormal);
     vec3 V = normalize(scene.viewpos.xyz - vWorldPos);
 
-    // Computed once and applied to every light's contribution, matching mesh3d.frag:
-    // the engine keeps a single shadow map for one casting light, so a second light
-    // gets no shadow term of its own. The geometric normal goes in even when a normal
-    // map is bound, because the bias is about how the real surface faces the light
-    // rather than about its bumps. 1.0 means fully lit.
-    float shadowing = 1.0;
-    if (scene.shadowlightpos.w > 0.0) {
-        shadowing = 1.0 - calculateShadow(normalize(vNormal));
-    }
-
     // Reflectance at normal incidence: 0.04 for dielectrics, the albedo itself for
     // metals, blended by the metallic value.
     vec3 F0 = vec3(0.04);
@@ -424,10 +415,10 @@ void main() {
 
         float NdotL = max(dot(N, L), 0.0);
 
-        // Only the direct term is shadowed. The ambient one is accumulated separately
-        // below and stays untouched, which is what keeps a shadowed surface from
-        // going pure black - the same rule mesh3d.frag follows.
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL * shadowing;
+        // OpenGL's PBR path does not sample the classic shadow map. Keep the same
+        // analytic contribution here so switching backends does not darken PBR
+        // materials or add shadows that are absent from the reference image.
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
 
     // The global ambient only stands in when the scene has no lights at all, which
