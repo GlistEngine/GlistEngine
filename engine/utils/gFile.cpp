@@ -60,7 +60,7 @@ gFile::~gFile() {}
 
 bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
 #ifdef _WIN32
-    path = fs::path(utf8ToWide(fullPath));   // <-- kritik
+    path = fs::path(utf8ToWide(fullPath));   // critical, a narrow path would go through the ANSI code page
 #else
     path = fs::path(fullPath);
 #endif
@@ -73,7 +73,7 @@ bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
 bool gFile::loadFile(const std::string& filePath, int fileMode, bool isBinary) {
 #ifdef _WIN32
     std::string p = gGetFilesDir() + filePath;
-    path = fs::path(utf8ToWide(p));          // <-- kritik
+    path = fs::path(utf8ToWide(p));          // critical, a narrow path would go through the ANSI code page
 #else
     path = fs::path(gGetFilesDir() + filePath);
 #endif
@@ -155,7 +155,7 @@ bool gFile::openStream(int fileMode, bool isBinary) {
         return false;
     }
 
-    // SADECE open baþarýlýysa oku
+    // Only read if the file opened successfully
     if(mode == FILEMODE_READONLY || mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) {
         readFile();
     }
@@ -417,7 +417,7 @@ std::vector<std::string> gFile::getDirectoryContent(const std::string& fullPath)
 
 std::string gFile::normalizePathUtf8(const std::string& p) {
 	#ifdef _WIN32
-		return toFsPath(p).u8string();   // ACP/UTF8 karýþsa bile fs::path üzerinden normalize edip UTF-8 döndürür
+		return toFsPath(p).u8string();   // Normalizes through fs::path and returns UTF-8 even when ACP and UTF-8 are mixed
 	#else
 		return p;
 	#endif
