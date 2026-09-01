@@ -128,11 +128,14 @@ void gFile::close() {
 bool gFile::openStream(int fileMode, bool isBinary) {
     mode = fileMode;
     binary = isBinary;
-    std::ios_base::openmode binarymode = binary ? std::ios::binary : (std::ios_base::openmode)0;
 
     close();
 
-    std::ios_base::openmode m = binarymode;
+    // Always open in binary. Text mode translates line endings only on Windows,
+    // which makes tellg disagree with what read delivers and leaves the buffer
+    // null padded. Text files get their carriage returns removed in readFile
+    // instead, so every platform sees the same bytes.
+    std::ios_base::openmode m = std::ios::binary;
 
     switch(mode) {
     case FILEMODE_READONLY:  m |= std::ios::in; break;
@@ -242,8 +245,7 @@ void gFile::readFile() {
 		// Read the entire file into the string.
 		stream.read(&filestr[0], size);
 
-		// Text mode translates line endings, so fewer characters arrive than tellg
-		// reported and the rest of the buffer would stay as null padding
+		// Keep only what actually arrived so a short read cannot leave null padding
 		filestr.resize(stream.gcount());
 
 		// Remove all carriage return characters

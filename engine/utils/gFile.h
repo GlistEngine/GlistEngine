@@ -51,6 +51,11 @@ public:
 	gFile(const std::string& fullPath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
 	virtual ~gFile();
 
+	/*
+	 * The stream is always opened in binary mode. isBinary only decides how the
+	 * contents are treated: text files get their carriage returns removed on read,
+	 * binary files are kept byte for byte. Writes are never translated.
+	 */
 	bool load(const std::string& fullPath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
 	bool loadFile(const std::string& filePath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
 	void close();
