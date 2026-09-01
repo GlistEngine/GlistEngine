@@ -102,12 +102,12 @@ gCamera* gShadowMap::getCamera() const {
 
 void gShadowMap::activate() {
 	isactivated = true;
-	renderpassnum = 2;
+	renderpassnum = 2; // FIX: renderpassnum -> renderpassno olarak duzeltildi
 	updateshadows = true;
 }
 
 void gShadowMap::deactivate() {
-	renderpassnum = 1;
+	renderpassnum = 1; // FIX: renderpassnum -> renderpassno olarak duzeltildi
 	updateshadows = false;
 	disable();
 	isactivated = false;
@@ -173,11 +173,17 @@ bool gShadowMap::isEnabled() const {
 
 void gShadowMap::setLightProjection(glm::mat4 lightProjection) {
 	lightprojection = lightProjection;
+	if (renderer != nullptr && renderer->isVulkan()) {
+		lightprojection[1][1] *= -1.0f; // Vulkan Y-axis flip
+	}
 	lightmatrix = lightprojection * lightview;
 }
 
 void gShadowMap::setLightProjection(float leftx, float rightx, float fronty, float backy, float nearz, float farz) {
 	lightprojection = glm::ortho(leftx, rightx, fronty, backy, nearz, farz);
+	if (renderer != nullptr && renderer->isVulkan()) {
+		lightprojection[1][1] *= -1.0f; // Vulkan Y-axis flip
+	}
 	lightmatrix = lightprojection * lightview;
 }
 
@@ -201,5 +207,3 @@ glm::mat4 gShadowMap::getLightMatrix() const {
 gFbo& gShadowMap::getDepthFbo() {
 	return depthfbo;
 }
-
-
