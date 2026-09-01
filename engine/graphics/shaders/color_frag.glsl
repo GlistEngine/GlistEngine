@@ -6,6 +6,13 @@ precision highp int;
 #version 330 core
 #endif
 
+uniform int isDeferred; 
+
+layout (location = 0) out vec4 FragColor; 
+layout (location = 1) out vec4 gPosition; 
+layout (location = 2) out vec4 gNormal;   
+layout (location = 3) out vec4 gAlbedo;
+
 struct Material {
     vec4 ambient;
     vec4 diffuse;
@@ -85,8 +92,6 @@ in vec3 incolor;
 in mat3 TBN;
 
 flat in int mUseShadowMap;
-
-out vec4 FragColor;
 
 float calculateShadow(vec4 fragPosLightSpace, bool softShadows) {
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -236,19 +241,88 @@ float getFogVisibility(Fog fog, float distance) {
 }
 
 void main() {
+    // 1. UI and 2D Rendering (Bypass Lighting)
+    if (isDeferred == 2) {
+        vec4 finalColor;
+        if (material.useDiffuseMap > 0) {
+            vec4 texColor = texture(material.diffusemap, TexCoords).rgba;
+            if (texColor.a < 0.5) discard;
+            finalColor = texColor * renderColor * vec4(incolor, 1.0);
+        } else {
+            finalColor = renderColor * vec4(incolor, 1.0);
+        }
+        
+        FragColor = finalColor; // Output raw color only
+        
+        // GPU Safety: Fill remaining MRT outputs
+        gPosition = vec4(0.0);
+        gNormal = vec4(0.0);
+        gAlbedo = vec4(0.0);
+        return; 
+    }
+    
+    // 2. G-Buffer (Deferred) Pass
+    if (isDeferred == 1) {
+        gPosition = vec4(FragPos, material.shininess);
+        
+        float specIntensity = 0.0;
+        if (material.useSpecularMap > 0) {
+            specIntensity = texture(material.specularmap, TexCoords).r;
+        } else {
+            specIntensity = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+        }
+        
+        vec3 finalNormal;
+        if (material.useNormalMap > 0) {
+            vec3 tangentNormal = texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0;
+            finalNormal = normalize(tangentNormal);
+        } else {
+            finalNormal = normalize(Normal);
+        }
+        gNormal = vec4(finalNormal, specIntensity);
+        
+        if (material.useDiffuseMap > 0) {
+            vec4 texColor = texture(material.diffusemap, TexCoords).rgba;
+            if (texColor.a < 0.5) discard;
+            gAlbedo = texColor * renderColor * vec4(incolor, 1.0);
+        } else {
+            gAlbedo = material.diffuse * renderColor * vec4(incolor, 1.0);
+        }
+        
+        FragColor = vec4(0.0); // GPU Safety
+        return;
+    }
+    
+    // 3. Standard Forward Lighting (isDeferred == 0)
+    
+    // Safety check for 2D objects (like crosshairs) that don't supply normals
+    if (length(Normal) < 0.01) {
+        vec4 texColor = vec4(1.0);
+        if (material.useDiffuseMap > 0) {
+            texColor = texture(material.diffusemap, TexCoords).rgba;
+        }
+        FragColor = texColor * renderColor * vec4(incolor, 1.0);
+        gPosition = vec4(0.0);
+        gNormal = vec4(0.0);
+        gAlbedo = vec4(0.0);
+        return;
+    }
+
     vec4 result = vec4(0.0);
     vec3 norm;
     if (material.useNormalMap > 0) {
-        norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space
+        norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0); 
     } else {
         norm = normalize(Normal);
     }
+    
     vec3 viewDir;
     if (material.useNormalMap > 0) {
         viewDir = normalize(TangentViewPos - TangentFragPos);
     } else {
         viewDir = normalize(viewPos - FragPos);
     }
+    
     vec4 materialAmbient;
     vec4 materialDiffuse;
     if (material.useDiffuseMap > 0) {
@@ -258,21 +332,24 @@ void main() {
         materialAmbient = material.ambient;
         materialDiffuse = material.diffuse;
     }
+    
     if (material.useDiffuseMap > 0 && materialDiffuse.a < 0.5) {
         discard;
     }
+    
     vec4 materialSpecular;
     if (material.useSpecularMap > 0) {
         materialSpecular = texture(material.specularmap, TexCoords).rgba;
-    }
-    else {
+    } else {
         materialSpecular = material.specular;
     }
+    
     float shadowing;
     if (mUseShadowMap > 0) {
         bool softShadows = (flags & ENABLE_SOFT_SHADOWS_FLAG) > 0;
         shadowing = 1.0 - calculateShadow(FragPosLightSpace, softShadows);
     }
+    
     bool haslight = false;
     for (int i = 0; i < lightnum; i++) {
         if ((enabledlights & (1 << i)) == 0) {
@@ -291,6 +368,7 @@ void main() {
         }
         haslight = true;
     }
+    
     if (!haslight) {
         result = globalambientcolor * materialAmbient;
     }
@@ -302,16 +380,39 @@ void main() {
         FragColor = mix(vec4(fog.color, 1.0), FragColor, getFogVisibility(fog, distance));
     }
 
-    // HDR tone mapping (Reinhard)
     if((flags & ENABLE_HDR_FLAG) > 0) {
         vec3 hdrColor = FragColor.rgb;
         vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
         FragColor = vec4(mapped, FragColor.a);
     }
 
-    // Gamma correction
     if((flags & ENABLE_GAMMA_FLAG) > 0) {
         float gamma = 2.2;
         FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));
+    }
+    
+    // GPU SAFETY: Fill all MRT channels at the end of the forward pass to prevent crashes
+    gPosition = vec4(FragPos, material.shininess);
+    
+    float specIntensity = 0.0;
+    if (material.useSpecularMap > 0) {
+        specIntensity = texture(material.specularmap, TexCoords).r;
+    } else {
+        specIntensity = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+    }
+    
+    vec3 finalNormal;
+    if (material.useNormalMap > 0) {
+        vec3 tangentNormal = texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0;
+        finalNormal = normalize(tangentNormal);
+    } else {
+        finalNormal = normalize(Normal);
+    }
+    gNormal = vec4(finalNormal, specIntensity);
+    
+    if (material.useDiffuseMap > 0) {
+        gAlbedo = texture(material.diffusemap, TexCoords).rgba * renderColor * vec4(incolor, 1.0);
+    } else {
+        gAlbedo = material.diffuse * renderColor * vec4(incolor, 1.0);
     }
 }

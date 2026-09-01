@@ -664,7 +664,11 @@ void gGLRenderEngine::bindTexture(GLuint texId) {
 }
 
 void gGLRenderEngine::bindTexture(GLuint texId, int textureSlotNo) {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
+	if (textureSlotNo < 32) {
+		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
+	} else {
+		G_CHECK_GL(glActiveTexture(textureSlotNo));
+	}
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, texId));
 }
 
@@ -673,7 +677,11 @@ void gGLRenderEngine::unbindTexture() {
 }
 
 void gGLRenderEngine::activateTexture(int textureSlotNo) {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
+	if (textureSlotNo < 32) {
+		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
+	} else {
+		G_CHECK_GL(glActiveTexture(textureSlotNo));
+	}
 }
 
 void gGLRenderEngine::resetTexture() {
@@ -773,7 +781,11 @@ void gGLRenderEngine::bindSkyTexture(GLuint texId) {
 }
 
 void gGLRenderEngine::bindSkyTexture(GLuint texId, int textureSlot) {
-	G_CHECK_GL(glActiveTexture(textureSlot));
+	if (textureSlot < 32) {
+		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlot));
+	} else {
+		G_CHECK_GL(glActiveTexture(textureSlot));
+	}
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, texId));
 }
 
