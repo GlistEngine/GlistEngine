@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"functions_func_u.html":[1,3,1,19],
+"functions_func_v.html":[1,3,1,20],
 "functions_func_w.html":[1,3,1,21],
 "functions_func_y.html":[1,3,1,22],
 "functions_func_~.html":[1,3,1,23],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "gGUIEvents_8h.html":[2,0,0,7,16],
 "gGUIEvents_8h.html#a03d9851d3fa27453d6988bbe7f2ebe96":[2,0,0,7,16,14],
 "gGUIEvents_8h.html#a0c91c1986fd175db09888790027d8ac2":[2,0,0,7,16,2],
-"gGUIEvents_8h.html#a1bec759ddeb65af606102073193578ef":[2,0,0,7,16,9],
-"gGUIEvents_8h.html#a364523bfc02e5bd6da98d22ec26692be":[2,0,0,7,16,1],
-"gGUIEvents_8h.html#a3a065e9f23bade7b812cafaed89cb8f8":[2,0,0,7,16,16]
+"gGUIEvents_8h.html#a1bec759ddeb65af606102073193578ef":[2,0,0,7,16,9]
 };
