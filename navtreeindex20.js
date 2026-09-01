@@ -92,8 +92,8 @@ var NAVTREEINDEX20 =
 "gWindowEvents_8h_source.html":[2,0,0,3,2],
 "gWindows_8h.html":[2,0,0,8,11],
 "gWindows_8h_source.html":[2,0,0,8,11],
-"globals.html":[2,1,0],
 "globals.html":[2,1,0,0],
+"globals.html":[2,1,0],
 "globals_a.html":[2,1,0,1],
 "globals_b.html":[2,1,0,2],
 "globals_c.html":[2,1,0,3],
@@ -223,6 +223,7 @@ var NAVTREEINDEX20 =
 "structgInputPlayer_1_1GamepadButtonAxisBinding.html#aa6d24c955849ea1753f35fbe98d681a0":[1,0,118,2,0],
 "structgRenderer_1_1gMeshSurface.html":[1,0,156,0],
 "structgRenderer_1_1gMeshSurface.html#a2d0bb2d60c220ce89a1208c4139544b7":[1,0,156,0,6],
+"structgRenderer_1_1gMeshSurface.html#a35567724fa966f7e3d11a16e3ea19d51":[1,0,156,0,13],
 "structgRenderer_1_1gMeshSurface.html#a3afd633a20ce586abaa667bed48a9d02":[1,0,156,0,3],
 "structgRenderer_1_1gMeshSurface.html#a3fe4572a4530fd5d36f5564bd64b8c1f":[1,0,156,0,4],
 "structgRenderer_1_1gMeshSurface.html#a6491ddb1c6a3c7279789560d70230969":[1,0,156,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,156,2,0],
 "structgRenderer_1_1gSceneFogData.html#a88990ff245ff5283fb0df9f4a4962f5d":[1,0,156,2,3],
 "structgRenderer_1_1gSceneFogData.html#aa7101cf0df447fa7f44729163cf6fb87":[1,0,156,2,2],
-"structgRenderer_1_1gSceneLightData.html":[1,0,156,3],
-"structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb":[1,0,156,3,10]
+"structgRenderer_1_1gSceneLightData.html":[1,0,156,3]
 };

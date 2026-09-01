@@ -84,7 +84,7 @@ var NAVTREEINDEX =
 "gGUIEvents_8h.html#a364523bfc02e5bd6da98d22ec26692be",
 "gLine_8h_source.html",
 "gUtils_8h_source.html",
-"structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df"
+"structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

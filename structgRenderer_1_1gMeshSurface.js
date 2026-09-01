@@ -12,5 +12,6 @@ var structgRenderer_1_1gMeshSurface =
     [ "roughnessmapid", "structgRenderer_1_1gMeshSurface.html#aedfbca9603cf66d21ddde138a2d7540c", null ],
     [ "shininess", "structgRenderer_1_1gMeshSurface.html#a6c1e5b3cd330a3bb3e95755bc461aefa", null ],
     [ "specular", "structgRenderer_1_1gMeshSurface.html#acc5cb7abbe7ecf7181e7873c37099984", null ],
-    [ "specularmapid", "structgRenderer_1_1gMeshSurface.html#acfc040d7554a052954d9e3fea2763cf4", null ]
+    [ "specularmapid", "structgRenderer_1_1gMeshSurface.html#acfc040d7554a052954d9e3fea2763cf4", null ],
+    [ "texturetiling", "structgRenderer_1_1gMeshSurface.html#a35567724fa966f7e3d11a16e3ea19d51", null ]
 ];

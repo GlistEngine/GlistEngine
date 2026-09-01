@@ -775,391 +775,397 @@ $(document).ready(function(){initNavTree('gVKContext_8h_source.html',''); initRe
 <div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>        recordedpipeline = pipeline;</div>
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>        recordeddescriptorlayout = VK_NULL_HANDLE;</div>
 <div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>        recordeddescriptorcount = 0;</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>    }</div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>    <span class="keywordtype">bool</span> shouldBindDescriptorSets(VkPipelineLayout layout, <span class="keyword">const</span> VkDescriptorSet* sets, uint32_t count) {</div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>        <span class="keywordflow">if</span>(recordeddescriptorlayout == layout &amp;&amp; recordeddescriptorcount == count</div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                &amp;&amp; std::equal(sets, sets + count, recordeddescriptors.begin())) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>        recordeddescriptorlayout = layout;</div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>        recordeddescriptorcount = count;</div>
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>        std::copy(sets, sets + count, recordeddescriptors.begin());</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>    }</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>    <span class="keywordtype">bool</span> shouldSetDepthState(VkBool32 test, VkBool32 write, VkCompareOp compare) {</div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>        <span class="keywordflow">if</span>(recordeddepthvalid &amp;&amp; recordeddepthtest == test &amp;&amp; recordeddepthwrite == write</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>                &amp;&amp; recordeddepthcompare == compare) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>        recordeddepthvalid = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>        recordeddepthtest = test;</div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>        recordeddepthwrite = write;</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>        recordeddepthcompare = compare;</div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>    }</div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    <span class="keywordtype">bool</span> shouldSetTopology(VkPrimitiveTopology topology) {</div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>        <span class="keywordflow">if</span>(recordedtopologyvalid &amp;&amp; recordedtopology == topology) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        recordedtopologyvalid = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>        recordedtopology = topology;</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>        <span class="comment">// Binding a pipeline which does not declare one of these dynamic states</span></div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>        <span class="comment">// invalidates its current value. The next pipeline may declare it again, so</span></div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>        <span class="comment">// the cache must force all three groups to be emitted after every change.</span></div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>        recordeddepthvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>        recordedtopologyvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>        recordedcullvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>    }</div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>    <span class="keywordtype">bool</span> shouldBindDescriptorSets(VkPipelineLayout layout, <span class="keyword">const</span> VkDescriptorSet* sets, uint32_t count) {</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>        <span class="keywordflow">if</span>(recordeddescriptorlayout == layout &amp;&amp; recordeddescriptorcount == count</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>                &amp;&amp; std::equal(sets, sets + count, recordeddescriptors.begin())) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>        recordeddescriptorlayout = layout;</div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>        recordeddescriptorcount = count;</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>        std::copy(sets, sets + count, recordeddescriptors.begin());</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>    }</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>    <span class="keywordtype">bool</span> shouldSetDepthState(VkBool32 test, VkBool32 write, VkCompareOp compare) {</div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>        <span class="keywordflow">if</span>(recordeddepthvalid &amp;&amp; recordeddepthtest == test &amp;&amp; recordeddepthwrite == write</div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>                &amp;&amp; recordeddepthcompare == compare) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>        recordeddepthvalid = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>        recordeddepthtest = test;</div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        recordeddepthwrite = write;</div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>        recordeddepthcompare = compare;</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    }</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    <span class="keywordtype">bool</span> shouldSetCullState(VkCullModeFlags mode, VkFrontFace frontface) {</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>        <span class="keywordflow">if</span>(recordedcullvalid &amp;&amp; recordedcullmode == mode &amp;&amp; recordedfrontface == frontface) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>        recordedcullvalid = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>        recordedcullmode = mode;</div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>        recordedfrontface = frontface;</div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>    }</div>
-<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span> </div>
-<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>    <span class="comment">// VK_EXT_extended_dynamic_state, core since Vulkan 1.3 - which minapiversion</span></div>
-<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>    <span class="comment">// already requires as this backend&#39;s floor. Android&#39;s NDK import library only</span></div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    <span class="comment">// exports these six entry points for API level 33+ regardless of what the</span></div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    <span class="comment">// device driver actually supports, so gVKRenderEngine::initVulkan resolves them</span></div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    <span class="comment">// itself through vkGetDeviceProcAddr instead of linking them statically, and</span></div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>    <span class="comment">// every draw call goes through these wrappers rather than the raw vkCmdSetXxx</span></div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>    <span class="comment">// names.</span></div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    <span class="keywordtype">void</span> cmdSetDepthState(VkCommandBuffer cmd, VkBool32 test, VkBool32 write, VkCompareOp compare) {</div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>        pfncmdsetdepthtestenable(cmd, test);</div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        pfncmdsetdepthwriteenable(cmd, write);</div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>        pfncmdsetdepthcompareop(cmd, compare);</div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    }</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    <span class="keywordtype">void</span> cmdSetTopology(VkCommandBuffer cmd, VkPrimitiveTopology topology) {</div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>        pfncmdsetprimitivetopology(cmd, topology);</div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>    }</div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>    <span class="keywordtype">void</span> cmdSetCullState(VkCommandBuffer cmd, VkCullModeFlags mode, VkFrontFace frontface) {</div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>        pfncmdsetcullmode(cmd, mode);</div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>        pfncmdsetfrontface(cmd, frontface);</div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    }</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>    <span class="comment">// Vertex and index bindings are command buffer state in their own right: binding a</span></div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    <span class="comment">// pipeline does not disturb them, so a run of draws over one mesh - a crowd posed</span></div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>    <span class="comment">// from the same model, or the same buffer drawn once per material - can rebind the</span></div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>    <span class="comment">// same handles hundreds of times per frame for nothing. The contents behind a</span></div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>    <span class="comment">// handle may change between draws; that does not matter here, because a draw reads</span></div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>    <span class="comment">// the buffer when the GPU executes it, not when the bind was recorded.</span></div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>    <span class="comment">// Every vkCmdBindVertexBuffers / vkCmdBindIndexBuffer in the backend goes through</span></div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>    <span class="comment">// these. One that did not would leave the cache describing a binding that is no</span></div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    <span class="comment">// longer current, and the next draw would skip a bind it actually needed.</span></div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>    <span class="keywordtype">bool</span> shouldBindVertexBuffers(<span class="keyword">const</span> VkBuffer* buffers, <span class="keyword">const</span> VkDeviceSize* offsets, uint32_t count) {</div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>        <span class="keywordflow">if</span>(count &gt; gvkmaxvertexbindings) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>        <span class="keywordflow">if</span>(recordedvertexcount == count</div>
-<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>                &amp;&amp; std::equal(buffers, buffers + count, recordedvertexbuffers.begin())</div>
-<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>                &amp;&amp; std::equal(offsets, offsets + count, recordedvertexoffsets.begin())) {</div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>        }</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>        recordedvertexcount = count;</div>
-<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>        std::copy(buffers, buffers + count, recordedvertexbuffers.begin());</div>
-<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>        std::copy(offsets, offsets + count, recordedvertexoffsets.begin());</div>
-<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>    }</div>
-<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>    <span class="keywordtype">bool</span> shouldBindIndexBuffer(VkBuffer buffer, VkDeviceSize offset, VkIndexType type) {</div>
-<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>        <span class="keywordflow">if</span>(recordedindexbuffer == buffer &amp;&amp; recordedindexoffset == offset</div>
-<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>                &amp;&amp; recordedindextype == type) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>        recordedindexbuffer = buffer;</div>
-<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>        recordedindexoffset = offset;</div>
-<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>        recordedindextype = type;</div>
-<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>    }</div>
-<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span> </div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>    std::string appname = <span class="stringliteral">&quot;GlistApp&quot;</span>;</div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>    std::string enginename = <span class="stringliteral">&quot;GlistEngine&quot;</span>;</div>
-<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>    uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>    uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);</div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    uint32_t minapiversion = VK_API_VERSION_1_3;</div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>    <span class="keywordtype">bool</span> enablevalidation = gvkdefaultvalidation;</div>
-<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>    std::vector&lt;const char*&gt; extrainstanceextensions;</div>
-<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>    std::vector&lt;const char*&gt; extradeviceextensions;</div>
-<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>    std::vector&lt;const char*&gt; extralayers;</div>
-<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span> </div>
-<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>    VkInstance instance = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span>    VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span>    VkSurfaceKHR surface = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span>    VkPhysicalDevice physicaldevice = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span>    VkDevice device = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span>    VkQueue graphicsqueue = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span>    VkQueue presentqueue = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>    uint32_t graphicsfamily = 0;</div>
-<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span>    uint32_t presentfamily = 0;</div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>    <span class="comment">// Resolved via vkGetDeviceProcAddr right after device creation; see</span></div>
-<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>    <span class="comment">// cmdSetDepthState / cmdSetTopology / cmdSetCullState above.</span></div>
-<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>    PFN_vkCmdSetDepthTestEnable pfncmdsetdepthtestenable = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>    PFN_vkCmdSetDepthWriteEnable pfncmdsetdepthwriteenable = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    PFN_vkCmdSetDepthCompareOp pfncmdsetdepthcompareop = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>    PFN_vkCmdSetPrimitiveTopology pfncmdsetprimitivetopology = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>    PFN_vkCmdSetCullMode pfncmdsetcullmode = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>    PFN_vkCmdSetFrontFace pfncmdsetfrontface = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>    uint32_t devicecount = 0;</div>
-<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>    std::vector&lt;VkPhysicalDevice&gt; physicaldevices;</div>
-<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>    std::vector&lt;VkPhysicalDeviceProperties&gt; physicaldeviceproperties;</div>
-<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    std::vector&lt;VkPhysicalDeviceFeatures&gt; physicaldevicefeatures;</div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    std::vector&lt;VkQueueFamilyProperties&gt; queuefamilyproperties;</div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>    std::vector&lt;VkBool32&gt; queuefamilypresentsupport;</div>
-<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>    std::vector&lt;const char*&gt; enabledinstanceextensions;</div>
-<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>    std::vector&lt;const char*&gt; enabledlayers;</div>
-<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>    std::vector&lt;const char*&gt; enableddeviceextensions;</div>
-<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>    std::vector&lt;VkExtensionProperties&gt; availableinstanceextensions;</div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    std::vector&lt;VkLayerProperties&gt; availablelayers;</div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>    std::vector&lt;VkExtensionProperties&gt; availabledeviceextensions;</div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>    VkPhysicalDeviceProperties deviceproperties{};</div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    VkPhysicalDeviceFeatures devicefeatures{};</div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>    VkPhysicalDeviceMemoryProperties devicememoryproperties{};</div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    VkSurfaceCapabilitiesKHR surfacecapabilities{};</div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>    std::vector&lt;VkSurfaceFormatKHR&gt; surfaceformats;</div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>    std::vector&lt;VkPresentModeKHR&gt; surfacepresentmodes;</div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>    uint32_t instanceapiversion = 0;</div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    <span class="keywordtype">bool</span> validationactive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span> </div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    <a class="code hl_class" href="classgBaseWindow.html">gBaseWindow</a>* window = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    <span class="keywordtype">bool</span> vsyncenabled = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    <span class="keywordtype">bool</span> swapchainrecreaterequested = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>    <span class="comment">// Set when the surface itself has to be rebuilt rather than just the swapchain:</span></div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>    <span class="comment">// the native window was replaced, or the driver reported VK_ERROR_SURFACE_LOST_KHR.</span></div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>    <span class="keywordtype">bool</span> surfacerecreaterequested = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span> </div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>    VkSwapchainKHR swapchain = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>    std::vector&lt;VkImage&gt; swapchainimages;</div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>    std::vector&lt;VkImageView&gt; swapchainimageviews;</div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    VkFormat swapchainformat = VK_FORMAT_UNDEFINED;</div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>    VkExtent2D swapchainextent = {0, 0};</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    <span class="keywordtype">bool</span> shouldSetTopology(VkPrimitiveTopology topology) {</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>        <span class="keywordflow">if</span>(recordedtopologyvalid &amp;&amp; recordedtopology == topology) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>        recordedtopologyvalid = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>        recordedtopology = topology;</div>
+<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>    }</div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>    <span class="keywordtype">bool</span> shouldSetCullState(VkCullModeFlags mode, VkFrontFace frontface) {</div>
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>        <span class="keywordflow">if</span>(recordedcullvalid &amp;&amp; recordedcullmode == mode &amp;&amp; recordedfrontface == frontface) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>        recordedcullvalid = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>        recordedcullmode = mode;</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>        recordedfrontface = frontface;</div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    }</div>
+<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span> </div>
+<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>    <span class="comment">// VK_EXT_extended_dynamic_state, core since Vulkan 1.3 - which minapiversion</span></div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    <span class="comment">// already requires as this backend&#39;s floor. Android&#39;s NDK import library only</span></div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>    <span class="comment">// exports these six entry points for API level 33+ regardless of what the</span></div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>    <span class="comment">// device driver actually supports, so gVKRenderEngine::initVulkan resolves them</span></div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    <span class="comment">// itself through vkGetDeviceProcAddr instead of linking them statically, and</span></div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    <span class="comment">// every draw call goes through these wrappers rather than the raw vkCmdSetXxx</span></div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    <span class="comment">// names.</span></div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>    <span class="keywordtype">void</span> cmdSetDepthState(VkCommandBuffer cmd, VkBool32 test, VkBool32 write, VkCompareOp compare) {</div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>        pfncmdsetdepthtestenable(cmd, test);</div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>        pfncmdsetdepthwriteenable(cmd, write);</div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>        pfncmdsetdepthcompareop(cmd, compare);</div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>    }</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    <span class="keywordtype">void</span> cmdSetTopology(VkCommandBuffer cmd, VkPrimitiveTopology topology) {</div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>        pfncmdsetprimitivetopology(cmd, topology);</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    }</div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>    <span class="keywordtype">void</span> cmdSetCullState(VkCommandBuffer cmd, VkCullModeFlags mode, VkFrontFace frontface) {</div>
+<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>        pfncmdsetcullmode(cmd, mode);</div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>        pfncmdsetfrontface(cmd, frontface);</div>
+<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>    }</div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>    <span class="comment">// Vertex and index bindings are command buffer state in their own right: binding a</span></div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>    <span class="comment">// pipeline does not disturb them, so a run of draws over one mesh - a crowd posed</span></div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>    <span class="comment">// from the same model, or the same buffer drawn once per material - can rebind the</span></div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    <span class="comment">// same handles hundreds of times per frame for nothing. The contents behind a</span></div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>    <span class="comment">// handle may change between draws; that does not matter here, because a draw reads</span></div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>    <span class="comment">// the buffer when the GPU executes it, not when the bind was recorded.</span></div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>    <span class="comment">// Every vkCmdBindVertexBuffers / vkCmdBindIndexBuffer in the backend goes through</span></div>
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>    <span class="comment">// these. One that did not would leave the cache describing a binding that is no</span></div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>    <span class="comment">// longer current, and the next draw would skip a bind it actually needed.</span></div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>    <span class="keywordtype">bool</span> shouldBindVertexBuffers(<span class="keyword">const</span> VkBuffer* buffers, <span class="keyword">const</span> VkDeviceSize* offsets, uint32_t count) {</div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>        <span class="keywordflow">if</span>(count &gt; gvkmaxvertexbindings) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>        <span class="keywordflow">if</span>(recordedvertexcount == count</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>                &amp;&amp; std::equal(buffers, buffers + count, recordedvertexbuffers.begin())</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>                &amp;&amp; std::equal(offsets, offsets + count, recordedvertexoffsets.begin())) {</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>        }</div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>        recordedvertexcount = count;</div>
+<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>        std::copy(buffers, buffers + count, recordedvertexbuffers.begin());</div>
+<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>        std::copy(offsets, offsets + count, recordedvertexoffsets.begin());</div>
+<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>    }</div>
+<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>    <span class="keywordtype">bool</span> shouldBindIndexBuffer(VkBuffer buffer, VkDeviceSize offset, VkIndexType type) {</div>
+<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>        <span class="keywordflow">if</span>(recordedindexbuffer == buffer &amp;&amp; recordedindexoffset == offset</div>
+<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>                &amp;&amp; recordedindextype == type) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>        recordedindexbuffer = buffer;</div>
+<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>        recordedindexoffset = offset;</div>
+<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>        recordedindextype = type;</div>
+<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>    }</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span> </div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>    std::string appname = <span class="stringliteral">&quot;GlistApp&quot;</span>;</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>    std::string enginename = <span class="stringliteral">&quot;GlistEngine&quot;</span>;</div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>    uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>    uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);</div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>    uint32_t minapiversion = VK_API_VERSION_1_3;</div>
+<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span>    <span class="keywordtype">bool</span> enablevalidation = gvkdefaultvalidation;</div>
+<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span>    std::vector&lt;const char*&gt; extrainstanceextensions;</div>
+<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span>    std::vector&lt;const char*&gt; extradeviceextensions;</div>
+<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span>    std::vector&lt;const char*&gt; extralayers;</div>
+<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span> </div>
+<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span>    VkInstance instance = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>    VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span>    VkSurfaceKHR surface = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>    VkPhysicalDevice physicaldevice = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>    VkDevice device = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>    VkQueue graphicsqueue = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>    VkQueue presentqueue = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    uint32_t graphicsfamily = 0;</div>
+<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>    uint32_t presentfamily = 0;</div>
+<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>    <span class="comment">// Resolved via vkGetDeviceProcAddr right after device creation; see</span></div>
+<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>    <span class="comment">// cmdSetDepthState / cmdSetTopology / cmdSetCullState above.</span></div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>    PFN_vkCmdSetDepthTestEnable pfncmdsetdepthtestenable = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>    PFN_vkCmdSetDepthWriteEnable pfncmdsetdepthwriteenable = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>    PFN_vkCmdSetDepthCompareOp pfncmdsetdepthcompareop = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    PFN_vkCmdSetPrimitiveTopology pfncmdsetprimitivetopology = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    PFN_vkCmdSetCullMode pfncmdsetcullmode = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>    PFN_vkCmdSetFrontFace pfncmdsetfrontface = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>    uint32_t devicecount = 0;</div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>    std::vector&lt;VkPhysicalDevice&gt; physicaldevices;</div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>    std::vector&lt;VkPhysicalDeviceProperties&gt; physicaldeviceproperties;</div>
+<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>    std::vector&lt;VkPhysicalDeviceFeatures&gt; physicaldevicefeatures;</div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    std::vector&lt;VkQueueFamilyProperties&gt; queuefamilyproperties;</div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>    std::vector&lt;VkBool32&gt; queuefamilypresentsupport;</div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>    std::vector&lt;const char*&gt; enabledinstanceextensions;</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    std::vector&lt;const char*&gt; enabledlayers;</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>    std::vector&lt;const char*&gt; enableddeviceextensions;</div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    std::vector&lt;VkExtensionProperties&gt; availableinstanceextensions;</div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>    std::vector&lt;VkLayerProperties&gt; availablelayers;</div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>    std::vector&lt;VkExtensionProperties&gt; availabledeviceextensions;</div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>    VkPhysicalDeviceProperties deviceproperties{};</div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    VkPhysicalDeviceFeatures devicefeatures{};</div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    VkPhysicalDeviceMemoryProperties devicememoryproperties{};</div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    VkSurfaceCapabilitiesKHR surfacecapabilities{};</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    std::vector&lt;VkSurfaceFormatKHR&gt; surfaceformats;</div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    std::vector&lt;VkPresentModeKHR&gt; surfacepresentmodes;</div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>    uint32_t instanceapiversion = 0;</div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>    <span class="keywordtype">bool</span> validationactive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span> </div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>    <a class="code hl_class" href="classgBaseWindow.html">gBaseWindow</a>* window = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>    <span class="keywordtype">bool</span> vsyncenabled = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>    <span class="keywordtype">bool</span> swapchainrecreaterequested = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>    <span class="comment">// Set when the surface itself has to be rebuilt rather than just the swapchain:</span></div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    <span class="comment">// the native window was replaced, or the driver reported VK_ERROR_SURFACE_LOST_KHR.</span></div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>    <span class="keywordtype">bool</span> surfacerecreaterequested = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span> </div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    <span class="comment">// One depth attachment per frame in flight. This avoids overlapping writes</span></div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>    <span class="comment">// without allocating one for every (often more numerous) swapchain image.</span></div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>    std::vector&lt;VkImage&gt; depthimages;</div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>    std::vector&lt;VkDeviceMemory&gt; depthimagememories;</div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>    std::vector&lt;VkImageView&gt; depthimageviews;</div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    VkFormat depthformat = VK_FORMAT_UNDEFINED;</div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span> </div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>    <span class="comment">// Multisampling. requestedsamples is the application&#39;s ask, samplecount is what</span></div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>    <span class="comment">// the device agreed to and what everything below is built with; see the setters.</span></div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>    uint32_t requestedsamples = 1;</div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>    VkSampleCountFlagBits samplecount = VK_SAMPLE_COUNT_1_BIT;</div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    <span class="keywordtype">bool</span> sampleshadingenabled = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>    <span class="keywordtype">float</span> minsampleshading = 0.25f;</div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span> </div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>    <span class="comment">// The multisampled colour attachment the screen pass renders into while MSAA is</span></div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>    <span class="comment">// on, one per frame in flight for the same reason depth is: private slots avoid</span></div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    <span class="comment">// overlapping writes without one per swapchain image. It never leaves tile</span></div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>    <span class="comment">// memory - the pass clears it, resolves it into the acquired swapchain image and</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>    <span class="comment">// discards the samples - so it is created TRANSIENT and, where the device offers</span></div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>    <span class="comment">// it, backed by LAZILY_ALLOCATED memory that a tiler never has to page in.</span></div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    std::vector&lt;VkImage&gt; msaacolorimages;</div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>    std::vector&lt;VkDeviceMemory&gt; msaacolormemories;</div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>    std::vector&lt;VkImageView&gt; msaacolorviews;</div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span> </div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>    <span class="comment">// Shadow map: a depth-only target drawn from the light&#39;s point of view and</span></div>
-<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>    <span class="comment">// sampled while shading. See gVKShadow.h.</span></div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>    VkImage shadowimage = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>    VkDeviceMemory shadowmemory = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>    VkImageView shadowview = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>    VkSampler shadowsampler = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>    VkRenderPass shadowrenderpass = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>    VkFramebuffer shadowframebuffer = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>    VkDescriptorSet shadowdescriptorset = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>    <span class="comment">// Depth-only pipeline that fills the map. Built with the shadow render pass,</span></div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>    <span class="comment">// so it cannot exist before that pass does.</span></div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>    VkPipeline shadowpipeline = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>    VkPipelineLayout shadowpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    <span class="comment">// One set layout, for the cutout diffuse map. Held here rather than left in the</span></div>
-<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span>    <span class="comment">// build&#39;s scratch struct because it has to outlive the build and be destroyed</span></div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    <span class="comment">// with the pipeline; before the cutout sampler existed this list was empty.</span></div>
-<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>    std::vector&lt;VkDescriptorSetLayout&gt; shadowsetlayouts;</div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>    uint32_t shadowpushsize = 0;</div>
-<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>    VkShaderStageFlags shadowpushstages = 0;</div>
-<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>    VkFormat shadowformat = VK_FORMAT_UNDEFINED;</div>
-<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>    VkExtent2D shadowextent = {0, 0};</div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>    <span class="comment">// True between gvkBeginShadowPass and gvkEndShadowPass, so the draw path can</span></div>
-<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>    <span class="comment">// tell which of the two passes it is recording into.</span></div>
-<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>    <span class="keywordtype">bool</span> shadowpassactive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span> </div>
-<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>    VkRenderPass renderpass = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>    <span class="comment">// The same pass with LOAD in place of CLEAR on colour and depth. A frame opens</span></div>
-<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>    <span class="comment">// the screen pass more than once whenever the application binds a render target</span></div>
-<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>    <span class="comment">// half way through drawing - a gGUIScrollable renders its clipped content into</span></div>
-<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>    <span class="comment">// an FBO, a canvas may run a post effect over the scene it has drawn so far -</span></div>
-<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>    <span class="comment">// and reopening with the clearing pass would erase everything recorded before</span></div>
-<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>    <span class="comment">// the target was bound. Every reopen after the frame&#39;s first one uses this.</span></div>
-<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>    VkRenderPass loadrenderpass = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>    <span class="comment">// Multisampled only. The multisample image is a transient attachment - it may</span></div>
-<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>    <span class="comment">// live entirely on chip and have no memory behind it at all - so its contents</span></div>
-<div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>    <span class="comment">// cannot survive between two passes, and the LOAD variant above is useless</span></div>
-<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>    <span class="comment">// there. This one discards the multisample colour and clears depth, and the</span></div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>    <span class="comment">// picture is put back by redrawing the resolved swapchain image into it.</span></div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>    VkRenderPass restorerenderpass = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>    <span class="comment">// The single-sampled copy that redraw samples from, sized to the swapchain and</span></div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>    <span class="comment">// rebuilt with it. Created on the first reopen and not before: a frame that</span></div>
-<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>    <span class="comment">// never binds a render target half way through never needs it.</span></div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>    <span class="keyword">struct </span>gVKTexture* screenrestoretexture = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>    <span class="comment">// A 1x colour+depth pass that is never begun. It exists only while the screen</span></div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>    <span class="comment">// pass is multisampled, as the compatibility template the single-sample</span></div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    <span class="comment">// pipelines are built against - a pipeline needs a render pass at build time,</span></div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>    <span class="comment">// and the passes those pipelines really run in (the per-FBO ones) are created</span></div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>    <span class="comment">// later, on demand, one per render target. VK_NULL_HANDLE when MSAA is off,</span></div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>    <span class="comment">// where the screen pass is itself the 1x template.</span></div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>    VkRenderPass singlesamplerenderpass = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>    <span class="comment">// One per (frame-in-flight, swapchain image) pair.</span></div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>    std::vector&lt;VkFramebuffer&gt; framebuffers;</div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span> </div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>    VkCommandPool commandpool = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>    <span class="comment">// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.</span></div>
-<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>    std::vector&lt;VkCommandBuffer&gt; commandbuffers;</div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span> </div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>    <span class="comment">// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.</span></div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>    std::vector&lt;VkSemaphore&gt; imageavailablesemaphores;</div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>    std::vector&lt;VkFence&gt; inflightfences;</div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>    <span class="comment">// One per swapchain image, indexed by currentimageindex.</span></div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    std::vector&lt;VkSemaphore&gt; renderfinishedsemaphores;</div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    VkSwapchainKHR swapchain = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>    std::vector&lt;VkImage&gt; swapchainimages;</div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>    std::vector&lt;VkImageView&gt; swapchainimageviews;</div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>    VkFormat swapchainformat = VK_FORMAT_UNDEFINED;</div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>    VkExtent2D swapchainextent = {0, 0};</div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span> </div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>    <span class="comment">// One depth attachment per frame in flight. This avoids overlapping writes</span></div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>    <span class="comment">// without allocating one for every (often more numerous) swapchain image.</span></div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>    std::vector&lt;VkImage&gt; depthimages;</div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>    std::vector&lt;VkDeviceMemory&gt; depthimagememories;</div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>    std::vector&lt;VkImageView&gt; depthimageviews;</div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    VkFormat depthformat = VK_FORMAT_UNDEFINED;</div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span> </div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>    <span class="comment">// Multisampling. requestedsamples is the application&#39;s ask, samplecount is what</span></div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>    <span class="comment">// the device agreed to and what everything below is built with; see the setters.</span></div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>    uint32_t requestedsamples = 1;</div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    VkSampleCountFlagBits samplecount = VK_SAMPLE_COUNT_1_BIT;</div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>    <span class="keywordtype">bool</span> sampleshadingenabled = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>    <span class="keywordtype">float</span> minsampleshading = 0.25f;</div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span> </div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    <span class="comment">// The multisampled colour attachment the screen pass renders into while MSAA is</span></div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>    <span class="comment">// on, one per frame in flight for the same reason depth is: private slots avoid</span></div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>    <span class="comment">// overlapping writes without one per swapchain image. It never leaves tile</span></div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>    <span class="comment">// memory - the pass clears it, resolves it into the acquired swapchain image and</span></div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>    <span class="comment">// discards the samples - so it is created TRANSIENT and, where the device offers</span></div>
+<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>    <span class="comment">// it, backed by LAZILY_ALLOCATED memory that a tiler never has to page in.</span></div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>    std::vector&lt;VkImage&gt; msaacolorimages;</div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>    std::vector&lt;VkDeviceMemory&gt; msaacolormemories;</div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>    std::vector&lt;VkImageView&gt; msaacolorviews;</div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span> </div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>    <span class="comment">// Shadow map: a depth-only target drawn from the light&#39;s point of view and</span></div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>    <span class="comment">// sampled while shading. See gVKShadow.h.</span></div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>    VkImage shadowimage = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>    VkDeviceMemory shadowmemory = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>    VkImageView shadowview = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>    VkSampler shadowsampler = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>    VkRenderPass shadowrenderpass = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    VkFramebuffer shadowframebuffer = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span>    VkDescriptorSet shadowdescriptorset = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    <span class="comment">// Depth-only pipeline that fills the map. Built with the shadow render pass,</span></div>
+<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>    <span class="comment">// so it cannot exist before that pass does.</span></div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>    VkPipeline shadowpipeline = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>    VkPipelineLayout shadowpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>    <span class="comment">// One set layout, for the cutout diffuse map. Held here rather than left in the</span></div>
+<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>    <span class="comment">// build&#39;s scratch struct because it has to outlive the build and be destroyed</span></div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>    <span class="comment">// with the pipeline; before the cutout sampler existed this list was empty.</span></div>
+<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>    std::vector&lt;VkDescriptorSetLayout&gt; shadowsetlayouts;</div>
+<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>    uint32_t shadowpushsize = 0;</div>
+<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>    VkShaderStageFlags shadowpushstages = 0;</div>
+<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>    VkFormat shadowformat = VK_FORMAT_UNDEFINED;</div>
+<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>    VkExtent2D shadowextent = {0, 0};</div>
+<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>    <span class="comment">// True between gvkBeginShadowPass and gvkEndShadowPass, so the draw path can</span></div>
+<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>    <span class="comment">// tell which of the two passes it is recording into.</span></div>
+<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>    <span class="keywordtype">bool</span> shadowpassactive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span> </div>
+<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>    VkRenderPass renderpass = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>    <span class="comment">// The same pass with LOAD in place of CLEAR on colour and depth. A frame opens</span></div>
+<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>    <span class="comment">// the screen pass more than once whenever the application binds a render target</span></div>
+<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>    <span class="comment">// half way through drawing - a gGUIScrollable renders its clipped content into</span></div>
+<div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>    <span class="comment">// an FBO, a canvas may run a post effect over the scene it has drawn so far -</span></div>
+<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>    <span class="comment">// and reopening with the clearing pass would erase everything recorded before</span></div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>    <span class="comment">// the target was bound. Every reopen after the frame&#39;s first one uses this.</span></div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>    VkRenderPass loadrenderpass = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>    <span class="comment">// Multisampled only. The multisample image is a transient attachment - it may</span></div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>    <span class="comment">// live entirely on chip and have no memory behind it at all - so its contents</span></div>
+<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>    <span class="comment">// cannot survive between two passes, and the LOAD variant above is useless</span></div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>    <span class="comment">// there. This one discards the multisample colour and clears depth, and the</span></div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>    <span class="comment">// picture is put back by redrawing the resolved swapchain image into it.</span></div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>    VkRenderPass restorerenderpass = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    <span class="comment">// The single-sampled copy that redraw samples from, sized to the swapchain and</span></div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>    <span class="comment">// rebuilt with it. Created on the first reopen and not before: a frame that</span></div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>    <span class="comment">// never binds a render target half way through never needs it.</span></div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>    <span class="keyword">struct </span>gVKTexture* screenrestoretexture = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>    <span class="comment">// A 1x colour+depth pass that is never begun. It exists only while the screen</span></div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>    <span class="comment">// pass is multisampled, as the compatibility template the single-sample</span></div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>    <span class="comment">// pipelines are built against - a pipeline needs a render pass at build time,</span></div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>    <span class="comment">// and the passes those pipelines really run in (the per-FBO ones) are created</span></div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>    <span class="comment">// later, on demand, one per render target. VK_NULL_HANDLE when MSAA is off,</span></div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>    <span class="comment">// where the screen pass is itself the 1x template.</span></div>
+<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>    VkRenderPass singlesamplerenderpass = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>    <span class="comment">// One per (frame-in-flight, swapchain image) pair.</span></div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>    std::vector&lt;VkFramebuffer&gt; framebuffers;</div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span> </div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>    VkCommandPool commandpool = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>    <span class="comment">// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.</span></div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    std::vector&lt;VkCommandBuffer&gt; commandbuffers;</div>
 <div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span> </div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>    uint32_t currentframe = 0;</div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>    uint64_t framesequence = 0;</div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>    uint32_t currentimageindex = 0;</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>    <span class="keywordtype">bool</span> frameactive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>    <span class="comment">// Match gBaseCanvas::clearBackground(), the default used by the OpenGL path.</span></div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>    VkClearValue clearvalue = {{{0.0f, 0.0f, 30.0f / 255.0f, 0.0f}}};</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span> </div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>    <span class="comment">// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.</span></div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    <span class="comment">// renderpassactive tracks the lazily-begun render pass within a frame: geometry</span></div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>    <span class="comment">// must be recorded inside vkCmdBeginRenderPass..EndRenderPass, but the clear</span></div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>    <span class="comment">// colour is only final once the canvas has drawn, so the pass is opened on the</span></div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>    <span class="comment">// first draw (or in endFrame) rather than in beginFrame.</span></div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>    <span class="comment">// Whether the open pass draws through a negative-height viewport. Only the</span></div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>    <span class="comment">// screen pass does: it has to hand the presentation engine an image stored top</span></div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>    <span class="comment">// row first. Offscreen targets are drawn with a positive viewport instead, so</span></div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>    <span class="comment">// they end up stored bottom row first - the order OpenGL keeps a texture in -</span></div>
-<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>    <span class="comment">// and every consumer written against OpenGL then addresses them correctly,</span></div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    <span class="comment">// shaders reading TexCoords included. Mirroring the y axis also reverses the</span></div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    <span class="comment">// winding a triangle appears to have, so this is what decides whether the front</span></div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>    <span class="comment">// face has to be flipped; see gVKCullState.</span></div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>    <span class="keywordtype">bool</span> passflipsy = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>    <span class="keywordtype">bool</span> renderpassactive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>    <span class="comment">// The render area of whichever pass is open, so a mid-pass clear knows the</span></div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    <span class="comment">// rectangle it may touch. Set by every pass begin: the screen pass uses the</span></div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    <span class="comment">// swapchain extent, the shadow pass its map size, an offscreen pass the mip</span></div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>    <span class="comment">// level it renders into.</span></div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    VkExtent2D currentpassextent = {0, 0};</div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>    <span class="comment">// Whether the screen pass has been begun at all this frame. The first begin</span></div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>    <span class="comment">// clears, every later one loads what the earlier ones left.</span></div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>    <span class="keywordtype">bool</span> screenpassbegun = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>    <span class="keywordtype">bool</span> screenshotrequested = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>    <span class="keywordtype">bool</span> screenshotready = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>    std::vector&lt;unsigned char&gt; screenshotpixels;</div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    uint32_t screenshotwidth = 0;</div>
-<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>    uint32_t screenshotheight = 0;</div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>    VkFormat screenshotformat = VK_FORMAT_UNDEFINED;</div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>    <span class="comment">// One entry per sample count in use; index 0 is always the single-sample build.</span></div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>    <span class="comment">// Layouts and reflected sizes are shared by both, because the variants differ</span></div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>    <span class="comment">// only in their multisample state and the pass they were built against.</span></div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>    VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>    gVKPipelineVariants color2d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>    VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>    gVKPipelineVariants image2d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>    <span class="comment">// Which of the two the getters hand out; see useScreenPipelines().</span></div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>    uint32_t activepipelinevariant = 0;</div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>    <span class="comment">// 3D mesh path. Same shape as the 2D pipelines above, but with depth test and</span></div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>    <span class="comment">// depth write on and a vertex layout matching gVertex.</span></div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>    VkPipelineLayout mesh3dpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>    gVKPipelineVariants mesh3d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>    std::vector&lt;VkDescriptorSetLayout&gt; mesh3dsetlayouts;</div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>    uint32_t mesh3dpushsize = 0;</div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>    VkShaderStageFlags mesh3dpushstages = 0;</div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span> </div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>    <span class="comment">// PBR variant. Its five maps share one descriptor set rather than taking one</span></div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>    <span class="comment">// each: Vulkan only guarantees four bound sets, and scene plus five textures</span></div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    <span class="comment">// would need six.</span></div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>    VkPipelineLayout mesh3dpbrpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>    <span class="comment">// The skybox: six textured quads around the camera, with a pipeline of its own</span></div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    <span class="comment">// because nothing it draws is lit and it needs none of the mesh push constants.</span></div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>    VkPipelineLayout skyboxpipelinelayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>    gVKPipelineVariants skybox[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>    std::vector&lt;VkDescriptorSetLayout&gt; skyboxsetlayouts;</div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>    uint32_t skyboxpushsize = 0;</div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>    VkShaderStageFlags skyboxpushstages = 0;</div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>    gVKPipelineVariants mesh3dpbr[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    std::vector&lt;VkDescriptorSetLayout&gt; mesh3dpbrsetlayouts;</div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>    uint32_t mesh3dpbrpushsize = 0;</div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    VkShaderStageFlags mesh3dpbrpushstages = 0;</div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>    <span class="comment">// One descriptor set per distinct combination of the five PBR maps, keyed by</span></div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    <span class="comment">// their texture ids. Materials commonly share maps, and a descriptor pool is</span></div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    <span class="comment">// finite, so caching by combination rather than per mesh keeps allocations down.</span></div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    <span class="comment">// An entry is freed and dropped when one of its textures is destroyed or</span></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>    <span class="comment">// replaced, which is what keeps a session of loading and unloading from draining</span></div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>    <span class="comment">// the pool; what is left is freed with the pool in gvkDestroyGraphicsPipelines.</span></div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>    std::map&lt;std::array&lt;uint32_t, 5&gt;, VkDescriptorSet&gt; pbrmaterialsets;</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    <span class="comment">// And one per distinct diffuse/specular/normal trio for the classic path.</span></div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>    std::map&lt;std::array&lt;uint32_t, 3&gt;, VkDescriptorSet&gt; materialsets;</div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span> </div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>    <span class="comment">// Camera and lights for the 3D path, one set per frame in flight so the CPU can</span></div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    <span class="comment">// write the next frame while the GPU still reads the previous one. Permanently</span></div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>    <span class="comment">// mapped; see gVKUniform.h.</span></div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>    <span class="comment">// One entry per chunk of GVK_SCENE_UNIFORM_SLOTS slots; a frame that needs more</span></div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>    <span class="comment">// scene lighting changes than one chunk holds gets another appended to it</span></div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>    <span class="comment">// rather than being capped. sceneuniformsets is flat and indexed by slot</span></div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>    <span class="comment">// directly, since a descriptor set is naturally one-per-slot, not one-per-chunk.</span></div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>    std::vector&lt;VkBuffer&gt; sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT];</div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>    std::vector&lt;VkDeviceMemory&gt; sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT];</div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>    std::vector&lt;void*&gt; sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT];</div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>    std::vector&lt;VkDescriptorSet&gt; sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT];</div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>    uint32_t currentsceneuniformslot = 0;</div>
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>    uint32_t sceneuniformslotcount = 0;</div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>    <span class="comment">// Descriptor set layouts of each pipeline, in set order, and the push constant</span></div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>    <span class="comment">// block each declares. All of it is reflected out of the compiled SPIR-V rather</span></div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>    <span class="comment">// than written out here, so the shaders stay the single source of truth.</span></div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>    std::vector&lt;VkDescriptorSetLayout&gt; color2dsetlayouts;</div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>    std::vector&lt;VkDescriptorSetLayout&gt; image2dsetlayouts;</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>    uint32_t color2dpushsize = 0;</div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>    VkShaderStageFlags color2dpushstages = 0;</div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    uint32_t image2dpushsize = 0;</div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>    VkShaderStageFlags image2dpushstages = 0;</div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>    VkDescriptorPool descriptorpool = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>    VkPipelineCache pipelinecache = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>    <span class="comment">// Identical filter/wrap combinations share one immutable sampler object.</span></div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>    std::map&lt;uint64_t, std::pair&lt;VkSampler, uint32_t&gt;&gt; samplercache;</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>    <span class="comment">// One host-visible, persistently mapped vertex buffer per frame in flight,</span></div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>    <span class="comment">// filled linearly each frame and rewound at the start of the next.</span></div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>    std::vector&lt;VkBuffer&gt; dynvertexbuffers;</div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    std::vector&lt;VkDeviceMemory&gt; dynvertexmemories;</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>    std::vector&lt;void*&gt; dynvertexmapped;</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>    std::vector&lt;VkDeviceSize&gt; dynvertexoffsets;</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>    VkDeviceSize dynvertexcapacity = 0;</div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span> </div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>    <span class="comment">// Per-frame arena for mesh vertices the CPU rewrites; see pushMeshData.</span></div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>    std::vector&lt;VkBuffer&gt; mesharenabuffers;</div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>    std::vector&lt;VkDeviceMemory&gt; mesharenamemories;</div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    std::vector&lt;void*&gt; mesharenamapped;</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    std::vector&lt;VkDeviceSize&gt; mesharenaoffsets;</div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>    VkDeviceSize mesharenacapacity = 0;</div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    VkDeviceSize mesharenahighwater = 0;</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    <span class="comment">// A capacity the device refused. The frame loop asks for the arena to grow</span></div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>    <span class="comment">// whenever the high-water mark is above what it holds, so without remembering</span></div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    <span class="comment">// this it would ask again on the next frame, and the next - each attempt</span></div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    <span class="comment">// draining the device first. Cleared as soon as any growth succeeds.</span></div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    VkDeviceSize mesharenarefusedcapacity = 0;</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    uint64_t meshgeneration = 0;</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span> </div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    VkPipeline recordedpipeline = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    std::array&lt;VkDescriptorSet, 5&gt; recordeddescriptors{};</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    uint32_t recordeddescriptorcount = 0;</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    <span class="keywordtype">bool</span> recordeddepthvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>    VkBool32 recordeddepthtest = VK_FALSE;</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    VkBool32 recordeddepthwrite = VK_FALSE;</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    <span class="keywordtype">bool</span> recordedtopologyvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <span class="keywordtype">bool</span> recordedcullvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    <span class="comment">// Two: a mesh binds its vertices plus the per-instance model matrices, and the</span></div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    <span class="comment">// 2D paths bind one. A larger bind is simply never cached.</span></div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    <span class="keyword">static</span> <span class="keyword">const</span> uint32_t gvkmaxvertexbindings = 2;</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    std::array&lt;VkBuffer, gvkmaxvertexbindings&gt; recordedvertexbuffers{};</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>    std::array&lt;VkDeviceSize, gvkmaxvertexbindings&gt; recordedvertexoffsets{};</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    uint32_t recordedvertexcount = 0;</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    VkBuffer recordedindexbuffer = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    VkDeviceSize recordedindexoffset = 0;</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    VkIndexType recordedindextype = VK_INDEX_TYPE_UINT32;</div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>};</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span> </div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span> </div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKCONTEXT_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>    <span class="comment">// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.</span></div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>    std::vector&lt;VkSemaphore&gt; imageavailablesemaphores;</div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>    std::vector&lt;VkFence&gt; inflightfences;</div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>    <span class="comment">// One per swapchain image, indexed by currentimageindex.</span></div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>    std::vector&lt;VkSemaphore&gt; renderfinishedsemaphores;</div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span> </div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>    uint32_t currentframe = 0;</div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>    uint64_t framesequence = 0;</div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    uint32_t currentimageindex = 0;</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>    <span class="keywordtype">bool</span> frameactive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>    <span class="comment">// Match gBaseCanvas::clearBackground(), the default used by the OpenGL path.</span></div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>    VkClearValue clearvalue = {{{0.0f, 0.0f, 30.0f / 255.0f, 0.0f}}};</div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span> </div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>    <span class="comment">// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.</span></div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>    <span class="comment">// renderpassactive tracks the lazily-begun render pass within a frame: geometry</span></div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>    <span class="comment">// must be recorded inside vkCmdBeginRenderPass..EndRenderPass, but the clear</span></div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>    <span class="comment">// colour is only final once the canvas has drawn, so the pass is opened on the</span></div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    <span class="comment">// first draw (or in endFrame) rather than in beginFrame.</span></div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    <span class="comment">// Whether the open pass draws through a negative-height viewport. Only the</span></div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>    <span class="comment">// screen pass does: it has to hand the presentation engine an image stored top</span></div>
+<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>    <span class="comment">// row first. Offscreen targets are drawn with a positive viewport instead, so</span></div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>    <span class="comment">// they end up stored bottom row first - the order OpenGL keeps a texture in -</span></div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>    <span class="comment">// and every consumer written against OpenGL then addresses them correctly,</span></div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    <span class="comment">// shaders reading TexCoords included. Mirroring the y axis also reverses the</span></div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    <span class="comment">// winding a triangle appears to have, so this is what decides whether the front</span></div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>    <span class="comment">// face has to be flipped; see gVKCullState.</span></div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    <span class="keywordtype">bool</span> passflipsy = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>    <span class="keywordtype">bool</span> renderpassactive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>    <span class="comment">// The render area of whichever pass is open, so a mid-pass clear knows the</span></div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>    <span class="comment">// rectangle it may touch. Set by every pass begin: the screen pass uses the</span></div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>    <span class="comment">// swapchain extent, the shadow pass its map size, an offscreen pass the mip</span></div>
+<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>    <span class="comment">// level it renders into.</span></div>
+<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>    VkExtent2D currentpassextent = {0, 0};</div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    <span class="comment">// Whether the screen pass has been begun at all this frame. The first begin</span></div>
+<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>    <span class="comment">// clears, every later one loads what the earlier ones left.</span></div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>    <span class="keywordtype">bool</span> screenpassbegun = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>    <span class="keywordtype">bool</span> screenshotrequested = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>    <span class="keywordtype">bool</span> screenshotready = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>    std::vector&lt;unsigned char&gt; screenshotpixels;</div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>    uint32_t screenshotwidth = 0;</div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>    uint32_t screenshotheight = 0;</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>    VkFormat screenshotformat = VK_FORMAT_UNDEFINED;</div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>    <span class="comment">// One entry per sample count in use; index 0 is always the single-sample build.</span></div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>    <span class="comment">// Layouts and reflected sizes are shared by both, because the variants differ</span></div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>    <span class="comment">// only in their multisample state and the pass they were built against.</span></div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>    VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>    gVKPipelineVariants color2d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>    VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>    gVKPipelineVariants image2d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>    <span class="comment">// Which of the two the getters hand out; see useScreenPipelines().</span></div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>    uint32_t activepipelinevariant = 0;</div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>    <span class="comment">// 3D mesh path. Same shape as the 2D pipelines above, but with depth test and</span></div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>    <span class="comment">// depth write on and a vertex layout matching gVertex.</span></div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>    VkPipelineLayout mesh3dpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>    gVKPipelineVariants mesh3d[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    std::vector&lt;VkDescriptorSetLayout&gt; mesh3dsetlayouts;</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>    uint32_t mesh3dpushsize = 0;</div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>    VkShaderStageFlags mesh3dpushstages = 0;</div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span> </div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>    <span class="comment">// PBR variant. Its five maps share one descriptor set rather than taking one</span></div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>    <span class="comment">// each: Vulkan only guarantees four bound sets, and scene plus five textures</span></div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>    <span class="comment">// would need six.</span></div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>    VkPipelineLayout mesh3dpbrpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>    <span class="comment">// The skybox: six textured quads around the camera, with a pipeline of its own</span></div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>    <span class="comment">// because nothing it draws is lit and it needs none of the mesh push constants.</span></div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    VkPipelineLayout skyboxpipelinelayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>    gVKPipelineVariants skybox[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    std::vector&lt;VkDescriptorSetLayout&gt; skyboxsetlayouts;</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>    uint32_t skyboxpushsize = 0;</div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    VkShaderStageFlags skyboxpushstages = 0;</div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    gVKPipelineVariants mesh3dpbr[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    std::vector&lt;VkDescriptorSetLayout&gt; mesh3dpbrsetlayouts;</div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>    uint32_t mesh3dpbrpushsize = 0;</div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>    VkShaderStageFlags mesh3dpbrpushstages = 0;</div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>    <span class="comment">// One descriptor set per distinct combination of the five PBR maps, keyed by</span></div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    <span class="comment">// their texture ids. Materials commonly share maps, and a descriptor pool is</span></div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>    <span class="comment">// finite, so caching by combination rather than per mesh keeps allocations down.</span></div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>    <span class="comment">// An entry is freed and dropped when one of its textures is destroyed or</span></div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>    <span class="comment">// replaced, which is what keeps a session of loading and unloading from draining</span></div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    <span class="comment">// the pool; what is left is freed with the pool in gvkDestroyGraphicsPipelines.</span></div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>    std::map&lt;std::array&lt;uint32_t, 5&gt;, VkDescriptorSet&gt; pbrmaterialsets;</div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>    <span class="comment">// And one per distinct diffuse/specular/normal trio for the classic path.</span></div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>    std::map&lt;std::array&lt;uint32_t, 3&gt;, VkDescriptorSet&gt; materialsets;</div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span> </div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>    <span class="comment">// Camera and lights for the 3D path, one set per frame in flight so the CPU can</span></div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>    <span class="comment">// write the next frame while the GPU still reads the previous one. Permanently</span></div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>    <span class="comment">// mapped; see gVKUniform.h.</span></div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>    <span class="comment">// One entry per chunk of GVK_SCENE_UNIFORM_SLOTS slots; a frame that needs more</span></div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>    <span class="comment">// scene lighting changes than one chunk holds gets another appended to it</span></div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>    <span class="comment">// rather than being capped. sceneuniformsets is flat and indexed by slot</span></div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>    <span class="comment">// directly, since a descriptor set is naturally one-per-slot, not one-per-chunk.</span></div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>    std::vector&lt;VkBuffer&gt; sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT];</div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>    std::vector&lt;VkDeviceMemory&gt; sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT];</div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>    std::vector&lt;void*&gt; sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT];</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>    std::vector&lt;VkDescriptorSet&gt; sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT];</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>    uint32_t currentsceneuniformslot = 0;</div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>    uint32_t sceneuniformslotcount = 0;</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>    <span class="comment">// Descriptor set layouts of each pipeline, in set order, and the push constant</span></div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    <span class="comment">// block each declares. All of it is reflected out of the compiled SPIR-V rather</span></div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>    <span class="comment">// than written out here, so the shaders stay the single source of truth.</span></div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>    std::vector&lt;VkDescriptorSetLayout&gt; color2dsetlayouts;</div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>    std::vector&lt;VkDescriptorSetLayout&gt; image2dsetlayouts;</div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>    uint32_t color2dpushsize = 0;</div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>    VkShaderStageFlags color2dpushstages = 0;</div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>    uint32_t image2dpushsize = 0;</div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>    VkShaderStageFlags image2dpushstages = 0;</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>    VkDescriptorPool descriptorpool = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    VkPipelineCache pipelinecache = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>    <span class="comment">// Identical filter/wrap combinations share one immutable sampler object.</span></div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>    std::map&lt;uint64_t, std::pair&lt;VkSampler, uint32_t&gt;&gt; samplercache;</div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>    <span class="comment">// One host-visible, persistently mapped vertex buffer per frame in flight,</span></div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>    <span class="comment">// filled linearly each frame and rewound at the start of the next.</span></div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>    std::vector&lt;VkBuffer&gt; dynvertexbuffers;</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>    std::vector&lt;VkDeviceMemory&gt; dynvertexmemories;</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>    std::vector&lt;void*&gt; dynvertexmapped;</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    std::vector&lt;VkDeviceSize&gt; dynvertexoffsets;</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    VkDeviceSize dynvertexcapacity = 0;</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span> </div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    <span class="comment">// Per-frame arena for mesh vertices the CPU rewrites; see pushMeshData.</span></div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    std::vector&lt;VkBuffer&gt; mesharenabuffers;</div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>    std::vector&lt;VkDeviceMemory&gt; mesharenamemories;</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    std::vector&lt;void*&gt; mesharenamapped;</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    std::vector&lt;VkDeviceSize&gt; mesharenaoffsets;</div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    VkDeviceSize mesharenacapacity = 0;</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    VkDeviceSize mesharenahighwater = 0;</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>    <span class="comment">// A capacity the device refused. The frame loop asks for the arena to grow</span></div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    <span class="comment">// whenever the high-water mark is above what it holds, so without remembering</span></div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    <span class="comment">// this it would ask again on the next frame, and the next - each attempt</span></div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    <span class="comment">// draining the device first. Cleared as soon as any growth succeeds.</span></div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    VkDeviceSize mesharenarefusedcapacity = 0;</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    uint64_t meshgeneration = 0;</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span> </div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    VkPipeline recordedpipeline = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    std::array&lt;VkDescriptorSet, 5&gt; recordeddescriptors{};</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    uint32_t recordeddescriptorcount = 0;</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <span class="keywordtype">bool</span> recordeddepthvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    VkBool32 recordeddepthtest = VK_FALSE;</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    VkBool32 recordeddepthwrite = VK_FALSE;</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    <span class="keywordtype">bool</span> recordedtopologyvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    <span class="keywordtype">bool</span> recordedcullvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>    VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    <span class="comment">// Two: a mesh binds its vertices plus the per-instance model matrices, and the</span></div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    <span class="comment">// 2D paths bind one. A larger bind is simply never cached.</span></div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    <span class="keyword">static</span> <span class="keyword">const</span> uint32_t gvkmaxvertexbindings = 2;</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>    std::array&lt;VkBuffer, gvkmaxvertexbindings&gt; recordedvertexbuffers{};</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>    std::array&lt;VkDeviceSize, gvkmaxvertexbindings&gt; recordedvertexoffsets{};</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>    uint32_t recordedvertexcount = 0;</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    VkBuffer recordedindexbuffer = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>    VkDeviceSize recordedindexoffset = 0;</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>    VkIndexType recordedindextype = VK_INDEX_TYPE_UINT32;</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>};</div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span> </div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span> </div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKCONTEXT_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseWindow_html"><div class="ttname"><a href="classgBaseWindow.html">gBaseWindow</a></div><div class="ttdef"><b>Definition</b> gBaseWindow.h:29</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html"><div class="ttname"><a href="classgVKRenderEngine.html">gVKRenderEngine</a></div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:38</div></div>
 </div><!-- fragment --></div><!-- contents -->

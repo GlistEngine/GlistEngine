@@ -469,80 +469,87 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="comment">// What gShadowMap last told the backend. Fed into the scene uniform block, and</span></div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="comment">// into the depth pass&#39;s push constant while the shadow pass is being recorded.</span></div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keywordtype">bool</span> shadowmapenabled = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordtype">bool</span> shadowsoft = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    glm::mat4 shadowlightmatrix{1.0f};</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    glm::vec3 shadowlightposition{0.0f};</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="comment">// Fills the frame&#39;s scene uniform block from the renderer&#39;s camera and lights.</span></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="comment">// Declared unconditionally: this header does not pull in the Vulkan guard, and</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="comment">// the definition is what is compiled out on a build without Vulkan.</span></div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordtype">void</span> updateSceneUniforms();</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="comment">// Whether this frame&#39;s scene block has been written yet. Reset in beginFrame, so</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="comment">// the camera and lights are gathered once per frame instead of once per mesh.</span></div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordtype">bool</span> sceneuniformswritten = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="comment">// Consecutive opaque mesh calls are safe to combine because their relative</span></div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="comment">// order is preserved.  Transparent meshes and caller-provided instancing stay</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="comment">// immediate: changing either would alter the public draw semantics.</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">struct </span>QueuedMeshDraw {</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        GLuint vertexarrayid = 0;</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="keywordtype">int</span> vertexcount = 0;</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        <span class="keywordtype">int</span> indexcount = 0;</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        <span class="keywordtype">int</span> drawmode = GL_TRIANGLES;</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <span class="keywordtype">int</span> instancecount = 1;</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        glm::mat4 model{1.0f};</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        gMeshSurface surface{};</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        glm::vec4 tint{1.0f};</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        <span class="keywordtype">bool</span> depthtest = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <span class="keywordtype">int</span> depthtesttype = <a class="code hl_variable" href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">DEPTHTESTTYPE_LESS</a>;</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        <span class="keywordtype">bool</span> culling = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>        <span class="keywordtype">int</span> cullface = GL_BACK;</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        <span class="keywordtype">int</span> cullingdirection = GL_CCW;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="comment">// A digest of everything canMergeQueuedDraws compares, filled when the draw</span></div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <span class="comment">// is queued. flushQueuedDraws sorts by it so that draws which could merge but</span></div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        <span class="comment">// arrived apart end up next to each other; the exact comparison still decides</span></div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        <span class="comment">// whether they really do, so a hash collision costs a missed merge and</span></div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <span class="comment">// nothing else.</span></div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        uint64_t mergekey = 0;</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    };</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    std::vector&lt;QueuedMeshDraw&gt; queuedmeshdraws;</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="keywordtype">bool</span> flushingqueueddraws = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keyword">static</span> uint64_t gvkQueuedDrawKey(<span class="keyword">const</span> QueuedMeshDraw&amp; draw);</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keywordtype">bool</span> canMergeQueuedDraws(<span class="keyword">const</span> QueuedMeshDraw&amp; first, <span class="keyword">const</span> QueuedMeshDraw&amp; next) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="keywordtype">void</span> recordQueuedDrawGroup(<span class="keywordtype">size_t</span> first, <span class="keywordtype">size_t</span> count);</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordtype">void</span> destroyAllTextures();</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="comment">// The Vulkan texture behind the currently bound id, or null when there is none</span></div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="comment">// yet - gTexture sets filtering and wrapping both before and after the upload.</span></div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    gVKTexture* getBoundVKTexture();</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="comment">// The texture bound to one unit, for gVKUserShader&#39;s sampler resolution.</span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    gVKTexture* getVKTextureAtUnit(<span class="keywordtype">int</span> unit);</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span> </div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="comment">// Applies a pending setMultiSampling at a frame boundary: everything the sample</span></div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="comment">// count is baked into - the render pass, the depth and MSAA attachments, the</span></div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="comment">// framebuffers and both pipeline builds - is destroyed and rebuilt. Returns</span></div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="comment">// straight away when nothing was requested, which is the normal case.</span></div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keywordtype">void</span> applyPendingSampleCount();</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="comment">// The sample count an app asked for before the context existed, and the pending</span></div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="comment">// request applyPendingSampleCount acts on. 0 means &quot;nothing pending&quot;.</span></div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="keywordtype">int</span> pendingsamplecount = 0;</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="comment">// Shader hot reload. Development builds watch the .vert / .frag sources the 2D</span></div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <span class="comment">// pipelines are compiled from and rebuild them when one is saved, so a shader</span></div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="comment">// can be tuned without restarting. Release builds compile nothing at runtime,</span></div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="comment">// the timestamp stays 0 and this costs one comparison per frame.</span></div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="keywordtype">void</span> checkShaderReload();</div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="keywordtype">long</span> <span class="keywordtype">long</span> shadersourcetimestamp = 0;</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    <span class="keywordtype">int</span> shaderpollcountdown = 0;</div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>};</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="comment">// A depth-only clear issued while recording the shadow traversal marks the</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="comment">// start of a first-person/overlay section. The world recorded before it must</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="comment">// remain in the shadow map, while later meshes must not become shadow casters.</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordtype">bool</span> shadowcasterrecordingclosed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="comment">// Set by the depth-only clear which starts a first-person overlay. Later meshes</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="comment">// keep lighting but do not receive the world&#39;s shadow map.</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordtype">bool</span> firstpersonoverlayactive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordtype">bool</span> shadowsoft = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    glm::mat4 shadowlightmatrix{1.0f};</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    glm::vec3 shadowlightposition{0.0f};</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="comment">// Fills the frame&#39;s scene uniform block from the renderer&#39;s camera and lights.</span></div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="comment">// Declared unconditionally: this header does not pull in the Vulkan guard, and</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="comment">// the definition is what is compiled out on a build without Vulkan.</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordtype">void</span> updateSceneUniforms();</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="comment">// Whether this frame&#39;s scene block has been written yet. Reset in beginFrame, so</span></div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="comment">// the camera and lights are gathered once per frame instead of once per mesh.</span></div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordtype">bool</span> sceneuniformswritten = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="comment">// Consecutive opaque mesh calls are safe to combine because their relative</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <span class="comment">// order is preserved.  Transparent meshes and caller-provided instancing stay</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="comment">// immediate: changing either would alter the public draw semantics.</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keyword">struct </span>QueuedMeshDraw {</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        GLuint vertexarrayid = 0;</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        <span class="keywordtype">int</span> vertexcount = 0;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <span class="keywordtype">int</span> indexcount = 0;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        <span class="keywordtype">int</span> drawmode = GL_TRIANGLES;</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>        <span class="keywordtype">int</span> instancecount = 1;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        glm::mat4 model{1.0f};</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        gMeshSurface surface{};</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        glm::vec4 tint{1.0f};</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        <span class="keywordtype">bool</span> depthtest = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        <span class="keywordtype">int</span> depthtesttype = <a class="code hl_variable" href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">DEPTHTESTTYPE_LESS</a>;</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <span class="keywordtype">bool</span> culling = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="keywordtype">int</span> cullface = GL_BACK;</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        <span class="keywordtype">int</span> cullingdirection = GL_CCW;</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        <span class="comment">// A digest of everything canMergeQueuedDraws compares, filled when the draw</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        <span class="comment">// is queued. flushQueuedDraws sorts by it so that draws which could merge but</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>        <span class="comment">// arrived apart end up next to each other; the exact comparison still decides</span></div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        <span class="comment">// whether they really do, so a hash collision costs a missed merge and</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>        <span class="comment">// nothing else.</span></div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>        uint64_t mergekey = 0;</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    };</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    std::vector&lt;QueuedMeshDraw&gt; queuedmeshdraws;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <span class="keywordtype">bool</span> flushingqueueddraws = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keyword">static</span> uint64_t gvkQueuedDrawKey(<span class="keyword">const</span> QueuedMeshDraw&amp; draw);</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordtype">bool</span> canMergeQueuedDraws(<span class="keyword">const</span> QueuedMeshDraw&amp; first, <span class="keyword">const</span> QueuedMeshDraw&amp; next) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">void</span> recordQueuedDrawGroup(<span class="keywordtype">size_t</span> first, <span class="keywordtype">size_t</span> count);</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keywordtype">void</span> destroyAllTextures();</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="comment">// The Vulkan texture behind the currently bound id, or null when there is none</span></div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="comment">// yet - gTexture sets filtering and wrapping both before and after the upload.</span></div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    gVKTexture* getBoundVKTexture();</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="comment">// The texture bound to one unit, for gVKUserShader&#39;s sampler resolution.</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    gVKTexture* getVKTextureAtUnit(<span class="keywordtype">int</span> unit);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="comment">// Applies a pending setMultiSampling at a frame boundary: everything the sample</span></div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="comment">// count is baked into - the render pass, the depth and MSAA attachments, the</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="comment">// framebuffers and both pipeline builds - is destroyed and rebuilt. Returns</span></div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <span class="comment">// straight away when nothing was requested, which is the normal case.</span></div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="keywordtype">void</span> applyPendingSampleCount();</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="comment">// The sample count an app asked for before the context existed, and the pending</span></div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="comment">// request applyPendingSampleCount acts on. 0 means &quot;nothing pending&quot;.</span></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="keywordtype">int</span> pendingsamplecount = 0;</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="comment">// Shader hot reload. Development builds watch the .vert / .frag sources the 2D</span></div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    <span class="comment">// pipelines are compiled from and rebuild them when one is saved, so a shader</span></div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>    <span class="comment">// can be tuned without restarting. Release builds compile nothing at runtime,</span></div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    <span class="comment">// the timestamp stays 0 and this costs one comparison per frame.</span></div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    <span class="keywordtype">void</span> checkShaderReload();</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    <span class="keywordtype">long</span> <span class="keywordtype">long</span> shadersourcetimestamp = 0;</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    <span class="keywordtype">int</span> shaderpollcountdown = 0;</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>};</div>
 </div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgImage_html"><div class="ttname"><a href="classgImage.html">gImage</a></div><div class="ttdef"><b>Definition</b> gImage.h:34</div></div>
 <div class="ttc" id="aclassgRenderer_html"><div class="ttname"><a href="classgRenderer.html">gRenderer</a></div><div class="ttdef"><b>Definition</b> gRenderer.h:132</div></div>
-<div class="ttc" id="aclassgRenderer_html_a10ba9eb49755cea48500ab0046baf6e4"><div class="ttname"><a href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">gRenderer::height</a></div><div class="ttdeci">static int height</div><div class="ttdef"><b>Definition</b> gRenderer.h:699</div></div>
-<div class="ttc" id="aclassgRenderer_html_a521e019ad5133df5702d399bf051adda"><div class="ttname"><a href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">gRenderer::width</a></div><div class="ttdeci">static int width</div><div class="ttdef"><b>Definition</b> gRenderer.h:699</div></div>
+<div class="ttc" id="aclassgRenderer_html_a10ba9eb49755cea48500ab0046baf6e4"><div class="ttname"><a href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">gRenderer::height</a></div><div class="ttdeci">static int height</div><div class="ttdef"><b>Definition</b> gRenderer.h:700</div></div>
+<div class="ttc" id="aclassgRenderer_html_a521e019ad5133df5702d399bf051adda"><div class="ttname"><a href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">gRenderer::width</a></div><div class="ttdeci">static int width</div><div class="ttdef"><b>Definition</b> gRenderer.h:700</div></div>
 <div class="ttc" id="aclassgRenderer_html_a714415836f28448509a9f3716ae4361d"><div class="ttname"><a href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">gRenderer::DEPTHTESTTYPE_LESS</a></div><div class="ttdeci">static const int DEPTHTESTTYPE_LESS</div><div class="ttdef"><b>Definition</b> gRenderer.h:135</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html"><div class="ttname"><a href="classgVKRenderEngine.html">gVKRenderEngine</a></div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:38</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a01de61e2a5152955877139b9d779c071"><div class="ttname"><a href="classgVKRenderEngine.html#a01de61e2a5152955877139b9d779c071">gVKRenderEngine::updateLights</a></div><div class="ttdeci">void updateLights() override</div></div>
