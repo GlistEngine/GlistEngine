@@ -162,6 +162,13 @@ public:
 	float getLineHeight() const;
 
 	/**
+	 * Ascender and descender of the face at the loaded size, both as positive
+	 * distances from the baseline in logical pixels.
+	 */
+	float getAscender() const;
+	float getDescender() const;
+
+	/**
 	 * Returns the path of the loaded font.
 	 *
 	 * @return The path of the font
@@ -229,6 +236,8 @@ private:
 	FT_Face fontface = nullptr;
 
 	float lineheight = 0.0f;
+	float ascender = 0.0f;
+	float descender = 0.0f;
 	float letterspacing = 1.0f;
 	float spacesize = 1.0f;
 	float scale = 1.0f;

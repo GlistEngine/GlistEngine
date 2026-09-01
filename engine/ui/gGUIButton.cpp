@@ -177,7 +177,8 @@ void gGUIButton::resetTitlePosition() {
 	float visualw = xmax - xmin;
 
 	tx = (int)std::round((buttonw - visualw) * 0.5f - xmin);
-	ty = (buttonh - getFont()->getStringHeight("a")) / 2 + 2;
+	// Center the font's line box: baseline sits descender above the bottom gap.
+	ty = (int)std::round((buttonh - getFont()->getAscender() - getFont()->getDescender()) / 2.0f + getFont()->getDescender());
 
 	// clamp
 	if(tx < 4) tx = 4;

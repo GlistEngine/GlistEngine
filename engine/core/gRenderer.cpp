@@ -6,6 +6,7 @@
  */
 
 #include "gRenderer.h"
+#include <cmath>
 #include "gFbo.h"
 #include "gRenderObject.h" // for the global renderer the compatibility calls below use
 
@@ -733,17 +734,15 @@ float gRenderer::getScaleMultiplier() {
 	return width / (float)unitwidth;
 }
 
-int gRenderer::scaleX(int x) { return (x * unitwidth) / width; }
-int gRenderer::scaleY(int y) { return (y * unitheight) / height; }
+int gRenderer::scaleX(int x) { return (int)std::lround((double)x * unitwidth / width); }
+int gRenderer::scaleY(int y) { return (int)std::lround((double)y * unitheight / height); }
 
 int gRenderer::unscaleX(int x) {
-	float scale = width / (float)unitwidth;
-	return x * scale;
+	return (int)std::lround((double)x * width / unitwidth);
 }
 
 int gRenderer::unscaleY(int y) {
-	float scale = height / (float)unitheight;
-	return y * scale;
+	return (int)std::lround((double)y * height / unitheight);
 }
 
 void gRenderer::setColor(int r, int g, int b, int a) {

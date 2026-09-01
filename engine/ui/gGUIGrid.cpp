@@ -2772,7 +2772,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 				} else if (allcells[cellIndex].showncontent[i] == ','
 						|| allcells[cellIndex].showncontent[i] == ' ') {
 					if (isdigit(allcells[cellIndex].showncontent[i - 1])) {
-						if (i + 1 < allcells[cellIndex].showncontent.length()) {
+						if (i + 3 < allcells[cellIndex].showncontent.length()) {
 							int next = 3;
 							while (next > 0) {
 								if (!isdigit(
