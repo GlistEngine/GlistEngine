@@ -17,9 +17,9 @@ gCanvas::~gCanvas() {
 }
 
 void gCanvas::setup() {
-	background.loadImage("images/magnifier_background.png");
-	logo.loadImage("images/glistengine_logo.png");
-	magnifierframe.loadImage("images/magnifier_frame.png");
+	background.loadImage("magnifier_background.png");
+	logo.loadImage("glistengine_logo.png");
+	magnifierframe.loadImage("magnifier_frame.png");
 
 	postprocessmanager.setDimensions(getWidth(), getHeight());
 
