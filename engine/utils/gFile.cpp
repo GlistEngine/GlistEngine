@@ -60,7 +60,7 @@ gFile::~gFile() {}
 
 bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
 #ifdef _WIN32
-    path = fs::path(utf8ToWide(fullPath));   // <-- kritik
+    path = fs::path(utf8ToWide(fullPath));   // critical, a narrow path would go through the ANSI code page
 #else
     path = fs::path(fullPath);
 #endif
@@ -73,7 +73,7 @@ bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
 bool gFile::loadFile(const std::string& filePath, int fileMode, bool isBinary) {
 #ifdef _WIN32
     std::string p = gGetFilesDir() + filePath;
-    path = fs::path(utf8ToWide(p));          // <-- kritik
+    path = fs::path(utf8ToWide(p));          // critical, a narrow path would go through the ANSI code page
 #else
     path = fs::path(gGetFilesDir() + filePath);
 #endif
@@ -128,11 +128,14 @@ void gFile::close() {
 bool gFile::openStream(int fileMode, bool isBinary) {
     mode = fileMode;
     binary = isBinary;
-    std::ios_base::openmode binarymode = binary ? std::ios::binary : (std::ios_base::openmode)0;
 
     close();
 
-    std::ios_base::openmode m = binarymode;
+    // Always open in binary. Text mode translates line endings only on Windows,
+    // which makes tellg disagree with what read delivers and leaves the buffer
+    // null padded. Text files get their carriage returns removed in readFile
+    // instead, so every platform sees the same bytes.
+    std::ios_base::openmode m = std::ios::binary;
 
     switch(mode) {
     case FILEMODE_READONLY:  m |= std::ios::in; break;
@@ -155,7 +158,7 @@ bool gFile::openStream(int fileMode, bool isBinary) {
         return false;
     }
 
-    // SADECE open baþarýlýysa oku
+    // Only read if the file opened successfully
     if(mode == FILEMODE_READONLY || mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) {
         readFile();
     }
@@ -221,9 +224,19 @@ void gFile::readFile() {
 	size = stream.tellg();
 	stream.seekg(0, std::ios::beg);  // Go back to the beginning of the file.
 
+	if(size <= 0) {
+		size = 0;
+		bytes.clear();
+		stream.clear();
+		return;
+	}
+
 	if (binary) {
 		bytes = std::vector<char>(size);
 		stream.read(bytes.data(), size);
+
+		// Keep only what actually arrived, read() can deliver less than requested
+		bytes.resize(stream.gcount());
 	} else { // Replace carriage return characters in text files
 		// Reserve the size of the string to prevent reallocations.
 		std::string filestr;
@@ -232,13 +245,17 @@ void gFile::readFile() {
 		// Read the entire file into the string.
 		stream.read(&filestr[0], size);
 
+		// Keep only what actually arrived so a short read cannot leave null padding
+		filestr.resize(stream.gcount());
+
 		// Remove all carriage return characters
 		filestr.erase(std::remove(filestr.begin(), filestr.end(), '\r'), filestr.end());
 
 		// Move the modified string into a vector<char>
 		bytes = std::vector<char>(filestr.begin(), filestr.end());
-		size = bytes.size();
 	}
+
+	size = bytes.size();
 
 	// Clear any flags and rewind if needed to read again later.
 	stream.clear();
@@ -402,7 +419,7 @@ std::vector<std::string> gFile::getDirectoryContent(const std::string& fullPath)
 
 std::string gFile::normalizePathUtf8(const std::string& p) {
 	#ifdef _WIN32
-		return toFsPath(p).u8string();   // ACP/UTF8 karýþsa bile fs::path üzerinden normalize edip UTF-8 döndürür
+		return toFsPath(p).u8string();   // Normalizes through fs::path and returns UTF-8 even when ACP and UTF-8 are mixed
 	#else
 		return p;
 	#endif
