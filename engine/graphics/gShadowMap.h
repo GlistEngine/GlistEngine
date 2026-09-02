@@ -7,11 +7,7 @@
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by me.
  */
 
 #ifndef GRAPHICS_GSHADOWMAP_H_
@@ -21,7 +17,7 @@
 #include "gFbo.h"
 #include "gLight.h"
 #include "gCamera.h"
-
+#include <vector>
 
 class gShadowMap : public gRenderObject {
 public:
@@ -57,6 +53,8 @@ public:
 
 	gFbo& getDepthFbo();
 
+	unsigned int getVulkanDepthTextureId() const;
+	void bindVulkanShadowMap(int slot = 1);
 
 private:
 	bool isallocated, isactivated, isenabled;
@@ -68,6 +66,10 @@ private:
 	int width, height;
 	int shadowmaptextureslot;
 	bool updateshadows;
+
+	unsigned int vkdepthtextureid;
+	void allocateVulkanResources();
+	void releaseVulkanResources();
 };
 
 #endif /* GRAPHICS_GSHADOWMAP_H_ */
