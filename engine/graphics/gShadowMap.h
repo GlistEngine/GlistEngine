@@ -53,7 +53,6 @@ public:
 
 	gFbo& getDepthFbo();
 
-	// Vulkan Destek Fonksiyonlarý
 	unsigned int getVulkanDepthTextureId() const;
 	void bindVulkanShadowMap(int slot = 1);
 
@@ -68,7 +67,6 @@ private:
 	int shadowmaptextureslot;
 	bool updateshadows;
 
-	// Vulkan Spesifik Deðiþkenler
 	unsigned int vkdepthtextureid;
 	void allocateVulkanResources();
 	void releaseVulkanResources();

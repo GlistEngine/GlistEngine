@@ -73,7 +73,6 @@ void gGLRenderEngine::clear() {
 }
 
 void gGLRenderEngine::clearColor(int r, int g, int b, int a) {
-	//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
 	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
@@ -114,10 +113,6 @@ int gGLRenderEngine::getDepthTestType() {
 
 void gGLRenderEngine::enableAlphaBlending() {
 	G_CHECK_GL(glEnable(GL_BLEND));
-	// Separate alpha factors keep destination alpha meaningful when rendering
-	// into an FBO: coverage accumulates as a_s + a_d * (1 - a_s). With plain
-	// glBlendFunc the FBO alpha ends up wrong and text composited through an
-	// FBO gets fringes over colored backgrounds.
 	G_CHECK_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	blendmode = BLENDMODE_ALPHA;
 	isalphablendingenabled = true;
@@ -125,9 +120,6 @@ void gGLRenderEngine::enableAlphaBlending() {
 
 void gGLRenderEngine::setBlendMode(int blendMode) {
 	blendmode = blendMode;
-	// Set even when blending is off: glBlendFunc is remembered by the context, so a
-	// later enableAlphaBlending would otherwise start in whatever mode was last
-	// used. Enabling deliberately resets it to ALPHA, so the two agree either way.
 	if(blendMode == BLENDMODE_ADDITIVE) {
 		G_CHECK_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	} else {
@@ -172,10 +164,8 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
 	unsigned char* temprow = new unsigned char[rowsize];
 
 	for(int row = 0; row < height / 2; ++row) {
-		// Calculate the corresponding row from the bottom
 		int bottomrow = height - row - 1;
 
-		// Swap the rows
 		memcpy(temprow, pixelData + row * rowsize, rowsize);
 		memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
 		memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
@@ -190,8 +180,6 @@ void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
 	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 }
 
 void gGLRenderEngine::takeScreenshot(gImage& img) {
@@ -202,8 +190,6 @@ void gGLRenderEngine::takeScreenshot(gImage& img) {
 	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
 	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 }
 
 
@@ -244,7 +230,6 @@ void gGLRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int s
 	G_CHECK_GL(glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer, offset, size));
 }
 
-// ----- VAO -----l
 GLuint gGLRenderEngine::createVAO() {
 	checkGLThread("createVAO");
 	GLuint vao;
@@ -350,7 +335,6 @@ void gGLRenderEngine::bindFramebuffer(GLuint fbo) {
 }
 
 void gGLRenderEngine::checkFramebufferStatus() {
-	// check if fbo complete
 	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	if(status != GL_FRAMEBUFFER_COMPLETE) {
 		gLoge("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
@@ -476,7 +460,6 @@ GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 #endif
 	G_CHECK_GL(glLinkProgram(id));
 	checkCompileErrors(id, "PROGRAM");
-	// delete the shaders as they're linked into our program now and no longer necessery
 	G_CHECK_GL(glDeleteShader(vertex));
 	G_CHECK_GL(glDeleteShader(fragment));
 #if defined(WIN32) || defined(LINUX)
@@ -885,18 +868,12 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 void gGLRenderEngine::init() {
 	glthreadid = std::this_thread::get_id();
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
-	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
-	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.
 	if (GLEW_VERSION_4_3 || GLEW_ARB_debug_output) {
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(openglErrorCallback, nullptr);
 	}
 #endif
-	// The counterpart of the Vulkan backend's startup line: which backend this run
-	// actually got, and on what. A game that asked for one backend and quietly got
-	// the other looks the same in every other line of the log, so the difference
-	// only ever showed up as a frame counter nobody could explain.
 	const GLubyte* devicename = glGetString(GL_RENDERER);
 	const GLubyte* deviceversion = glGetString(GL_VERSION);
 	gLogi("gGLRenderEngine") << "Renderer: OpenGL "

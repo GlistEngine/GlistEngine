@@ -511,7 +511,6 @@ void gSkybox::drawVulkan() {
 			v[0] = position.x; v[1] = position.y; v[2] = position.z;
 			v[3] = uv.x;       v[4] = uv.y;
 		}
-		// 6 vertex, her vertex 5 float (x,y,z,u,v) olacak sekilde friend Vulkan katmanina gonderiliyor
 		renderer->drawSkyboxFace(vkfaceids[face], xyzuv, 6, viewprojection);
 	}
 }

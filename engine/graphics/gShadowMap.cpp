@@ -27,14 +27,6 @@ gShadowMap::gShadowMap() {
 gShadowMap::~gShadowMap() {}
 
 void gShadowMap::allocate(gLight* light, gCamera* camera, int width, int height) {
-	// The Vulkan backend has no GL context and no shadowmap shader, so instead of
-	// the depthfbo below it builds its own depth-only render target and pipeline.
-	// Everything after that - the light matrices, the two render passes, the
-	// enable/disable pairing - is shared with the OpenGL path.
-	//
-	// If the backend cannot provide one, isallocated stays false and every entry
-	// point of this class turns into a no-op, so a game that asks for shadows
-	// renders without them instead of crashing.
 	if(renderer->isVulkan()) {
 		if(!renderer->allocateShadowMap(width, height)) {
 			gLogw("gShadowMap") << "The Vulkan backend could not allocate a shadow map; "
@@ -102,12 +94,12 @@ gCamera* gShadowMap::getCamera() const {
 
 void gShadowMap::activate() {
 	isactivated = true;
-	renderpassnum = 2; // FIX: renderpassnum -> renderpassno olarak duzeltildi
+	renderpassnum = 2;
 	updateshadows = true;
 }
 
 void gShadowMap::deactivate() {
-	renderpassnum = 1; // FIX: renderpassnum -> renderpassno olarak duzeltildi
+	renderpassnum = 1;
 	updateshadows = false;
 	disable();
 	isactivated = false;
@@ -124,11 +116,6 @@ void gShadowMap::enable() {
 	isenabled = true;
 	isshadowmappingenabled = true;
 
-	// The Vulkan path does not switch shaders or bind an FBO here: which pass is
-	// being recorded is decided by the frame loop, which opens the shadow render
-	// pass for pass 0 and the screen one for pass 1. All this has to do is keep the
-	// backend's copy of the light transform current, so the depth pass and the
-	// shading pass agree on where the light is.
 	if (renderer->isVulkan()) {
 		renderer->setShadowMapState(true, lightmatrix, lightposition,
 				renderer->isSoftShadowsEnabled());
@@ -159,9 +146,6 @@ void gShadowMap::disable() {
 
 	isenabled = false;
 	isshadowmappingenabled = false;
-
-	// Nothing to unbind on Vulkan: there is no bound FBO, and the render pass is
-	// closed by the frame loop that opened it.
 	if (renderer->isVulkan()) return;
 
 	depthfbo.unbind();
@@ -174,7 +158,7 @@ bool gShadowMap::isEnabled() const {
 void gShadowMap::setLightProjection(glm::mat4 lightProjection) {
 	lightprojection = lightProjection;
 	if (renderer != nullptr && renderer->isVulkan()) {
-		lightprojection[1][1] *= -1.0f; // Vulkan Y-axis flip
+		lightprojection[1][1] *= -1.0f;
 	}
 	lightmatrix = lightprojection * lightview;
 }
@@ -182,7 +166,7 @@ void gShadowMap::setLightProjection(glm::mat4 lightProjection) {
 void gShadowMap::setLightProjection(float leftx, float rightx, float fronty, float backy, float nearz, float farz) {
 	lightprojection = glm::ortho(leftx, rightx, fronty, backy, nearz, farz);
 	if (renderer != nullptr && renderer->isVulkan()) {
-		lightprojection[1][1] *= -1.0f; // Vulkan Y-axis flip
+		lightprojection[1][1] *= -1.0f;
 	}
 	lightmatrix = lightprojection * lightview;
 }
