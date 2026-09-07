@@ -1123,7 +1123,7 @@ var searchData=
   ['graphics_5fgmaterial_5fh_5f_1120',['GRAPHICS_GMATERIAL_H_',['../gMaterial_8h.html#abc7824228f11ca141215f69618e40b7e',1,'gMaterial.h']]],
   ['gravity_1121',['gravity',['../classgParticle.html#af1f613e6f143d1310d89e93969cef2c5',1,'gParticle']]],
   ['gravityfactor_1122',['gravityfactor',['../classgParticle.html#a4ce075534a682eff590658d205bce94c',1,'gParticle']]],
-  ['gray_1123',['gray',['../classgRay.html',1,'gRay'],['../classgRay.html#adf9b9b43d8f6d8d527a364f8e3a6dd82',1,'gRay::gRay(const glm::vec3 &amp;originPoint, const glm::vec3 &amp;directionVector)'],['../classgRay.html#ac8d293b061a78f961fbb4a6e8fe0a367',1,'gRay::gRay()'],['../classgColor.html#ab5cf038dbf8419d603b7b000ec8fb46e',1,'gColor::GRAY']]],
+  ['gray_1123',['gray',['../classgRay.html',1,'gRay'],['../classgColor.html#ab5cf038dbf8419d603b7b000ec8fb46e',1,'gColor::GRAY'],['../classgRay.html#adf9b9b43d8f6d8d527a364f8e3a6dd82',1,'gRay::gRay(const glm::vec3 &amp;originPoint, const glm::vec3 &amp;directionVector)'],['../classgRay.html#ac8d293b061a78f961fbb4a6e8fe0a367',1,'gRay::gRay()']]],
   ['gray_2eh_1124',['gRay.h',['../gRay_8h.html',1,'']]],
   ['greater_1125',['GREATER',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca25b5ca2f56d99ba6ffcb5316adac34c1',1,'gSpriteAnimation.h']]],
   ['greater_5fequal_1126',['GREATER_EQUAL',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca4495f63771aa2060042a31363e16d4f9',1,'gSpriteAnimation.h']]],

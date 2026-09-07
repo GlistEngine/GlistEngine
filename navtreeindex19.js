@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"gLight_8h.html":[2,0,0,4,15],
 "gLight_8h_source.html":[2,0,0,4,15],
 "gLine_8h.html":[2,0,0,4,2,6],
 "gLine_8h_source.html":[2,0,0,4,2,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907":[2,0,0,8,9,42],
 "gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2":[2,0,0,8,9,67],
 "gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2":[2,0,0,8,9,21],
-"gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b":[2,0,0,8,9,36],
-"gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023":[2,0,0,8,9,20]
+"gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b":[2,0,0,8,9,36]
 };

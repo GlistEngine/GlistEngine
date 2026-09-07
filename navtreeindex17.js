@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"functions_func_r.html":[1,3,1,16],
 "functions_func_s.html":[1,3,1,17],
 "functions_func_t.html":[1,3,1,18],
 "functions_func_u.html":[1,3,1,19],
@@ -25,8 +26,8 @@ var NAVTREEINDEX17 =
 "functions_type.html":[1,3,3],
 "functions_u.html":[1,3,0,20],
 "functions_v.html":[1,3,0,21],
-"functions_vars.html":[1,3,2,0],
 "functions_vars.html":[1,3,2],
+"functions_vars.html":[1,3,2,0],
 "functions_vars_b.html":[1,3,2,1],
 "functions_vars_c.html":[1,3,2,2],
 "functions_vars_d.html":[1,3,2,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "gGUIDivider_8h_source.html":[2,0,0,7,14],
 "gGUIDropdownList_8h.html":[2,0,0,7,15],
 "gGUIDropdownList_8h_source.html":[2,0,0,7,15],
-"gGUIEvents_8h.html":[2,0,0,7,16],
-"gGUIEvents_8h.html#a03d9851d3fa27453d6988bbe7f2ebe96":[2,0,0,7,16,14]
+"gGUIEvents_8h.html":[2,0,0,7,16]
 };

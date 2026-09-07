@@ -6,6 +6,7 @@ var classgDeferredLight =
     [ "enable", "classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a", null ],
     [ "getGeomShader", "classgDeferredLight.html#af331545a36199d263f536d5a72e002b8", null ],
     [ "getLightShader", "classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b", null ],
-    [ "renderLightingPass", "classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e", null ],
+    [ "renderLightingPass", "classgDeferredLight.html#a15064a1b2efed9d5c03781b83bfa2b4a", null ],
+    [ "resize", "classgDeferredLight.html#afb28fb69675548001d2e4e0a10241940", null ],
     [ "setup", "classgDeferredLight.html#a50c91b8ac08418f39c23a7d557688131", null ]
 ];

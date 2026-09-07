@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023":[2,0,0,8,9,20],
 "gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050":[2,0,0,8,9,68],
 "gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a":[2,0,0,8,9,43],
 "gUtils_8h_source.html":[2,0,0,8,9],
@@ -100,8 +101,8 @@ var NAVTREEINDEX20 =
 "globals_b.html":[2,1,0,2],
 "globals_c.html":[2,1,0,3],
 "globals_d.html":[2,1,0,4],
-"globals_defs.html":[2,1,6],
 "globals_defs.html":[2,1,6,0],
+"globals_defs.html":[2,1,6],
 "globals_defs_c.html":[2,1,6,1],
 "globals_defs_e.html":[2,1,6,2],
 "globals_defs_g.html":[2,1,6,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,156,2,5],
 "structgRenderer_1_1gSceneFogData.html#a52fbca828c7a89b94457ba5f0c8cb461":[1,0,156,2,4],
 "structgRenderer_1_1gSceneFogData.html#a555b19f83c6c0e00463b12da0f4d2cea":[1,0,156,2,1],
-"structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,156,2,0],
-"structgRenderer_1_1gSceneFogData.html#a88990ff245ff5283fb0df9f4a4962f5d":[1,0,156,2,3]
+"structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,156,2,0]
 };
