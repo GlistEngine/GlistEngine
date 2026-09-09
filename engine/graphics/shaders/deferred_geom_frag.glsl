@@ -34,32 +34,40 @@ uniform Material material;
 uniform sampler2D texture_diffuse1;
 
 void main() {
-    gPosition = vec4(FragPos, material.shininess);
+    // Position and Shininess
+    gPosition = vec4(FragPos, material.shininess > 0.0 ? material.shininess : 32.0);
     
+    // 1. Normal automation
     vec3 finalNormal = normalize(Normal);
-    float specIntensity = 0.0;
+    if (material.useNormalMap > 0) {
+        vec3 mapNormal = texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0;
+        finalNormal = normalize(mapNormal);
+    }
+
+    // 2. Albedo / Color automation
+    vec4 baseColor = vec4(1.0);
     
-    // Albedo / Color
     if (material.useDiffuseMap > 0) {
         vec4 texColor = texture(material.diffusemap, TexCoords);
-        if (texColor.a < 0.5) discard;
-        gAlbedo = texColor * renderColor * vec4(incolor, 1.0);
+        if (texColor.a < 0.1) discard;
+        baseColor = texColor;
+    } else if (material.diffuse.a > 0.0 && (material.diffuse.r + material.diffuse.g + material.diffuse.b) > 0.0) {
+        baseColor = material.diffuse;
     } else {
-        // Try fallback to texture_diffuse1 if material doesn't use map explicitly but texture is bound
-        // This handles cases where mesh just binds a texture
-        gAlbedo = material.diffuse * renderColor * vec4(incolor, 1.0);
-        
-        vec4 fallbackTex = texture(texture_diffuse1, TexCoords);
-        if(fallbackTex.a > 0.0) {
-            // Very simple heuristic for fallback
-        }
+        baseColor = vec4(0.8, 0.8, 0.8, 1.0);
     }
     
+    // Vertex color and renderColor blending
+    vec3 vertexColor = (incolor != vec3(0.0)) ? incolor : vec3(1.0);
+    gAlbedo = baseColor * renderColor * vec4(vertexColor, 1.0);
+
+    // 3. Specular / Roughness map automation
+    float specIntensity = 0.0;
     if (material.useSpecularMap > 0) {
         specIntensity = texture(material.specularmap, TexCoords).r;
     } else {
-        specIntensity = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+        float matSpecAvg = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+        specIntensity = (matSpecAvg > 0.0) ? matSpecAvg : clamp(1.0 - (baseColor.r * 0.5), 0.1, 0.4);
     }
-
     gNormal = vec4(finalNormal, specIntensity);
 }

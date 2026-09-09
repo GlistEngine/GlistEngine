@@ -1,25 +1,24 @@
 #version 330 core
 
+uniform sampler2D ssgiTexture;
+uniform int useSSGI;
+
 out vec4 FragColor;
 in vec2 TexCoords;
 
-//G-Buffer Textures
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedo;
 
-//Light Variables
 uniform vec3 lightPos;
 uniform vec3 lightAmbient;
 uniform vec3 lightDiffuse;
 uniform vec3 viewPos;
 
-//Shadow Variables
 uniform mat4 lightMatrix;
 uniform sampler2D shadowMap;
 uniform vec3 shadowLightPos;
 
-//Scene UBO matches GlistEngine exactly
 struct Fog {
     vec3 color;
     float linearStart;
@@ -30,7 +29,7 @@ struct Fog {
 };
 
 struct Light {
-    int type; //0-ambient, 1-directional, 2-point, 3-spot
+    int type; 
     vec3 position;
     vec3 direction;
     vec4 ambient;
@@ -97,7 +96,6 @@ float calculateShadow(vec4 fragPosLightSpace, vec3 FragPos, vec3 Normal) {
     return shadow;
 }
 
-// Single-Pass Screen Space Directional Occlusion (Fake SSAO/Cavity)
 float calculateAO(vec2 texCoords, vec3 fragPos, vec3 normal) {
     vec2 texel = 1.0 / vec2(textureSize(gPosition, 0));
     float occlusion = 0.0;
@@ -107,11 +105,11 @@ float calculateAO(vec2 texCoords, vec3 fragPos, vec3 normal) {
         vec2( 2.0,  2.0), vec2(-2.0, -2.0), vec2( 2.0, -2.0), vec2(-2.0,  2.0)
     );
     
-    float radius = 1.5; // Max distance in world space
+    float radius = 1.5; 
     
     for(int i = 0; i < 8; i++) {
         vec3 samplePos = texture(gPosition, texCoords + offsets[i] * texel).rgb;
-        if (length(samplePos) < 0.1) continue; // Skip skybox
+        if (length(samplePos) < 0.1) continue; 
         
         vec3 diff = samplePos - fragPos;
         float dist = length(diff);
@@ -138,9 +136,7 @@ void main() {
     float effectiveSpecIntensity = (specIntensity > 0.01) ? specIntensity : 0.35;
     
     vec4 Albedo = texture(gAlbedo, TexCoords);
-    // Removed Gamma Correction here to match the Forward renderer perfectly!
     
-    // Discard empty skybox areas
     if(length(Normal) < 0.1) {
         FragColor = Albedo;
         return;
@@ -148,17 +144,17 @@ void main() {
     
     vec3 norm = normalize(Normal);
     vec3 vDir = normalize(viewPos - FragPos);
-    vec3 lightDir = normalize(lightPos - FragPos); 
     
-    // Evaluate Fake SSAO for corner and edge depth
-	float aoFactor = 1.0; //calculateAO(TexCoords, FragPos, norm);
-    
-    // Evaluate Hemispheric Ambient (Up-facing is brighter than down-facing)
+    float aoFactor = 1.0; 
     float hemi = (norm.y + 1.0) * 0.5;
     float hemiFactor = mix(0.4, 1.0, hemi);
     
-    //Lighting
-	vec3 totalAmbient = vec3(0.0);
+    vec3 ssgiColor = vec3(0.0);
+    if (useSSGI == 1) {
+        ssgiColor = texture(ssgiTexture, TexCoords).rgb;
+    }
+    
+    vec3 totalAmbient = (globalambientcolor.rgb + ssgiColor) * Albedo.rgb * aoFactor * hemiFactor;
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     
@@ -172,18 +168,17 @@ void main() {
         if (light.type == 0) {
             totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
         } 
-        else if (light.type == 1) {
+        else if (light.type == 1) { 
             vec3 lDir = normalize(-light.direction);
             float diff = max(dot(norm, lDir), 0.0);
             vec3 reflectDir = reflect(-lDir, norm);
             float spec = pow(max(dot(vDir, reflectDir), 0.0), shininess);
             
-            // AO heavily darkens directional light in crevices (micro-shadowing)
             totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
             totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb * aoFactor;
             totalSpecular += light.specular.rgb * spec * effectiveSpecIntensity * aoFactor; 
         }
-        else if (light.type == 2) {
+        else if (light.type == 2) { 
             vec3 lDir = normalize(light.position - FragPos);
             float distance = length(light.position - FragPos);
             float diff = max(dot(norm, lDir), 0.0);
@@ -192,11 +187,11 @@ void main() {
             
             float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
             
-            totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
+            totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor * attenuation;
             totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb * attenuation * aoFactor;
             totalSpecular += light.specular.rgb * spec * effectiveSpecIntensity * attenuation * aoFactor;
         }
-        else if (light.type == 3) {
+        else if (light.type == 3) { 
             vec3 lDir = normalize(light.position - FragPos);
             float distance = length(light.position - FragPos);
             float diff = max(dot(norm, lDir), 0.0);
@@ -222,7 +217,6 @@ void main() {
         totalAmbient = globalambientcolor.rgb * Albedo.rgb * aoFactor * hemiFactor;
     }
 
-    //Shadow Blending
     vec4 fragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
     float shadowing = 1.0 - calculateShadow(fragPosLightSpace, FragPos, norm);
     
@@ -231,7 +225,6 @@ void main() {
     
     vec4 result = vec4(totalAmbient + totalDiffuse + totalSpecular, Albedo.a);
     
-    //Post-Processing 
     if((flags & ENABLE_FOG_FLAG) > 0) {
         float distance = length(viewPos - FragPos);
         float visibility = 0.0;
