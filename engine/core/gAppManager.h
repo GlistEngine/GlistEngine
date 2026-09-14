@@ -237,6 +237,9 @@ public:
     void setStepMode(int stepMode);
     int getStepMode();
 
+    void setUpdateTargetRate(int rate);
+    int getUpdateTargetRate();
+
 	/**
 	 * @param framerate Target frames per second value
 	 */
@@ -382,7 +385,6 @@ private:
     static const int maxjoysticknum = 16;
     static const int maxjoystickbuttonnum = 15;
     static const int maxmousebuttonnum = 3;
-    static const int updatetargetrate = 60;
 
     using AppClock = std::chrono::steady_clock;
     using AppClockDuration = AppClock::duration;
@@ -427,6 +429,7 @@ private:
     int totalupdates;
     int totaldraws;
     int targetframerate;
+    int updatetargetrate;
     bool iscanvasset;
 
     std::thread updatethread;

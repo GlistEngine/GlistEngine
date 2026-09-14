@@ -121,6 +121,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     totalupdates = 0;
     totaldraws = 0;
     isupdatethreadrunning = false;
+    updatetargetrate = 60;
     updatetargettimestep = AppClockDuration(1'000'000'000 / (updatetargetrate + 1));
     iswindowfocused = false;
 #ifdef ANDROID
@@ -452,6 +453,15 @@ void gAppManager::setStepMode(int stepMode) {
 
 int gAppManager::getStepMode() {
     return stepmode;
+}
+
+void gAppManager::setUpdateTargetRate(int rate) {
+    updatetargetrate = rate;
+    updatetargettimestep = AppClockDuration(1'000'000'000 / (updatetargetrate + 1));
+}
+
+int gAppManager::getUpdateTargetRate() {
+    return updatetargetrate;
 }
 
 void gAppManager::setTargetFramerate(int framerate) {
