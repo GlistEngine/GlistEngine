@@ -110,6 +110,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     for(int i = 0; i < maxmousebuttonnum; i++) {
         mousebuttonpressed[i] = false;
     }
+    stepmode = STEPMODE_FRAME;
     targetframerate = 60;
 	framerate = targetframerate;
     updateTime();
@@ -119,6 +120,8 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     totaltime = 0;
     totalupdates = 0;
     totaldraws = 0;
+    isupdatethreadrunning = false;
+    updatetargettimestep = AppClockDuration(1'000'000'000 / (updatetargetrate + 1));
     iswindowfocused = false;
 #ifdef ANDROID
     deviceorientation = DEVICEORIENTATION_PORTRAIT;
@@ -160,6 +163,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 }
 
 gAppManager::~gAppManager() {
+	stopUpdateThread();
 	gBaseGUIObject::cleanupResources();
 	// This will ask to stop and wait for it to complete
 	// Then it will delete all the resources it holds
@@ -254,6 +258,7 @@ void gAppManager::loop() {
 #endif
     //gLogi("gAppManager") << "starting loop";
     isrunning = true;
+    if(stepmode == STEPMODE_TIME) startUpdateThread();
 #if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	// Android and iOS drive the app through initialize()/setup()/loop() directly
 	// instead of runApp(), so the GUI app thread must also be started here. The
@@ -301,6 +306,7 @@ void gAppManager::loop() {
         }
     }
     //gLogi("gAppManager") << "stopping loop";
+    stopUpdateThread();
     app->stop();
     if(usewindow) {
         window->close();
@@ -431,12 +437,21 @@ void gAppManager::setScreenSize(int width, int height) {
 }
 
 void gAppManager::setCurrentCanvas(gBaseCanvas* canvas) {
+    std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
     canvasmanager->setCurrentCanvas(canvas);
     iscanvasset = true;
 }
 
 gBaseCanvas* gAppManager::getCurrentCanvas() {
     return canvasmanager->getCurrentCanvas();
+}
+
+void gAppManager::setStepMode(int stepMode) {
+    stepmode = stepMode;
+}
+
+int gAppManager::getStepMode() {
+    return stepmode;
 }
 
 void gAppManager::setTargetFramerate(int framerate) {
@@ -483,6 +498,9 @@ void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {
 }
 
 double gAppManager::getElapsedTime() {
+    if(stepmode == STEPMODE_TIME && std::this_thread::get_id() == updatethreadid.load()) {
+        return updateelapsedtime.count() / 1'000'000'000.0;
+    }
     return deltatime.count() / 1'000'000'000.0;
 }
 
@@ -568,7 +586,10 @@ void gAppManager::tick() {
     	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
     		component->update();
     	}
-		executeQueue();
+		{
+			std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
+			executeQueue();
+		}
         return;
     }
 
@@ -579,91 +600,141 @@ void gAppManager::tick() {
     // clearColor() call at the top of draw() still sets the colour the pass clears
     // to, and any geometry recorded afterwards lands inside that same pass.
     if(renderengine == G_RENDERER_VK) {
-        if(canvasmanager) canvasmanager->update();
-        if(guimanager) guimanager->update();
-        if(!isguiapp) app->update();
-        for(gBaseComponent*& component : gBaseComponent::usedcomponents) {
-            component->update();
-        }
-        for(gBasePlugin*& component : gBasePlugin::usedplugins) {
-            component->update();
-        }
-
-        gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
-        if(vkcanvas) vkcanvas->update();
-        if(renderer != nullptr && renderer->beginFrame()) {
-            // The scene is drawn once per render pass, the same way the OpenGL loop
-            // below does it. renderpassnum is 1 normally and 2 once gShadowMap has
-            // been activated: pass 0 fills the shadow map from the light's point of
-            // view, pass 1 shades the result to the screen. The canvas is unaware of
-            // this and simply draws itself twice; what changes between the two is
-            // which render pass the backend has open.
-            for(int i = 0; i < renderpassnum; i++) {
-                renderpassno = i;
-                const bool shadowpass = renderpassnum > 1 && i == 0;
-                if(shadowpass && !renderer->beginShadowPass()) continue;
-                if(vkcanvas) vkcanvas->draw();
-				renderer->flushQueuedDraws();
-                if(shadowpass) renderer->endShadowPass();
+        {
+            std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
+            if(canvasmanager) canvasmanager->update();
+            if(stepmode == STEPMODE_FRAME) {
+                stepUpdate();
             }
-            renderpassno = 0;
-            if(guimanager) guimanager->draw();
-            renderer->endFrame();
-            totaldraws++;
+
+            gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
+            if(renderer != nullptr && renderer->beginFrame()) {
+                // The scene is drawn once per render pass, the same way the OpenGL loop
+                // below does it. renderpassnum is 1 normally and 2 once gShadowMap has
+                // been activated: pass 0 fills the shadow map from the light's point of
+                // view, pass 1 shades the result to the screen. The canvas is unaware of
+                // this and simply draws itself twice; what changes between the two is
+                // which render pass the backend has open.
+                for(int i = 0; i < renderpassnum; i++) {
+                    renderpassno = i;
+                    const bool shadowpass = renderpassnum > 1 && i == 0;
+                    if(shadowpass && !renderer->beginShadowPass()) continue;
+                    if(vkcanvas) vkcanvas->draw();
+                    renderer->flushQueuedDraws();
+                    if(shadowpass) renderer->endShadowPass();
+                }
+                renderpassno = 0;
+                if(guimanager) guimanager->draw();
+                renderer->endFrame();
+                totaldraws++;
+            }
         }
         if(inputmanager) inputmanager->update();
         window->update();
-        executeQueue();
+        {
+            std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
+            executeQueue();
+        }
         return;
     }
 
-    if(canvasmanager) canvasmanager->update();
-    if(guimanager) guimanager->update();
-    if(!isguiapp) {
-		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): App Update");
-    	app->update();
-    }
     {
-		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Components Update");
-    	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
-    		component->update();
-    	}
-    }
-    {
-		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Plugins Update");
-    	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
-    		component->update();
-    	}
-    }
+    	std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
 
-    gBaseCanvas* canvas = nullptr;
-    if(!isguiapp) {
-		if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
-		if(canvas) {
-			G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Canvas Update");
-			canvas->update();
-		}
-    }
+    	if(canvasmanager) canvasmanager->update();
+    	if(stepmode == STEPMODE_FRAME) {
+    		stepUpdate();
+    	}
 
-    if(window->isRendering()) {
-    	if(!isguiapp) {
-			if(canvas) {
-				canvas->clearBackground();
-				for (int i = 0; i < renderpassnum; i++) {
-					G_PROFILE_ZONE_SCOPED_N("gGUIManager::tick(): Render Pass");
-					G_PROFILE_ZONE_VALUE(i);
-					renderpassno = i;
-					gBaseCanvas::getRenderer()->updateScene();
-					canvas->draw();
+    	gBaseCanvas* canvas = nullptr;
+    	if(!isguiapp && canvasmanager) {
+    		canvas = canvasmanager->getCurrentCanvas();
+    	}
+
+    	if(window->isRendering()) {
+    		if(!isguiapp) {
+				if(canvas) {
+					canvas->clearBackground();
+					for (int i = 0; i < renderpassnum; i++) {
+						G_PROFILE_ZONE_SCOPED_N("gGUIManager::tick(): Render Pass");
+						G_PROFILE_ZONE_VALUE(i);
+						renderpassno = i;
+						gBaseCanvas::getRenderer()->updateScene();
+						canvas->draw();
+					}
 				}
-			}
+    		}
+			if(guimanager) guimanager->draw();
+        	totaldraws++;
     	}
-		if(guimanager) guimanager->draw();
-        totaldraws++;
     }
 	if(inputmanager) inputmanager->update();
 	if(usewindow) window->update();
-	executeQueue();
+	{
+		std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
+		executeQueue();
+	}
+}
+
+void gAppManager::stepUpdate() {
+    if(guimanager) guimanager->update();
+    if(!isguiapp) {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::stepUpdate(): App Update");
+    	app->update();
+    }
+    {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::stepUpdate(): Components Update");
+    	for(gBaseComponent*& component : gBaseComponent::usedcomponents) {
+    		component->update();
+    	}
+    }
+    {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::stepUpdate(): Plugins Update");
+    	for(gBasePlugin*& component : gBasePlugin::usedplugins) {
+    		component->update();
+    	}
+    }
+    if(!isguiapp && canvasmanager) {
+		gBaseCanvas* canvas = canvasmanager->getCurrentCanvas();
+		if(canvas) {
+			G_PROFILE_ZONE_SCOPED_N("gAppManager::stepUpdate(): Canvas Update");
+			canvas->update();
+		}
+    }
+}
+
+void gAppManager::startUpdateThread() {
+	if(isupdatethreadrunning) return;
+	isupdatethreadrunning = true;
+	updatethread = std::thread(&gAppManager::updateThreadFunction, this);
+}
+
+void gAppManager::stopUpdateThread() {
+	if(!isupdatethreadrunning) return;
+	isupdatethreadrunning = false;
+	if(updatethread.joinable()) updatethread.join();
+}
+
+void gAppManager::updateThreadFunction() {
+	updatethreadid = std::this_thread::get_id();
+	AppClockTimePoint updatestarttime = AppClock::now();
+	AppClockTimePoint updateendtime;
+
+	while(isupdatethreadrunning) {
+		updateendtime = AppClock::now();
+		updateelapsedtime = updateendtime - updatestarttime;
+		updatestarttime = updateendtime;
+
+		{
+			std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
+			stepUpdate();
+		}
+
+		double sleeptime = (updatetargettimestep - (AppClock::now() - updatestarttime)).count() / 1'000'000'000.0;
+		if(sleeptime > 0) {
+			preciseSleep(sleeptime);
+		}
+	}
 }
 
 void gAppManager::onEvent(gEvent& event) {
