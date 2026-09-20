@@ -566,6 +566,12 @@ std::string gGLFWWindow::getClipboardString() {
 void gGLFWWindow::setWindowSize(int width, int height) {
 	if(window != nullptr) {
 		glfwSetWindowSize(window, width, height);
+		// The framebuffer is not the window size on a HiDPI surface: the backing
+		// store is scaled by the display's content scale, and on the web by
+		// devicePixelRatio. Ask GLFW instead of assuming, the way setScale and
+		// the fullscreen path already do, or the viewport covers a corner of the
+		// buffer and everything is drawn that many times too large.
+		glfwGetFramebufferSize(window, &width, &height);
 		onFramebufferResize(window, width, height);
 	}
 }
