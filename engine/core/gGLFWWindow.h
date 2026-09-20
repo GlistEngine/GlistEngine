@@ -9,7 +9,8 @@
 #define ENGINE_CORE_GGLFWWINDOW_H_
 
 #include "gBaseWindow.h"
-// #include <glad/glad.h> //case_win
+// Above GLFW on purpose: glfw3.h includes GL/gl.h unless GLEW is already in,
+// and glew.h refuses to come after gl.h.
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "gCamera.h"
