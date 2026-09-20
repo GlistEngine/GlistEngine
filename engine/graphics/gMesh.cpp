@@ -256,71 +256,73 @@ void gMesh::processTransformationMatrix() {
 }
 
 void gMesh::bindMaterialUniforms(gShader& shader) {
-	if(!material.isPBR()) {
-		shader.setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
-		shader.setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
-		shader.setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
-		shader.setFloat("material.shininess", material.getShininess());
+    if(!material.isPBR()) {
+        shader.setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
+        shader.setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
+        shader.setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
+        shader.setFloat("material.shininess", material.getShininess());
 
-		bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
-		bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
-		bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+        bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+        bool hasSpecular = material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+        bool hasNormal = material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
 
-		shader.setInt("material.useDiffuseMap", hasDiffuse);
-		shader.setInt("material.useSpecularMap", hasSpecular);
-		shader.setInt("material.useNormalMap", hasNormal);
-	} else { // isPBR
-		bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
-		bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+        shader.setInt("material.useDiffuseMap", hasDiffuse ? 1 : 0);
+        shader.setInt("material.useSpecularMap", hasSpecular ? 1 : 0);
+        shader.setInt("material.useNormalMap", hasNormal ? 1 : 0);
+    } else {
+        bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+        bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
 
-		shader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
-		shader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
-		shader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
-		shader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
-		shader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
-	}
+        shader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
+        shader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
+        shader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
+        shader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
+        shader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
+    }
 }
 
 void gMesh::bindMaterialTextures(gShader& shader) {
-	if(!material.isPBR()) {
-		bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
-		if(hasDiffuse) {
-			shader.setInt("material.diffusemap", 0);
-			renderer->activateTexture(0);
-			material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
-		}
-		bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
-		if(hasSpecular) {
-			shader.setInt("material.specularmap", 1);
-			renderer->activateTexture(1);
-			material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
-		}
-		bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
-		if(hasNormal) {
-			shader.setInt("material.normalMap", 2);
-			renderer->activateTexture(2);
-			material.bindMap(gTexture::TEXTURETYPE_NORMAL);
-		}
-	} else { // isPBR
-		shader.setInt("albedoMap", 3);
-		shader.setInt("normalMap", 4);
-		shader.setInt("metallicMap", 5);
-		shader.setInt("roughnessMap", 6);
-		shader.setInt("aoMap", 7);
+    if(!material.isPBR()) {
+        bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+        if(hasDiffuse) {
+            shader.setInt("material.diffusemap", 0);
+            renderer->activateTexture(0);
+            material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
+        }
 
-		bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
-		bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+        bool hasSpecular = material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+        if(hasSpecular) {
+            shader.setInt("material.specularmap", 1);
+            renderer->activateTexture(1);
+            material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
+        }
 
-		if(hasAlbedo) {
-			material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
-		} else if(hasDiffuseFallback) {
-			material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
-		}
-		material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
-		material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
-		material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
-		material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
-	}
+        bool hasNormal = material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+        if(hasNormal) {
+            shader.setInt("material.normalMap", 2);
+            renderer->activateTexture(2);
+            material.bindMap(gTexture::TEXTURETYPE_NORMAL);
+        }
+    } else {
+        shader.setInt("albedoMap", 3);
+        shader.setInt("normalMap", 4);
+        shader.setInt("metallicMap", 5);
+        shader.setInt("roughnessMap", 6);
+        shader.setInt("aoMap", 7);
+
+        bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+        bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+
+        if(hasAlbedo) {
+            material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
+        } else if(hasDiffuseFallback) {
+            material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
+        }
+        material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
+        material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
+        material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
+        material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
+    }
 }
 
 void gMesh::drawStart(bool isInstanced) {
