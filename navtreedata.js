@@ -83,8 +83,8 @@ var NAVTREEINDEX =
 "functions_func_r.html",
 "gGUIEvents_8h.html#a03d9851d3fa27453d6988bbe7f2ebe96",
 "gLight_8h.html",
-"gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023",
-"structgRenderer_1_1gSceneFogData.html#a88990ff245ff5283fb0df9f4a4962f5d"
+"gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2",
+"structgRenderer_1_1gSceneFogData.html#a52fbca828c7a89b94457ba5f0c8cb461"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

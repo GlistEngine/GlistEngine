@@ -166,5 +166,6 @@ var searchData=
   ['type_5fspin_163',['TYPE_SPIN',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68ab8003d7d6157a8fd217a6c85e17c04cf',1,'gGUIProgressBar']]],
   ['type_5fstring_164',['TYPE_STRING',['../structgGUIGrid_1_1Cell.html#af6da2929ba48477298620d5d1389ddfea6bcbc7d762457ce5bde2f3dc1fa53811',1,'gGUIGrid::Cell']]],
   ['type_5ftexture_165',['TYPE_TEXTURE',['../classgAssetLoader.html#a16e9aab4083c8b01d02a816761ad67a5',1,'gAssetLoader']]],
-  ['types_5fgconstants_5fh_5f_166',['TYPES_GCONSTANTS_H_',['../gConstants_8h.html#a49608e704766b1171b06dde4898b47a1',1,'gConstants.h']]]
+  ['types_5fgconstants_5fh_5f_166',['TYPES_GCONSTANTS_H_',['../gConstants_8h.html#a49608e704766b1171b06dde4898b47a1',1,'gConstants.h']]],
+  ['types_5fgtargetdefines_5fh_5f_167',['TYPES_GTARGETDEFINES_H_',['../gTargetDefines_8h.html#a968fa9a4ed8cd3c13ab0f38d3028e702',1,'gTargetDefines.h']]]
 ];

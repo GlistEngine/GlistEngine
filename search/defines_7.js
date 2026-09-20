@@ -9,5 +9,6 @@ var searchData=
   ['trigger_5fless_5fequal_6',['TRIGGER_LESS_EQUAL',['../gSpriteAnimation_8h.html#a4547f4de11676ea832f6a97e6739184a',1,'gSpriteAnimation.h']]],
   ['trigger_5fnone_7',['TRIGGER_NONE',['../gSpriteAnimation_8h.html#af3a5f41be3fc211fbeeca534c470ef14',1,'gSpriteAnimation.h']]],
   ['trigger_5ftrue_8',['TRIGGER_TRUE',['../gSpriteAnimation_8h.html#a7434c41651986cef79919b09b16084a4',1,'gSpriteAnimation.h']]],
-  ['types_5fgconstants_5fh_5f_9',['TYPES_GCONSTANTS_H_',['../gConstants_8h.html#a49608e704766b1171b06dde4898b47a1',1,'gConstants.h']]]
+  ['types_5fgconstants_5fh_5f_9',['TYPES_GCONSTANTS_H_',['../gConstants_8h.html#a49608e704766b1171b06dde4898b47a1',1,'gConstants.h']]],
+  ['types_5fgtargetdefines_5fh_5f_10',['TYPES_GTARGETDEFINES_H_',['../gTargetDefines_8h.html#a968fa9a4ed8cd3c13ab0f38d3028e702',1,'gTargetDefines.h']]]
 ];

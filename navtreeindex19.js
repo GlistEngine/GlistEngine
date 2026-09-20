@@ -149,6 +149,9 @@ var NAVTREEINDEX19 =
 "gSpriteAnimation_8h_source.html":[2,0,0,0,0],
 "gSpriteAnimator_8h.html":[2,0,0,0,1],
 "gSpriteAnimator_8h_source.html":[2,0,0,0,1],
+"gTargetDefines_8h.html":[2,0,0,6,3],
+"gTargetDefines_8h.html#a968fa9a4ed8cd3c13ab0f38d3028e702":[2,0,0,6,3,0],
+"gTargetDefines_8h_source.html":[2,0,0,6,3],
 "gTerrain_8h.html":[2,0,0,4,30],
 "gTerrain_8h_source.html":[2,0,0,4,30],
 "gTexture_8h.html":[2,0,0,4,31],
@@ -246,8 +249,5 @@ var NAVTREEINDEX19 =
 "gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9":[2,0,0,8,9,17],
 "gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba":[2,0,0,8,9,54],
 "gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85":[2,0,0,8,9,27],
-"gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907":[2,0,0,8,9,42],
-"gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2":[2,0,0,8,9,67],
-"gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2":[2,0,0,8,9,21],
-"gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b":[2,0,0,8,9,36]
+"gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907":[2,0,0,8,9,42]
 };
