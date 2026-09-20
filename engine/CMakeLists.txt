@@ -528,6 +528,18 @@ list(APPEND INC_DIRS ${ENGINE_INCLUDES})
 # the one place that must keep calling the real ones.
 target_compile_definitions(GlistEngine PRIVATE GLIST_ENGINE_BUILD)
 
+########## BUILD TARGET NAMES ##########
+# gTargetDefines.h turns the compiler's own macros into the short names the
+# engine guards on. Force including it means a header can use them without
+# including anything first, which headers like gHttpFile.h and gVKContext.h do
+# before their first include. PUBLIC so apps and plugins get the same names.
+set(GLIST_TARGET_DEFINES ${ENGINE_DIR}/types/gTargetDefines.h)
+if(MSVC)
+	target_compile_options(GlistEngine PUBLIC "/FI${GLIST_TARGET_DEFINES}")
+else()
+	target_compile_options(GlistEngine PUBLIC "SHELL:-include ${GLIST_TARGET_DEFINES}")
+endif()
+
 if(TRACY_ENABLE)
 	target_compile_definitions(GlistEngine PUBLIC TRACY_ENABLE)
 	list(APPEND INC_DIRS

@@ -8,7 +8,6 @@
 #ifndef ENGINE_GRAPHICS_GCAMERA_H_
 #define ENGINE_GRAPHICS_GCAMERA_H_
 
-//#include <GL/glew.h>
 #include "gNode.h"
 #include "gSkybox.h"
 #include "gBoundingBox.h"
