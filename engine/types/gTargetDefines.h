@@ -22,7 +22,13 @@
 #ifndef TYPES_GTARGETDEFINES_H_
 #define TYPES_GTARGETDEFINES_H_
 
-#ifdef _WIN64
+#if defined(__EMSCRIPTEN__)
+    // Web. Checked first because Emscripten also defines __unix__, so the unix
+    // arm at the end of this chain would otherwise swallow it.
+	#ifndef EMSCRIPTEN
+		#define EMSCRIPTEN 1
+	#endif
+#elif defined(_WIN64)
    //define something for Windows (64-bit)
 	#ifndef WIN64
 		#define WIN64 _WIN32
