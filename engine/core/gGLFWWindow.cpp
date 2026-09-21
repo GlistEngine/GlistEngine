@@ -55,6 +55,26 @@ static ActionType touchActionOf(int eventtype, const EmscriptenTouchEvent* event
 	}
 }
 
+static DeviceOrientation deviceOrientationOf(int orientationindex) {
+	switch (orientationindex) {
+		case EMSCRIPTEN_ORIENTATION_PORTRAIT_PRIMARY: return DEVICEORIENTATION_PORTRAIT;
+		case EMSCRIPTEN_ORIENTATION_PORTRAIT_SECONDARY: return DEVICEORIENTATION_REVERSE_PORTRAIT;
+		case EMSCRIPTEN_ORIENTATION_LANDSCAPE_PRIMARY: return DEVICEORIENTATION_LANDSCAPE;
+		case EMSCRIPTEN_ORIENTATION_LANDSCAPE_SECONDARY: return DEVICEORIENTATION_REVERSE_LANDSCAPE;
+		default: return DEVICEORIENTATION_UNSPECIFIED;
+	}
+}
+
+// Not consumed: the page may have its own reason to know, and unlike a touch
+// there is nothing here to keep the browser from acting on.
+static EM_BOOL onOrientationChange(int eventtype, const EmscriptenOrientationChangeEvent* event, void* userdata) {
+	gGLFWWindow* handle = static_cast<gGLFWWindow*>(userdata);
+	if (handle == nullptr) return EM_FALSE;
+	gDeviceOrientationChangedEvent orientationevent(deviceOrientationOf(event->orientationIndex));
+	handle->callEvent(orientationevent);
+	return EM_FALSE;
+}
+
 static EM_BOOL onTouch(int eventtype, const EmscriptenTouchEvent* event, void* userdata) {
 	gGLFWWindow* handle = static_cast<gGLFWWindow*>(userdata);
 	if (handle == nullptr || event->numTouches <= 0) return EM_FALSE;
@@ -465,6 +485,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	emscripten_set_touchmove_callback("#canvas", this, EM_FALSE, onTouch);
 	emscripten_set_touchend_callback("#canvas", this, EM_FALSE, onTouch);
 	emscripten_set_touchcancel_callback("#canvas", this, EM_FALSE, onTouch);
+	emscripten_set_orientationchange_callback(this, EM_FALSE, onOrientationChange);
 #endif
 
     for (int jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; ++jid) {

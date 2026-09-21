@@ -120,7 +120,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     totalupdates = 0;
     totaldraws = 0;
     iswindowfocused = false;
-#ifdef ANDROID
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     deviceorientation = DEVICEORIENTATION_PORTRAIT;
     olddeviceorientation = DEVICEORIENTATION_PORTRAIT;
     delayedresize = false;
@@ -687,10 +687,8 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
-#if GLIST_ANDROID || GLIST_IOS
-    dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
-#endif
 #if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
+    dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->onEvent(event);
@@ -935,7 +933,7 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
     return false;
 }
 
-#if GLIST_ANDROID || GLIST_IOS
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
 	deviceorientation = event.getOrientation();
     if(canvasmanager && getCurrentCanvas()) {
@@ -943,9 +941,6 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
     }
     return false;
 }
-#endif
-
-#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
 
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	// A GUI application owns its touch interpretation.  The application manager
