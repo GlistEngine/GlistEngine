@@ -689,6 +689,8 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
 #if GLIST_ANDROID || GLIST_IOS
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
+#endif
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->onEvent(event);
@@ -941,6 +943,9 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
     }
     return false;
 }
+#endif
+
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
 
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	// A GUI application owns its touch interpretation.  The application manager

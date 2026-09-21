@@ -458,6 +458,8 @@ private:
     bool onAppResumeEvent(gAppResumeEvent&);
 #if GLIST_ANDROID || GLIST_IOS
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);
+#endif
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     bool onTouchEvent(gTouchEvent&);
 #endif
 
