@@ -15,6 +15,9 @@
 #endif
 
 #include "gGLFWWindow.h"
+#ifdef EMSCRIPTEN
+#include <emscripten/html5.h>
+#endif
 #include "gAppManager.h"
 #include "gRenderObject.h"
 #include "gTracy.h"
@@ -25,6 +28,66 @@
 // Static functions
 
 static GLFWwindow* currentwindow = nullptr;
+
+#ifdef EMSCRIPTEN
+// Emscripten's GLFW routes touchstart, touchmove and touchend into its own mouse
+// handlers, so a web build sees one emulated cursor and never a finger: no
+// second touch, no finger ids, and canvas->touchPressed is never reached. These
+// callbacks read the browser's touch events directly and raise the same
+// gTouchEvent that Android and iOS do.
+// EmscriptenTouchEvent carries at most this many points.
+static const int WEB_TOUCH_MAX = 32;
+
+static ActionType touchActionOf(int eventtype, const EmscriptenTouchEvent* event) {
+	int changed = 0;
+	for (int i = 0; i < event->numTouches; i++) {
+		if (event->touches[i].isChanged) changed++;
+	}
+	switch (eventtype) {
+		case EMSCRIPTEN_EVENT_TOUCHSTART:
+			return event->numTouches == changed ? ACTIONTYPE_DOWN : ACTIONTYPE_POINTER_DOWN;
+		case EMSCRIPTEN_EVENT_TOUCHEND:
+			return event->numTouches == changed ? ACTIONTYPE_UP : ACTIONTYPE_POINTER_UP;
+		case EMSCRIPTEN_EVENT_TOUCHCANCEL:
+			return ACTIONTYPE_CANCEL;
+		default:
+			return ACTIONTYPE_MOVE;
+	}
+}
+
+static EM_BOOL onTouch(int eventtype, const EmscriptenTouchEvent* event, void* userdata) {
+	gGLFWWindow* handle = static_cast<gGLFWWindow*>(userdata);
+	if (handle == nullptr || event->numTouches <= 0) return EM_FALSE;
+
+	// The browser reports CSS pixels relative to the canvas. GLFW's mouse
+	// handler turns those into window coordinates by scaling with the ratio
+	// between the window and the canvas as displayed, so do the same here
+	// instead of assuming the two agree.
+	double cssw = 0.0, cssh = 0.0;
+	emscripten_get_element_css_size("#canvas", &cssw, &cssh);
+	int windowwidth = 0, windowheight = 0;
+	glfwGetWindowSize(handle->getGLFWWindow(), &windowwidth, &windowheight);
+	double scalex = cssw > 0.0 ? windowwidth / cssw : 1.0;
+	double scaley = cssh > 0.0 ? windowheight / cssh : 1.0;
+
+	int count = event->numTouches > WEB_TOUCH_MAX ? WEB_TOUCH_MAX : event->numTouches;
+	TouchInput inputs[WEB_TOUCH_MAX];
+	int actionindex = 0;
+	for (int i = 0; i < count; i++) {
+		const EmscriptenTouchPoint& point = event->touches[i];
+		inputs[i].type = INPUTTYPE_FINGER;
+		inputs[i].fingerid = point.identifier;
+		inputs[i].pointerindex = i;
+		inputs[i].x = (int)(point.targetX * scalex);
+		inputs[i].y = (int)(point.targetY * scaley);
+		if (point.isChanged) actionindex = i;
+	}
+
+	gTouchEvent touchevent(count, inputs, actionindex, touchActionOf(eventtype, event));
+	handle->callEvent(touchevent);
+	return EM_TRUE;
+}
+#endif
 
 static void onFramebufferResize(GLFWwindow* window, int width, int height) {
 	// A Vulkan window is created with GLFW_NO_API and has no current OpenGL
@@ -396,6 +459,13 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwSetWindowFocusCallback(window, onWindowFocus);
 	glfwSetWindowContentScaleCallback(window, onScaleChange);
 	glfwSetJoystickCallback(onJoystick);
+
+#ifdef EMSCRIPTEN
+	emscripten_set_touchstart_callback("#canvas", this, EM_FALSE, onTouch);
+	emscripten_set_touchmove_callback("#canvas", this, EM_FALSE, onTouch);
+	emscripten_set_touchend_callback("#canvas", this, EM_FALSE, onTouch);
+	emscripten_set_touchcancel_callback("#canvas", this, EM_FALSE, onTouch);
+#endif
 
     for (int jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; ++jid) {
         if (glfwJoystickPresent(jid)) {
