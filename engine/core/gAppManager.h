@@ -256,6 +256,11 @@ public:
     int getFramerate();
 
 	/**
+	 * @return Current updates per second value of the update thread. Only meaningful in STEPMODE_TIME.
+	 */
+    int getUpdateFramerate();
+
+	/**
 	 * @return Elapsed time between this frame and the previous one, as seconds. Also known as deltaTime.
 	 */
     double getElapsedTime();
@@ -438,6 +443,9 @@ private:
     AppClockDuration updatetargettimestep;
     AppClockDuration updateelapsedtime = AppClockDuration(0);
     std::recursive_mutex gamestatemutex;
+    std::atomic<int> updaterate{0};
+    int totalupdatesforups;
+    uint64_t updatetotaltime;
 
     bool isjoystickenabled;
     bool joystickconnected[maxjoysticknum];

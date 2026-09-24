@@ -123,6 +123,9 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     isupdatethreadrunning = false;
     updatetargetrate = 60;
     updatetargettimestep = AppClockDuration(1'000'000'000 / (updatetargetrate + 1));
+    updaterate = 0;
+    totalupdatesforups = 0;
+    updatetotaltime = 0;
     iswindowfocused = false;
 #ifdef ANDROID
     deviceorientation = DEVICEORIENTATION_PORTRAIT;
@@ -477,6 +480,10 @@ int gAppManager::getFramerate() {
     return framerate;
 }
 
+int gAppManager::getUpdateFramerate() {
+    return updaterate;
+}
+
 void gAppManager::enableVsync() {
     window->setVsync(true);
 	if(renderengine == G_RENDERER_VK && renderer != nullptr) {
@@ -733,11 +740,19 @@ void gAppManager::updateThreadFunction() {
 	while(isupdatethreadrunning) {
 		updateendtime = AppClock::now();
 		updateelapsedtime = updateendtime - updatestarttime;
+		updatetotaltime += updateelapsedtime.count();
 		updatestarttime = updateendtime;
+		totalupdatesforups++;
 
 		{
 			std::lock_guard<std::recursive_mutex> lock(gamestatemutex);
 			stepUpdate();
+		}
+
+		if(updatetotaltime >= 1'000'000'000) {
+			updaterate = totalupdatesforups;
+			updatetotaltime = 0;
+			totalupdatesforups = 0;
 		}
 
 		double sleeptime = (updatetargettimestep - (AppClock::now() - updatestarttime)).count() / 1'000'000'000.0;
