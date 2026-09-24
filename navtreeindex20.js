@@ -1,5 +1,9 @@
 var NAVTREEINDEX20 =
 {
+"gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9":[2,0,0,8,9,17],
+"gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba":[2,0,0,8,9,54],
+"gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85":[2,0,0,8,9,27],
+"gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907":[2,0,0,8,9,42],
 "gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2":[2,0,0,8,9,67],
 "gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2":[2,0,0,8,9,21],
 "gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b":[2,0,0,8,9,36],
@@ -245,9 +249,5 @@ var NAVTREEINDEX20 =
 "structgRenderer_1_1gSceneData.html":[1,0,156,1],
 "structgRenderer_1_1gSceneData.html#a09b83f2ce02728412c123b8173084c3d":[1,0,156,1,1],
 "structgRenderer_1_1gSceneData.html#a521328c0feca9f21460fe8b3b3350e3e":[1,0,156,1,0],
-"structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,156,1,3],
-"structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d":[1,0,156,1,4],
-"structgRenderer_1_1gSceneData.html#aad361730c6a440e3b644bf0bb45c264c":[1,0,156,1,2],
-"structgRenderer_1_1gSceneFogData.html":[1,0,156,2],
-"structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,156,2,5]
+"structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,156,1,3]
 };
