@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classgGUIToolbar.html#a5cbab2be859511b4c758a3a22236b06a":[1,0,110,8],
 "classgGUIToolbar.html#a5f9746e2e20435b326e0e3e3c02bd108":[1,0,110,2],
 "classgGUIToolbar.html#a692b04d02920abaf1e7e03310b85ec76":[1,0,110,0],
 "classgGUIToolbar.html#a82f4c76bf34ab5345f4af872034f227f":[1,0,110,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classgJoystickDisconnectEvent.html":[1,0,121],
 "classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a":[1,0,121,1],
 "classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e":[1,0,121,0],
-"classgKernelEffect.html":[1,0,122],
-"classgKernelEffect.html#a12c6f5b6e44e7491bec4151ec3297cfe":[1,0,122,2]
+"classgKernelEffect.html":[1,0,122]
 };

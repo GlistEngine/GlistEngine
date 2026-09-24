@@ -27,6 +27,7 @@ var classgAppManager =
     [ "getRenderEngine", "classgAppManager.html#a7820aefc5996461c7c3507db851f7b21", null ],
     [ "getStepMode", "classgAppManager.html#a141b109582293bffb14ed567f0beafdc", null ],
     [ "getTargetFramerate", "classgAppManager.html#a78191f2beaa4d835239927f0ea2a8a53", null ],
+    [ "getUpdateFramerate", "classgAppManager.html#a587ed6afc6a91dde430a72ac283f30bc", null ],
     [ "getUpdateTargetRate", "classgAppManager.html#adf2b0a68f477d5c291a9befedd2a4d8b", null ],
     [ "getWindow", "classgAppManager.html#ae5203036754ef8843a82972fae5a20d9", null ],
     [ "getWindowMode", "classgAppManager.html#aafa998e13fbeee554d72e867fd58d3f7", null ],

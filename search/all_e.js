@@ -42,7 +42,7 @@ var searchData=
   ['meshes_39',['meshes',['../classgModel.html#ac86fbf79931314dbe9e4022bb4581ebc',1,'gModel']]],
   ['metallicmapid_40',['metallicmapid',['../structgRenderer_1_1gMeshSurface.html#a2d0bb2d60c220ce89a1208c4139544b7',1,'gRenderer::gMeshSurface']]],
   ['middlegroundcolor_41',['middlegroundcolor',['../classgBaseGUIObject.html#a17e76771cbd006d84e08032672d29478',1,'gBaseGUIObject']]],
-  ['minx_42',['minx',['../classgBoundingBox.html#a0dcbeaa4992a9a3f470ed29eb802c5b5',1,'gBoundingBox::minX()'],['../classgGUIGraph.html#a7296ef007d1d699ec587941d638524ad',1,'gGUIGraph::minx']]],
+  ['minx_42',['minx',['../classgGUIGraph.html#a7296ef007d1d699ec587941d638524ad',1,'gGUIGraph::minx'],['../classgBoundingBox.html#a0dcbeaa4992a9a3f470ed29eb802c5b5',1,'gBoundingBox::minX() const']]],
   ['miny_43',['miny',['../classgBoundingBox.html#a822da8fa655ec6b9e5ae902975273ebc',1,'gBoundingBox::minY()'],['../classgGUIGraph.html#aba5c61f513a0006e6fc8a34a084faa4b',1,'gGUIGraph::miny']]],
   ['minz_44',['minZ',['../classgBoundingBox.html#a78ed39e1e81816122e9cfbb8dc239de2',1,'gBoundingBox']]],
   ['mode_45',['mode',['../classgFile.html#a3819f303037060ce0d25aa23a135d94f',1,'gFile::Mode'],['../classgModelAnimator.html#af8179b8a114c684c97370d65f55fc31e',1,'gModelAnimator::Mode'],['../structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63',1,'gRenderer::gSceneFogData::mode']]],

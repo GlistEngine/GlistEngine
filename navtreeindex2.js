@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classgBlur.html#af8f3e7876fa905797ae3bf067612da37":[1,0,22,4],
 "classgBoundingBox.html":[1,0,23],
 "classgBoundingBox.html#a02d528a31017c2ac5812a2c2fcb6a7ff":[1,0,23,4],
 "classgBoundingBox.html#a0797ed3a4d1e3b82b511c432e1f31cf6":[1,0,23,32],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgEventHook.html":[1,0,46],
 "classgEventHook.html#a408ca13a49589f90a9250243b83e7721":[1,0,46,2],
 "classgEventHook.html#a4e608921c9195114d200b2fcd9b44691":[1,0,46,0],
-"classgEventHook.html#aedf68a2d41b0f4e7693dadf68e3b17a5":[1,0,46,1],
-"classgFXAA.html":[1,0,54]
+"classgEventHook.html#aedf68a2d41b0f4e7693dadf68e3b17a5":[1,0,46,1]
 };
