@@ -47,9 +47,11 @@
 #include "gObject.h"
 class gGUIAppThread;
 
+#include <atomic>
 #include <chrono>
 #include <iostream>
 #include <mutex>
+#include <thread>
 #include "gGUIManager.h"
 #include "gRenderObject.h"
 
@@ -155,6 +157,8 @@ extern gAppManager* appmanager;
 
 class gAppManager : public gObject {
 public:
+    static const int STEPMODE_FRAME = 0;
+    static const int STEPMODE_TIME = 1;
     gAppManager(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, bool isResizable, int loopMode);
     ~gAppManager();
 
@@ -229,6 +233,12 @@ public:
 	 * @return Current canvas.
 	 */
 	gBaseCanvas* getCurrentCanvas();
+
+    void setStepMode(int stepMode);
+    int getStepMode();
+
+    void setUpdateTargetRate(int rate);
+    int getUpdateTargetRate();
 
 	/**
 	 * @param framerate Target frames per second value
@@ -398,6 +408,7 @@ private:
     int screenscaling;
     bool isresizable;
     int loopmode;
+    int stepmode;
     int renderengine = G_RENDERER_GL;
     int requestedmultisampling = 1;
     bool initialized;
@@ -418,7 +429,15 @@ private:
     int totalupdates;
     int totaldraws;
     int targetframerate;
+    int updatetargetrate;
     bool iscanvasset;
+
+    std::thread updatethread;
+    std::atomic<std::thread::id> updatethreadid{};
+    bool isupdatethreadrunning;
+    AppClockDuration updatetargettimestep;
+    AppClockDuration updateelapsedtime = AppClockDuration(0);
+    std::recursive_mutex gamestatemutex;
 
     bool isjoystickenabled;
     bool joystickconnected[maxjoysticknum];
@@ -437,6 +456,10 @@ private:
 private:
 
     void tick();
+    void stepUpdate();
+    void startUpdateThread();
+    void stopUpdateThread();
+    void updateThreadFunction();
     void onEvent(gEvent& event);
 
     bool onWindowResizedEvent(gWindowResizeEvent&);
