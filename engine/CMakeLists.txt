@@ -331,6 +331,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBaseComponent.cpp
+	${ENGINE_DIR}/base/gBasePlatform.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
 	${ENGINE_DIR}/core/gInputManager.cpp
 	${ENGINE_DIR}/core/gInputPlayer.cpp
@@ -608,6 +609,14 @@ endif(WIN32)
 
 target_include_directories(GlistEngine PUBLIC ${INC_DIRS})
 target_sources(GlistEngine PRIVATE ${ENGINE_INCLUDES})
+
+# Sources a plugin needs compiled into the app instead of this library. A
+# platform registers itself from a static object that nothing refers to, and a
+# linker drops such members out of a static library. Handing them to whoever
+# links the engine keeps that out of the app's CMakeLists. See gBasePlatform.
+if(PLUGIN_EXECUTABLE_SRCS)
+	target_sources(GlistEngine INTERFACE ${PLUGIN_EXECUTABLE_SRCS})
+endif()
 
 #message(WARNING "PLUGIN_LIBDIRS: ${PLUGIN_LIBDIRS}")
 foreach(PLIBDIR ${PLUGIN_LIBDIRS})
