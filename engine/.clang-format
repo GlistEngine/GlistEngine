@@ -1,4 +1,8 @@
-# Generated from CLion C/C++ Code Style settings
+# Glist's code style, as Glist Engine's code is written. Tabs for indentation,
+# braces on the same line after one space, spaces around operators.
+# Not for clang-format, so by hand: no blank lines between statements in a
+# function without a reason, a blank line before a // comment that is not
+# the first line of a body, and ++ and -- rather than += 1 and -= 1.
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
@@ -39,13 +43,19 @@ ContinuationIndentWidth: 8
 IndentCaseLabels: false
 IndentPPDirectives: None
 IndentWidth: 4
-KeepEmptyLinesAtTheStartOfBlocks: true
-MaxEmptyLinesToKeep: 2
+KeepEmptyLinesAtTheStartOfBlocks: false
+# At most one blank line anywhere, and no blank line opening a block.
+MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
 PointerAlignment: Left
-ReflowComments: false
+# On so that comments get one space after //; with ColumnLimit: 0 no comment is rewrapped.
+ReflowComments: true
+# #include lines stay in the order they were written.
+SortIncludes: Never
+# Exactly one blank line between function definitions (with MaxEmptyLinesToKeep: 1).
+SeparateDefinitionBlocks: Always
 SpaceAfterCStyleCast: true
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: false
@@ -53,10 +63,16 @@ SpaceBeforeAssignmentOperators: true
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: ControlStatements
+# No space between a keyword and its parenthesis, as the engine's code is written: if(, for(, while(.
+SpaceBeforeParens: Never
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 0
+# One space before a comment after code: x++; // why.
+SpacesBeforeTrailingComments: 1
+# Exactly one space after // before the comment text.
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: 1
 SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInContainerLiterals: false
