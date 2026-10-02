@@ -297,7 +297,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
     } else {
     	glfwWindowHint(GLFW_RESIZABLE, isResizable);
     }
-	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, scalesToMonitor() ? GLFW_TRUE : GLFW_FALSE);
 
     window = glfwCreateWindow(width, height, title.c_str(),
 			(windowMode == G_WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
