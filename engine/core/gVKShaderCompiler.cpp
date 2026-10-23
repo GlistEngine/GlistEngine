@@ -49,7 +49,7 @@ long long gvkShaderFileTimestamp(const std::string& fileName) {
 
 #ifdef GVK_RUNTIME_SHADERS
 
-// Lifts the version out of a shared shader's Vulkan block and removes every
+// Lifts the first version declaration out of an engine shader and removes every
 // #version line from what the compiler is given.
 //
 // The shader states its version in each dialect block, which is where it belongs
@@ -59,8 +59,8 @@ long long gvkShaderFileTimestamp(const std::string& fileName) {
 // exactly as gen_vk_shaders.cmake carries it into glslc's -std, and the file stays
 // the one place the version is written down.
 //
-// Returns false when no Vulkan block declares one, which is a shader that would
-// not have baked either.
+// Vulkan-only sources can state it directly; shared dialect sources encounter
+// their Vulkan declaration first. Returns false when no version was declared.
 static bool gvkExtractShaderVersion(const std::string& source, int& outVersion,
 		shaderc_profile& outProfile, std::string& outStripped) {
 	outVersion = 0;
@@ -68,20 +68,13 @@ static bool gvkExtractShaderVersion(const std::string& source, int& outVersion,
 	outStripped.clear();
 	outStripped.reserve(source.size());
 
-	bool invulkanblock = false;
 	std::stringstream reader(source);
 	std::string line;
 	while(std::getline(reader, line)) {
-		if(line.rfind("#if", 0) == 0) {
-			// Any marker beginning with VULKAN: the coloured-geometry shader splits
-			// its Vulkan half into VULKAN2D and VULKAN3D, and both name the same
-			// version.
-			invulkanblock = line.find("VULKAN") != std::string::npos;
-		} else if(line.rfind("#else", 0) == 0 || line.rfind("#endif", 0) == 0) {
-			invulkanblock = false;
-		}
 		if(line.rfind("#version", 0) == 0) {
-			if(invulkanblock && outVersion == 0) {
+			// Vulkan-only engine shaders state their version directly; shared
+			// dialect sources encounter their Vulkan version first as well.
+			if(outVersion == 0) {
 				std::stringstream parts(line.substr(8));
 				std::string profile;
 				parts >> outVersion >> profile;
@@ -116,7 +109,7 @@ bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits sta
 	shaderc_profile profile = shaderc_profile_core;
 	std::string source;
 	if(!gvkExtractShaderVersion(rawsource, version, profile, source)) {
-		gLoge("gVKShaderCompiler") << path << " declares no #version inside an #if VULKAN block.";
+		gLoge("gVKShaderCompiler") << path << " declares no GLSL #version.";
 		return false;
 	}
 

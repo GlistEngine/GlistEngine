@@ -18,6 +18,7 @@ struct gVKContext;
 struct gVKTexture;
 struct gVKFramebuffer;
 struct gVKMeshBuffer;
+struct gVKDeferredResources;
 
 // What a vertex array id stands for: the pair of buffer ids that were bound while
 // it was current, 0 meaning nothing was bound. Vulkan has no vertex array object,
@@ -43,6 +44,14 @@ public:
 	bool beginFrame() override;
 	void endFrame() override;
 	void flushQueuedDraws() override;
+
+	bool setupDeferredLighting(int width, int height) override;
+	bool resizeDeferredLighting(int width, int height) override;
+	bool beginDeferredGeometryPass() override;
+	bool renderDeferredLightingPass() override;
+	void endDeferredLighting() override;
+	void releaseDeferredLighting() override;
+	bool isDeferredGeometryPassActive() const override;
 
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;
@@ -290,6 +299,16 @@ protected:
 	void init() override;
 	void cleanup() override;
 private:
+	enum class DeferredState {
+		Uninitialized,
+		Ready,
+		GeometryActive
+	};
+	DeferredState deferredstate = DeferredState::Uninitialized;
+	int deferredwidth = 0;
+	int deferredheight = 0;
+	gVKDeferredResources* deferredresources = nullptr;
+
 	mutable GLuint currentprogram = 0;
 	bool initVulkan();
 	void cleanupVulkan();

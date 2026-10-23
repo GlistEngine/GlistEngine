@@ -126,8 +126,14 @@ bool gvkCreateDepthResources(gVKContext& ctx) {
 	// The render pass clears the image at the start of every frame, so whatever the
 	// previous contents were does not matter.
 	imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	imageinfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
-			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+	// Deferred lighting copies its geometry depth here before later forward draws.
+	// That continuation is intentionally the single-sample path; multisampled
+	// depth remains transient because Vulkan cannot copy a 1x G-buffer image into
+	// an Nx attachment directly.
+	imageinfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+			| (ctx.samplecount == VK_SAMPLE_COUNT_1_BIT
+					? VK_IMAGE_USAGE_TRANSFER_DST_BIT
+					: VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT);
 	// Every attachment of a subpass must agree on the sample count, so the depth
 	// buffer follows the colour one. Nothing samples it and the pass discards it, so
 	// a multisampled depth buffer stays in tile memory exactly like the 1x one.
@@ -146,7 +152,9 @@ bool gvkCreateDepthResources(gVKContext& ctx) {
 		}
 		VkMemoryRequirements memreq{};
 		vkGetImageMemoryRequirements(ctx.device, image, &memreq);
-		const uint32_t memorytype = gvkFindTransientMemoryType(ctx, memreq.memoryTypeBits, lazy);
+		const uint32_t memorytype = ctx.samplecount == VK_SAMPLE_COUNT_1_BIT
+				? gvkFindMemoryType(ctx, memreq.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+				: gvkFindTransientMemoryType(ctx, memreq.memoryTypeBits, lazy);
 		VkMemoryAllocateInfo allocinfo{};
 		allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocinfo.allocationSize = memreq.size;
@@ -412,11 +420,22 @@ static bool gvkBuildScreenRenderPass(gVKContext& ctx, VkSampleCountFlagBits samp
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 	dependency.dstSubpass = 0;
 	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.srcAccessMask = 0;
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_TRANSFER_BIT;
+	// The LOAD variant consumes colour/depth written by an earlier screen pass;
+	// deferred continuation additionally reaches it after a transfer wrote depth.
+	// These masks are harmless for the first CLEAR pass, where the old layouts are
+	// undefined and there is no matching source access to wait for.
+	dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_TRANSFER_WRITE_BIT;
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT
+			| VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
 			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
 	VkAttachmentDescription attachments[] = {colorattachment, depthattachment, resolveattachment};

@@ -256,6 +256,17 @@ public:
 	virtual void endFrame() {}
 	virtual void flushQueuedDraws() {}
 
+	// Backend hooks for deferred lighting. OpenGL keeps its established
+	// gDeferredLight implementation and leaves these defaults alone; Vulkan owns
+	// render-pass resources that cannot live in the backend-neutral graphics class.
+	virtual bool setupDeferredLighting(int width, int height) { return false; }
+	virtual bool resizeDeferredLighting(int width, int height) { return false; }
+	virtual bool beginDeferredGeometryPass() { return false; }
+	virtual bool renderDeferredLightingPass() { return false; }
+	virtual void endDeferredLighting() {}
+	virtual void releaseDeferredLighting() {}
+	virtual bool isDeferredGeometryPassActive() const { return false; }
+
 	int getRenderEngineType() const { return renderenginetype; }
 	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
 

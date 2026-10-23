@@ -546,6 +546,38 @@ bool gvkDrawFullscreenQuad(gVKContext& ctx) {
 	return true;
 }
 
+bool gvkDrawDeferredLighting(gVKContext& ctx, VkDescriptorSet gbufferSet,
+		VkDescriptorSet shadowSet) {
+	if(gbufferSet == VK_NULL_HANDLE || shadowSet == VK_NULL_HANDLE) return false;
+	if(!gvkEnsureRenderPass(ctx)) return false;
+	gvkFlush2DBatch(ctx);
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	VkPipeline pipeline = ctx.getDeferredLightingPipeline();
+	VkPipelineLayout layout = ctx.getDeferredLightingPipelineLayout();
+	VkDescriptorSet sceneSet = ctx.getCurrentSceneDescriptorSet();
+	if(cmd == VK_NULL_HANDLE || pipeline == VK_NULL_HANDLE
+			|| layout == VK_NULL_HANDLE || sceneSet == VK_NULL_HANDLE) return false;
+
+	const VkDeviceSize offset = ctx.pushDynamicVertices(GVK_FULLSCREEN_QUAD,
+			sizeof(GVK_FULLSCREEN_QUAD), sizeof(gvkFullscreenVertex));
+	if(offset == VK_WHOLE_SIZE) {
+		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping the deferred lighting pass.";
+		return false;
+	}
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	VkBuffer buffer = ctx.getCurrentDynamicVertexBuffer();
+	if(buffer == VK_NULL_HANDLE) return false;
+	vkCmdBindVertexBuffers(cmd, 0, 1, &buffer, &offset);
+	VkDescriptorSet sets[3] = {sceneSet, gbufferSet, shadowSet};
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout,
+			0, 3, sets, 0, nullptr);
+	vkCmdDraw(cmd, 6, 1, 0, 0);
+	ctx.resetRecordedDrawState();
+	return true;
+}
+
 void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
 		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,
@@ -561,6 +593,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
+	const bool deferred = ctx.isDeferredPassActive();
 
 	// An application that bound its own shader draws through that instead: its
 	// pipeline, its descriptor sets and its push constants replace the engine's.
@@ -570,7 +603,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	// A shader is bound but reads a layout this draw cannot feed - a post effect's
 	// quad of two vec2s, against a buffer of gVertex - so the bytes would be read
 	// as the wrong fields entirely. Nothing is drawn rather than something wrong.
-	if(gvkBoundUserShader() != GVK_NO_USER_SHADER && !gvkBoundUserShaderUsesMeshLayout()) {
+	if(!deferred && gvkBoundUserShader() != GVK_NO_USER_SHADER && !gvkBoundUserShaderUsesMeshLayout()) {
 		static bool reported = false;
 		if(!reported) {
 			reported = true;
@@ -579,13 +612,18 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 		}
 		return;
 	}
-	const bool usershader = gvkBindUserShaderForDraw(ctx, cmd, blending, lines);
+	// Custom shaders are intentionally outside the classic-material deferred path: they are
+	// built against the screen render pass and cannot be recorded into this MRT
+	// pass. Deferred geometry always selects the engine-owned compatible pipeline.
+	const bool usershader = !deferred && gvkBindUserShaderForDraw(ctx, cmd, blending, lines);
 	// Falling back to the engine's pipeline here would draw the mesh with a shader
 	// the application did not ask for, which looks like a working draw and is not
 	// one. A bind that failed has already said why.
-	if(!usershader && gvkBoundUserShader() != GVK_NO_USER_SHADER) return;
+	if(!deferred && !usershader && gvkBoundUserShader() != GVK_NO_USER_SHADER) return;
 	if(!usershader) {
-		VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending, cutout);
+		VkPipeline pipeline = deferred
+				? ctx.getDeferredGeometryPipeline(lines, cutout)
+				: (lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending, cutout));
 		if(pipeline == VK_NULL_HANDLE) return;
 		if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 	}
@@ -616,12 +654,15 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	// Adreno and Mali offer exactly four, so a set per texture would leave this
 	// pipeline uncreatable on most Android phones.
 	VkDescriptorSet sceneset = ctx.getCurrentSceneDescriptorSet();
-	if(!usershader && sceneset != VK_NULL_HANDLE && materialSet != VK_NULL_HANDLE
-			&& shadowSet != VK_NULL_HANDLE) {
+	if(!usershader && sceneset != VK_NULL_HANDLE && materialSet != VK_NULL_HANDLE) {
 		VkDescriptorSet sets[] = {sceneset, materialSet, shadowSet};
-		if(ctx.shouldBindDescriptorSets(ctx.getMesh3DPipelineLayout(), sets, 3)) {
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPipelineLayout(),
-					0, 3, sets, 0, nullptr);
+		const uint32_t setcount = deferred ? 2u : 3u;
+		const VkPipelineLayout layout = deferred
+				? ctx.getDeferredGeometryPipelineLayout() : ctx.getMesh3DPipelineLayout();
+		if((deferred || shadowSet != VK_NULL_HANDLE)
+				&& ctx.shouldBindDescriptorSets(layout, sets, setcount)) {
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout,
+					0, setcount, sets, 0, nullptr);
 		}
 	}
 
@@ -636,9 +677,14 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 		vkCmdBindVertexBuffers(cmd, 0, bindingcount, buffers, offsets);
 	}
 
-	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPushSize());
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), deferred
+			? ctx.getDeferredGeometryPushSize() : ctx.getMesh3DPushSize());
 	if(!usershader && pushsize > 0) {
-		vkCmdPushConstants(cmd, ctx.getMesh3DPipelineLayout(), ctx.getMesh3DPushStages(), 0, pushsize, &push);
+		const VkPipelineLayout layout = deferred
+				? ctx.getDeferredGeometryPipelineLayout() : ctx.getMesh3DPipelineLayout();
+		const VkShaderStageFlags stages = deferred
+				? ctx.getDeferredGeometryPushStages() : ctx.getMesh3DPushStages();
+		vkCmdPushConstants(cmd, layout, stages, 0, pushsize, &push);
 	}
 
 	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);

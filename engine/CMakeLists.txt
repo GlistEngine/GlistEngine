@@ -224,6 +224,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gVKMeshBuffer.cpp
 	${ENGINE_DIR}/core/gVKUniform.cpp
 	${ENGINE_DIR}/core/gVKShadow.cpp
+	${ENGINE_DIR}/core/gVKDeferred.cpp
 	${ENGINE_DIR}/core/gVKPipeline.cpp
 	${ENGINE_DIR}/core/gVKReflect.cpp
 	${ENGINE_DIR}/core/gVKShaderCompiler.cpp
@@ -878,6 +879,9 @@ if(Lib_Vulkan)
 			DEPENDS
 				${ENGINE_DIR}/graphics/shaders/color_vert.glsl
 				${ENGINE_DIR}/graphics/shaders/color_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/vk_deferred_geom_frag.glsl
+				${ENGINE_DIR}/graphics/shaders/vk_deferred_light_vert.glsl
+				${ENGINE_DIR}/graphics/shaders/vk_deferred_light_frag.glsl
 				${ENGINE_DIR}/graphics/shaders/image_vert.glsl
 				${ENGINE_DIR}/graphics/shaders/image_frag.glsl
 				${ENGINE_DIR}/graphics/shaders/pbr_vert.glsl

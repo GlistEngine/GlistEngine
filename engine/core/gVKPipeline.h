@@ -34,6 +34,13 @@
 long long gvkShaderSourcesTimestamp();
 void gvkDestroyPipelineCache(gVKContext& ctx);
 
+// Created on demand once gDeferredLight has supplied its internal MRT render
+// pass; the main screen pipelines are created earlier during Vulkan init.
+bool gvkCreateDeferredGeometryPipeline(gVKContext& ctx, VkRenderPass renderpass);
+void gvkDestroyDeferredGeometryPipeline(gVKContext& ctx);
+bool gvkCreateDeferredLightingPipeline(gVKContext& ctx);
+void gvkDestroyDeferredLightingPipeline(gVKContext& ctx);
+
 /*
  * A pipeline built from a shader the application supplied rather than one of the
  * engine's own. Everything in it is reflected out of the given SPIR-V, exactly as
