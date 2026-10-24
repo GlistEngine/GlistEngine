@@ -8,6 +8,7 @@
 #include "gAppManager.h"
 #include "gInputManager.h"
 #include "gBaseComponent.h"
+#include "gBasePlatform.h"
 #include "gBasePlugin.h"
 #include "gEventHook.h"
 #include "gBaseApp.h"
@@ -24,19 +25,11 @@
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
 #include "gGLFWWindow.h"
 #elif defined(ANDROID)
-#include "gAndroidWindow.h"
-#include "gAndroidCanvas.h"
-#include "gAndroidApp.h"
 #include "gAndroidUtil.h"
 #elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#   include "gIOSWindow.h"
-#   include "gIOSCanvas.h"
-#   include "gIOSApp.h"
-#   include "gIOSMain.h"
+#include "gIOSMain.h"
 #elif defined(EMSCRIPTEN)
 #include "gGLFWWindow.h"
-#include "gWebCanvas.h"
-#include "gWebApp.h"
 #include "emscripten.h"
 #endif
 
@@ -147,13 +140,12 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 	}
 	if(windowMode != G_WINDOWMODE_NONE) {
 		usewindow = true;
-#if defined(ANDROID)
-		window = new gAndroidWindow();
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-        window = new gIOSWindow();
-#else
-		window = new gGLFWWindow();
-#endif
+		if(gBasePlatform::getCurrent() != nullptr) {
+			// Android, iOS and web come from their plugins, see gBasePlatform.
+			window = gBasePlatform::getCurrent()->createWindow();
+		} else {
+			window = new gGLFWWindow();
+		}
 		window->setEventHandler(eventhandler);
 	} else {
 		usewindow = false;
