@@ -65,7 +65,6 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-
 void gMesh::setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices) {
 	this->setVertices(std::make_shared<std::vector<gVertex>>(vertices), std::make_shared<std::vector<gIndex>>(indices));
 }
@@ -186,8 +185,12 @@ void gMesh::draw() {
 	if (!isenabled) return;
 
 	if (renderer->isVulkan()) {
-		if (isprojection2d) drawVulkan2D();
-		else drawVulkan3D();
+		if (isprojection2d) {
+			drawVulkan2D();
+		} else {
+			processTransformationMatrix();
+			drawVulkan3D();
+		}
 		// A material can carry extra shaders, and on OpenGL the mesh is drawn again
 		// once per shader below. That cannot be honoured here - see the note above
 		// gvkReportNoUserShaders in gVKRenderEngine.cpp for why a gShader has no

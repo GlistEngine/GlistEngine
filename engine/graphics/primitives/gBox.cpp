@@ -7,8 +7,79 @@
 
 #include <gBox.h>
 
-gBox::gBox() {
+gBox::gBox(bool isFilled) {
 
+	if (!isFilled) {
+		// ---------------------------------------------------------
+		// WIREFRAME BOX
+		//
+		// Use 8 unique corners and the 12 real box edges.
+		// This avoids the diagonal lines that would appear if the
+		// filled triangle index buffer were simply rendered as lines.
+		// ---------------------------------------------------------
+		const glm::vec3 corners[] = {
+			glm::vec3(-1.0f,  1.0f, -1.0f), // 0
+			glm::vec3( 1.0f,  1.0f, -1.0f), // 1
+			glm::vec3(-1.0f, -1.0f, -1.0f), // 2
+			glm::vec3( 1.0f, -1.0f, -1.0f), // 3
+			glm::vec3(-1.0f,  1.0f,  1.0f), // 4
+			glm::vec3( 1.0f,  1.0f,  1.0f), // 5
+			glm::vec3(-1.0f, -1.0f,  1.0f), // 6
+			glm::vec3( 1.0f, -1.0f,  1.0f)  // 7
+		};
+
+		const unsigned int lineindices[] = {
+			// back rectangle
+			0, 1,
+			1, 3,
+			3, 2,
+			2, 0,
+
+			// front rectangle
+			4, 5,
+			5, 7,
+			7, 6,
+			6, 4,
+
+			// connections
+			0, 4,
+			1, 5,
+			2, 6,
+			3, 7
+		};
+
+		std::vector<gVertex> verticesb;
+		verticesb.reserve(8);
+
+		for (const glm::vec3& corner : corners) {
+			gVertex v{};
+			v.position = corner;
+			v.color = glm::vec3(1.0f);
+			verticesb.push_back(v);
+		}
+
+		std::vector<gIndex> indicesb;
+		indicesb.reserve(sizeof(lineindices) / sizeof(lineindices[0]));
+
+		for (unsigned int index : lineindices) {
+			indicesb.push_back(static_cast<gIndex>(index));
+		}
+
+		auto verticesptr =
+			std::make_shared<std::vector<gVertex>>(verticesb);
+
+		auto indicesptr =
+			std::make_shared<std::vector<gIndex>>(indicesb);
+
+		setVertices(verticesptr, indicesptr);
+		setDrawMode(GL_LINES);
+		return;
+	}
+
+
+	// ---------------------------------------------------------
+	// FILLED BOX
+	// ---------------------------------------------------------
 	float vertexdata[]= {
 	    // x,   y,   z,  s,  t,
 		-1.0f,  1.0f, -1.0f, 1.0f, 0.0f, // Back
@@ -47,21 +118,21 @@ gBox::gBox() {
 	    -1.0f, -1.0f,  1.0f,
 	     1.0f, -1.0f,  1.0f,
 	    -1.0f,  1.0f, -1.0f, // Left
-	    -1.0f,  -1.0f,  -1.0f,
-	    -1.0f, -1.0f, 1.0f,
-	    -1.0f, 1.0f,  1.0f,
-	     1.0f,  1.0f,  -1.0f, // Right
-	     1.0f,  -1.0f, -1.0f,
-	     1.0f, -1.0f,  1.0f,
-	     1.0f, 1.0f, 1.0f,
-	    -1.0f, -1.0f,  -1.0f, // Top
+	    -1.0f, -1.0f, -1.0f,
 	    -1.0f, -1.0f,  1.0f,
-	     1.0f, -1.0f, 1.0f,
+	    -1.0f,  1.0f,  1.0f,
+	     1.0f,  1.0f, -1.0f, // Right
+	     1.0f, -1.0f, -1.0f,
+	     1.0f, -1.0f,  1.0f,
+	     1.0f,  1.0f,  1.0f,
+	    -1.0f, -1.0f, -1.0f, // Top
+	    -1.0f, -1.0f,  1.0f,
+	     1.0f, -1.0f,  1.0f,
 	     1.0f, -1.0f, -1.0f,
 	    -1.0f,  1.0f, -1.0f, // Bottom
-	    -1.0f,  1.0f, 1.0f,
+	    -1.0f,  1.0f,  1.0f,
 	     1.0f,  1.0f,  1.0f,
-	     1.0f,  1.0f,  -1.0f
+	     1.0f,  1.0f, -1.0f
 	};
 
 
@@ -89,8 +160,8 @@ gBox::gBox() {
 
 	int nv = (sizeof(vertexdata) / sizeof(vertexdata[0])) / 5;
 	std::vector<gVertex> verticesb;
-	for (int i=0; i<nv; i++) {
-		gVertex v;
+	for (int i = 0; i < nv; i++) {
+		gVertex v{};
 		v.position.x = vertexdata[(i * 5)];
 		v.position.y = vertexdata[(i * 5) + 1];
 		v.position.z = vertexdata[(i * 5) + 2];
@@ -99,20 +170,25 @@ gBox::gBox() {
 		v.normal.x = normaldata[(i * 3)];
 		v.normal.y = normaldata[(i * 3) + 1];
 		v.normal.z = normaldata[(i * 3) + 2];
+		v.color = glm::vec3(1.0f);
 		verticesb.push_back(v);
 	}
 
 	int ni = sizeof(indexdata) / sizeof(indexdata[0]);
 	std::vector<gIndex> indicesb;
-	for (int i=0; i<ni; i++) {
+	for (int i = 0; i < ni; i++) {
 		indicesb.push_back(indexdata[i]);
 	}
 
-	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticesb);
-	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicesb);
+	auto verticesptr =
+		std::make_shared<std::vector<gVertex>>(verticesb);
+
+	auto indicesptr =
+		std::make_shared<std::vector<gIndex>>(indicesb);
+
 	setVertices(verticesptr, indicesptr);
+	setDrawMode(gMesh::DRAWMODE_TRIANGLES);
 }
 
 gBox::~gBox() {
 }
-
