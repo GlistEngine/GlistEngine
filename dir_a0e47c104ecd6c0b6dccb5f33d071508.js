@@ -18,6 +18,7 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gVKBuffer.h", "gVKBuffer_8h.html", "gVKBuffer_8h" ],
     [ "gVKCommands.h", "gVKCommands_8h.html", "gVKCommands_8h" ],
     [ "gVKContext.h", "gVKContext_8h.html", "gVKContext_8h" ],
+    [ "gVKDeferred.h", "gVKDeferred_8h.html", "gVKDeferred_8h" ],
     [ "gVKDraw.h", "gVKDraw_8h.html", "gVKDraw_8h" ],
     [ "gVKFrame.h", "gVKFrame_8h.html", "gVKFrame_8h" ],
     [ "gVKMeshBuffer.h", "gVKMeshBuffer_8h.html", "gVKMeshBuffer_8h" ],
