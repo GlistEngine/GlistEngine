@@ -31,6 +31,8 @@ enum {
 	GVK_STAGE_COLOR_VERT, GVK_STAGE_COLOR_FRAG,
 	GVK_STAGE_IMAGE_VERT, GVK_STAGE_IMAGE_FRAG,
 	GVK_STAGE_MESH3D_VERT, GVK_STAGE_MESH3D_FRAG,
+	GVK_STAGE_DEFERRED_GEOM_FRAG,
+	GVK_STAGE_DEFERRED_LIGHT_VERT, GVK_STAGE_DEFERRED_LIGHT_FRAG,
 	GVK_STAGE_MESH3DPBR_VERT, GVK_STAGE_MESH3DPBR_FRAG,
 	GVK_STAGE_SHADOW_VERT, GVK_STAGE_SHADOW_FRAG,
 	GVK_STAGE_SKYBOX_VERT, GVK_STAGE_SKYBOX_FRAG,
@@ -54,6 +56,9 @@ static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 	{"image_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
 	{"color_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "VULKAN3D", gvkspv_mesh3d_vert, sizeof(gvkspv_mesh3d_vert)},
 	{"color_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "VULKAN3D", gvkspv_mesh3d_frag, sizeof(gvkspv_mesh3d_frag)},
+	{"vk_deferred_geom_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_deferred_geom_frag, sizeof(gvkspv_deferred_geom_frag)},
+	{"vk_deferred_light_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_deferred_light_vert, sizeof(gvkspv_deferred_light_vert)},
+	{"vk_deferred_light_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_deferred_light_frag, sizeof(gvkspv_deferred_light_frag)},
 	{"pbr_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_mesh3dpbr_vert, sizeof(gvkspv_mesh3dpbr_vert)},
 	{"pbr_frag.glsl", VK_SHADER_STAGE_FRAGMENT_BIT, "", gvkspv_mesh3dpbr_frag, sizeof(gvkspv_mesh3dpbr_frag)},
 	{"shadowmap_vert.glsl", VK_SHADER_STAGE_VERTEX_BIT, "", gvkspv_shadow3d_vert, sizeof(gvkspv_shadow3d_vert)},
@@ -104,6 +109,14 @@ static const VkVertexInputAttributeDescription gvk2dattributes[] = {
 	{2, 0, VK_FORMAT_R32G32_SFLOAT, 32},         // texture coordinate
 };
 static constexpr uint32_t GVK_2D_VERTEX_STRIDE = 48;
+
+// Clip-space position and texture coordinate, matching the compact quad pushed by
+// gvkDrawDeferredLighting rather than the larger shared 2D batch vertex.
+static const VkVertexInputAttributeDescription gvkfullscreenattributes[] = {
+	{0, 0, VK_FORMAT_R32G32_SFLOAT, 0},
+	{1, 0, VK_FORMAT_R32G32_SFLOAT, 8},
+};
+static constexpr uint32_t GVK_FULLSCREEN_VERTEX_STRIDE = 16;
 
 static_assert(sizeof(gVertex) == GVK_MESH3D_VERTEX_STRIDE, "gVertex size no longer matches the Vulkan 3D vertex layout");
 static_assert(offsetof(gVertex, position) == 0, "gVertex::position moved");
@@ -162,6 +175,9 @@ struct gvkPipelineOptions {
 	// Non-zero adds a second binding stepped per instance rather than per vertex.
 	// Attributes above name binding 1 themselves.
 	uint32_t instancestride = 0;
+	// Number of colour attachments in the target subpass. Most engine passes have
+	// one; the deferred geometry pass writes position, normal and albedo together.
+	uint32_t colorattachmentcount = 1;
 };
 
 struct gvkShaderSet {
@@ -403,10 +419,12 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 	blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 	blendattachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
+	std::vector<VkPipelineColorBlendAttachmentState> blendattachments(
+			options.colorattachmentcount, blendattachment);
 	VkPipelineColorBlendStateCreateInfo colorblend{};
 	colorblend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorblend.attachmentCount = 1;
-	colorblend.pAttachments = &blendattachment;
+	colorblend.attachmentCount = static_cast<uint32_t>(blendattachments.size());
+	colorblend.pAttachments = blendattachments.data();
 
 	// The 3D pipeline takes its depth state per draw rather than baking it in. The
 	// engine lets an app switch depth testing on and off at any point through
@@ -502,10 +520,14 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 			// A second copy with blending flipped, so a 3D draw can follow the renderer's
 			// alpha blending state. It cannot be a dynamic state - blending is baked into
 			// a Vulkan pipeline - so the choice is made by binding one or the other.
-			blendattachment.blendEnable = options.blend ? VK_FALSE : VK_TRUE;
+			for(auto& attachment : blendattachments) {
+				attachment.blendEnable = options.blend ? VK_FALSE : VK_TRUE;
+			}
 			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
 					&built.blendvariantpipeline);
-			blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+			for(auto& attachment : blendattachments) {
+				attachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+			}
 		}
 		if(result == VK_SUCCESS && options.additivevariant) {
 			// Only the destination factor changes: the source is still scaled by alpha, so
@@ -514,14 +536,18 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 			// alpha channel follows along, because glBlendFunc(GL_SRC_ALPHA, GL_ONE)
 			// applies to all four channels on the OpenGL side and this has to land on
 			// the same pixels.
-			blendattachment.blendEnable = VK_TRUE;
-			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
-			blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+			for(auto& attachment : blendattachments) {
+				attachment.blendEnable = VK_TRUE;
+				attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+				attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+			}
 			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
 					&built.additivepipeline);
-			blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
-			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-			blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			for(auto& attachment : blendattachments) {
+				attachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+				attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+				attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			}
 		}
 		if(result == VK_SUCCESS && options.nocutoutvariant) {
 			// The same modules, compiled a second time with the cutout constant forced to
@@ -836,6 +862,119 @@ bool gvkReloadGraphicsPipelines(gVKContext& ctx) {
 	}
 	gLogi("gVKPipeline") << "Shaders reloaded.";
 	return true;
+}
+
+bool gvkCreateDeferredGeometryPipeline(gVKContext& ctx, VkRenderPass renderpass) {
+	if(ctx.device == VK_NULL_HANDLE || renderpass == VK_NULL_HANDLE) {
+		gLoge("gVKPipeline") << "The deferred geometry pipeline needs its G-buffer render pass first.";
+		return false;
+	}
+	gvkDestroyDeferredGeometryPipeline(ctx);
+
+	gvkShaderSet shaders;
+	gvkLoadShaderSet(shaders, false);
+
+	gvkPipelineOptions options;
+	options.depthtest = true;
+	options.blend = false;
+	options.dynamicculling = true;
+	options.linevariant = true;
+	options.nocutoutvariant = true;
+	options.vertexattributes = gvkmesh3dattributes;
+	options.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
+	options.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
+	options.instancestride = GVK_MESH3D_INSTANCE_STRIDE;
+	options.colorattachmentcount = 3;
+
+	gvkTargetPasses passes;
+	passes.pass[0] = renderpass;
+	gvkPipelineParts parts;
+	if(!gvkBuildPipeline(ctx.device, ctx.pipelinecache, passes, "deferred-geometry",
+			shaders.spirv[GVK_STAGE_MESH3D_VERT],
+			shaders.spirv[GVK_STAGE_DEFERRED_GEOM_FRAG], options, parts)) {
+		gvkDestroyParts(ctx.device, parts);
+		return false;
+	}
+
+	ctx.deferredgeometry = parts.variants[0];
+	ctx.deferredgeometrypipelinelayout = parts.layout;
+	ctx.deferredgeometrysetlayouts = std::move(parts.setlayouts);
+	ctx.deferredgeometrypushsize = parts.pushsize;
+	ctx.deferredgeometrypushstages = parts.pushstages;
+	return true;
+}
+
+void gvkDestroyDeferredGeometryPipeline(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE) return;
+	gvkDestroyPipelineVariants(ctx.device, ctx.deferredgeometry);
+	if(ctx.deferredgeometrypipelinelayout != VK_NULL_HANDLE) {
+		vkDestroyPipelineLayout(ctx.device, ctx.deferredgeometrypipelinelayout, nullptr);
+		ctx.deferredgeometrypipelinelayout = VK_NULL_HANDLE;
+	}
+	for(VkDescriptorSetLayout layout : ctx.deferredgeometrysetlayouts) {
+		if(layout != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(ctx.device, layout, nullptr);
+	}
+	ctx.deferredgeometrysetlayouts.clear();
+	ctx.deferredgeometrypushsize = 0;
+	ctx.deferredgeometrypushstages = 0;
+}
+
+bool gvkCreateDeferredLightingPipeline(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) {
+		gLoge("gVKPipeline") << "The deferred lighting pipeline needs the screen render pass first.";
+		return false;
+	}
+	gvkDestroyDeferredLightingPipeline(ctx);
+
+	gvkShaderSet shaders;
+	gvkLoadShaderSet(shaders, false);
+
+	gvkPipelineOptions options;
+	options.depthtest = false;
+	options.blend = false;
+	options.vertexattributes = gvkfullscreenattributes;
+	options.vertexattributecount = static_cast<uint32_t>(std::size(gvkfullscreenattributes));
+	options.vertexstride = GVK_FULLSCREEN_VERTEX_STRIDE;
+
+	gvkTargetPasses passes;
+	passes.pass[0] = ctx.singlesamplerenderpass != VK_NULL_HANDLE
+			? ctx.singlesamplerenderpass : ctx.renderpass;
+	passes.pass[1] = ctx.isMultiSampled() ? ctx.renderpass : VK_NULL_HANDLE;
+	passes.samples = ctx.samplecount;
+	passes.sampleshading = ctx.sampleshadingenabled
+			&& ctx.devicefeatures.sampleRateShading == VK_TRUE;
+	passes.minsampleshading = ctx.minsampleshading;
+
+	gvkPipelineParts parts;
+	if(!gvkBuildPipeline(ctx.device, ctx.pipelinecache, passes, "deferred-lighting",
+			shaders.spirv[GVK_STAGE_DEFERRED_LIGHT_VERT],
+			shaders.spirv[GVK_STAGE_DEFERRED_LIGHT_FRAG], options, parts)) {
+		gvkDestroyParts(ctx.device, parts);
+		return false;
+	}
+	for(uint32_t variant = 0; variant < GVK_PIPELINE_SAMPLE_VARIANTS; ++variant) {
+		ctx.deferredlighting[variant] = parts.variants[variant];
+		parts.variants[variant] = {};
+	}
+	ctx.deferredlightingpipelinelayout = parts.layout;
+	parts.layout = VK_NULL_HANDLE;
+	ctx.deferredlightingsetlayouts = std::move(parts.setlayouts);
+	return true;
+}
+
+void gvkDestroyDeferredLightingPipeline(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE) return;
+	for(gVKPipelineVariants& variants : ctx.deferredlighting) {
+		gvkDestroyPipelineVariants(ctx.device, variants);
+	}
+	if(ctx.deferredlightingpipelinelayout != VK_NULL_HANDLE) {
+		vkDestroyPipelineLayout(ctx.device, ctx.deferredlightingpipelinelayout, nullptr);
+		ctx.deferredlightingpipelinelayout = VK_NULL_HANDLE;
+	}
+	for(VkDescriptorSetLayout layout : ctx.deferredlightingsetlayouts) {
+		if(layout != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(ctx.device, layout, nullptr);
+	}
+	ctx.deferredlightingsetlayouts.clear();
 }
 
 bool gvkCreateShadowPipeline(gVKContext& ctx) {

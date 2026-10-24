@@ -114,6 +114,11 @@ void gvkFlush2DBatch(gVKContext& ctx);
  */
 bool gvkDrawFullscreenQuad(gVKContext& ctx);
 
+// Resolves the current frame slot's G-buffer into the screen render pass through
+// the engine-owned deferred lighting pipeline.
+bool gvkDrawDeferredLighting(gVKContext& ctx, VkDescriptorSet gbufferSet,
+		VkDescriptorSet shadowSet);
+
 // Abandons the open batch without recording it, for the frame boundary: the range
 // it names is about to be rewound underneath it.
 void gvkReset2DBatch();

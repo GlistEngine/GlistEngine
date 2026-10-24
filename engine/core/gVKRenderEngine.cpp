@@ -34,6 +34,7 @@
 	#include "gVKMeshBuffer.h"
 	#include "gVKUniform.h"
 	#include "gVKShadow.h"
+	#include "gVKDeferred.h"
 	#include "gVKUserShader.h"
 
 	// Defined further down; declared here because drawMesh3D reaches it first. Kept
@@ -595,11 +596,18 @@ bool gVKRenderEngine::ensureFramebufferPass(gVKFramebuffer* target) {
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 	dependency.dstSubpass = 0;
 	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.srcAccessMask = 0;
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_TRANSFER_BIT;
+	dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_TRANSFER_WRITE_BIT;
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+			| VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT
+			| VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
 			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
 	VkRenderPassCreateInfo passinfo{};
@@ -2384,6 +2392,11 @@ void gVKRenderEngine::cleanupVulkan() {
 	// Destroying objects the GPU is still using is a validation error, so the
 	// device is drained first.
 	if(ctx->device != VK_NULL_HANDLE) vkDeviceWaitIdle(ctx->device);
+	// The G-buffer framebuffers reference their image views and render pass, so the
+	// complete deferred unit must be released while the device is still alive.
+	gvkDestroyDeferredLightingPipeline(*ctx);
+	gvkDestroyDeferredGeometryPipeline(*ctx);
+	gvkDestroyDeferredResources(*ctx, deferredresources);
 	// Strict reverse creation order: Vulkan requires children to be destroyed
 	// before their parent, and the surface must die before its instance. The 2D
 	// draw path was built last, so it is torn down first (pipelines reference the
@@ -2476,10 +2489,37 @@ static void gvkDrainRetiredPasses(gVKContext* vkcontext, bool force) {
 bool gVKRenderEngine::beginFrame() {
 #ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return false;
+	// releaseDeferredLighting may be called while a command buffer is being
+	// recorded. In that case destruction is postponed until this frame boundary,
+	// after the submitted work can safely be drained.
+	if(deferredstate == DeferredState::Uninitialized && deferredresources != nullptr) {
+		vkDeviceWaitIdle(*vkcontext->getDevice());
+		gvkDestroyDeferredLightingPipeline(*vkcontext);
+		gvkDestroyDeferredGeometryPipeline(*vkcontext);
+		gvkDestroyDeferredResources(*vkcontext, deferredresources);
+		deferredwidth = 0;
+		deferredheight = 0;
+	}
 	// Between frames is the only safe point to swap pipelines out: no command
 	// buffer is recording and the previous frame can be drained.
 	applyPendingSampleCount();
 	checkShaderReload();
+	// A resize rebuilds the swapchain inside gvkBeginFrame and skips that frame.
+	// On the following frame, bring the private G-buffer to the new physical
+	// swapchain extent before recording begins. Doing this here also covers apps
+	// that do not forward their windowResized callback to gDeferredLight, and avoids
+	// confusing logical UI dimensions with the default framebuffer's pixel size.
+	if(deferredresources != nullptr && deferredstate != DeferredState::GeometryActive) {
+		const VkExtent2D extent = *vkcontext->getSwapchainExtent();
+		if(extent.width > 0 && extent.height > 0
+				&& (deferredwidth != static_cast<int>(extent.width)
+						|| deferredheight != static_cast<int>(extent.height))) {
+			if(!setupDeferredLighting(static_cast<int>(extent.width),
+					static_cast<int>(extent.height))) {
+				gLoge("gVKRenderEngine") << "Could not resize deferred resources to the current swapchain extent.";
+			}
+		}
+	}
 	// The new frame writes into a different uniform buffer, so whatever the previous
 	// one gathered does not carry over.
 	sceneuniformswritten = false;
@@ -2566,6 +2606,10 @@ void gVKRenderEngine::applyPendingSampleCount() {
 	const bool hadshadowmap = ctx->hasShadowMap();
 	const VkExtent2D shadowextent = ctx->shadowextent;
 	if(hadshadowmap) gvkDestroyShadowResources(*ctx);
+	if(deferredresources != nullptr) {
+		gvkReleaseDeferredDescriptors(*ctx, *deferredresources);
+		gvkDestroyDeferredLightingPipeline(*ctx);
+	}
 	// Scene descriptor sets belong to the same pool; release them before it goes,
 	// exactly as the shader reload path does.
 	gvkDestroyUniformResources(*ctx);
@@ -2586,6 +2630,12 @@ void gVKRenderEngine::applyPendingSampleCount() {
 		gLoge("gVKRenderEngine") << "Could not rebuild the frame path for " << requested
 				<< "x MSAA; rendering will be broken until this is resolved.";
 		return;
+	}
+	if(deferredresources != nullptr
+			&& (!gvkCreateDeferredLightingPipeline(*ctx)
+			|| !gvkCreateDeferredDescriptors(*ctx, *deferredresources,
+					ctx->getDeferredLightingGBufferSetLayout()))) {
+		gLoge("gVKRenderEngine") << "Could not rebuild deferred lighting after the MSAA change.";
 	}
 	// The rebuild destroyed the descriptor pool, so every texture still loaded needs
 	// pointing at the new one - the same fix-up the shader reload does.
@@ -2623,7 +2673,21 @@ void gVKRenderEngine::checkShaderReload() {
 	// Release their buffers first, then recreate both buffers and sets against the
 	// new reflected layout; retaining the old handles would bind freed sets.
 	gvkDestroyUniformResources(*vkcontext);
+	if(deferredresources != nullptr) {
+		gvkReleaseDeferredDescriptors(*vkcontext, *deferredresources);
+		gvkDestroyDeferredLightingPipeline(*vkcontext);
+	}
 	if(!gvkReloadGraphicsPipelines(*vkcontext)) return;
+	if(deferredresources != nullptr && !gvkCreateDeferredGeometryPipeline(*vkcontext,
+			gvkGetDeferredRenderPass(*deferredresources))) {
+		gLoge("gVKRenderEngine") << "Could not rebuild the deferred geometry pipeline after shader reload.";
+	}
+	if(deferredresources != nullptr
+			&& (!gvkCreateDeferredLightingPipeline(*vkcontext)
+			|| !gvkCreateDeferredDescriptors(*vkcontext, *deferredresources,
+					vkcontext->getDeferredLightingGBufferSetLayout()))) {
+		gLoge("gVKRenderEngine") << "Could not rebuild deferred lighting after shader reload.";
+	}
 	// Their pipelines were built against the render pass that just went, and their
 	// descriptor sets came from the pool that went with it.
 	gvkRebuildUserShaders(*vkcontext);
@@ -2642,6 +2706,10 @@ void gVKRenderEngine::checkShaderReload() {
 void gVKRenderEngine::endFrame() {
 #ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
+	if(deferredstate == DeferredState::GeometryActive) {
+		gLogw("gVKRenderEngine") << "Deferred geometry was left active at the end of the frame; cancelling it.";
+		endDeferredLighting();
+	}
 	flushQueuedDraws();
 	// An application that forgot to unbind its FBO would otherwise leave that pass
 	// open, and the frame loop would close it believing it was the screen one -
@@ -2871,6 +2939,7 @@ void gVKRenderEngine::cleanup() {
 	// because init() skips gRenderer::init(). The primitive meshes and rendercolor
 	// are what init() did allocate, so they are released here.
 	destroyPrimitiveMeshes();
+	releaseDeferredLighting();
 	cleanupVulkan();
 	delete rendercolor;
 	rendercolor = nullptr;
@@ -3144,6 +3213,17 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// PBR takes a separate pipeline and a separate shader, so it branches out before
 	// the non-PBR material work below.
 	if(surface.ispbr) {
+		// The deferred path currently targets classic materials only. The
+		// PBR pipeline belongs to the screen pass and binding it inside the MRT pass
+		// would be invalid, so skip explicitly until a PBR G-buffer contract exists.
+		if(vkcontext->isDeferredPassActive()) {
+			static bool reporteddeferredpbr = false;
+			if(!reporteddeferredpbr) {
+				reporteddeferredpbr = true;
+				gLogw("gVKRenderEngine") << "PBR meshes are not supported by the Vulkan deferred geometry pass and are skipped.";
+			}
+			return;
+		}
 		if(!ensureWhiteTexture()) return;
 		VkDescriptorSet materialset = gvkGetPbrMaterialSet(vkcontext, vktextures, whitetextureid, surface);
 		if(materialset == VK_NULL_HANDLE) return;
@@ -3524,6 +3604,193 @@ bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int v
 #else
 	return false;
 #endif
+}
+
+bool gVKRenderEngine::setupDeferredLighting(int width, int height) {
+#ifdef GVK_VULKAN
+	if(width <= 0 || height <= 0) {
+		gLoge("gVKRenderEngine") << "Deferred lighting requires a positive render size.";
+		return false;
+	}
+	if(vkcontext == nullptr || !vkcontext->isInitialized()) {
+		gLoge("gVKRenderEngine") << "Deferred lighting cannot be set up before Vulkan initialization.";
+		return false;
+	}
+	if(deferredstate == DeferredState::GeometryActive) {
+		gLogw("gVKRenderEngine") << "Cannot set up deferred lighting during an active geometry pass.";
+		return false;
+	}
+	if(deferredresources != nullptr && deferredwidth == width && deferredheight == height
+			&& vkcontext->getDeferredGeometryPipeline(false, true) != VK_NULL_HANDLE
+			&& vkcontext->getDeferredLightingPipeline() != VK_NULL_HANDLE
+			&& gvkGetDeferredDescriptorSet(*deferredresources, 0) != VK_NULL_HANDLE) {
+		deferredstate = DeferredState::Ready;
+		return true;
+	}
+	if(deferredresources != nullptr && vkcontext->isFrameActive()) {
+		gLogw("gVKRenderEngine") << "Cannot replace deferred resources during an active frame.";
+		return false;
+	}
+
+	gVKDeferredResources* replacement = gvkCreateDeferredResources(*vkcontext,
+			static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+	if(replacement == nullptr) return false;
+	if(deferredresources != nullptr) {
+		vkDeviceWaitIdle(*vkcontext->getDevice());
+		gvkDestroyDeferredLightingPipeline(*vkcontext);
+		gvkDestroyDeferredGeometryPipeline(*vkcontext);
+		gvkDestroyDeferredResources(*vkcontext, deferredresources);
+	}
+
+	deferredresources = replacement;
+	if(!gvkCreateDeferredGeometryPipeline(*vkcontext,
+			gvkGetDeferredRenderPass(*deferredresources))) {
+		gvkDestroyDeferredResources(*vkcontext, deferredresources);
+		return false;
+	}
+	if(!gvkCreateDeferredLightingPipeline(*vkcontext)
+			|| !gvkCreateDeferredDescriptors(*vkcontext, *deferredresources,
+					vkcontext->getDeferredLightingGBufferSetLayout())) {
+		gvkDestroyDeferredLightingPipeline(*vkcontext);
+		gvkDestroyDeferredGeometryPipeline(*vkcontext);
+		gvkDestroyDeferredResources(*vkcontext, deferredresources);
+		return false;
+	}
+	deferredwidth = width;
+	deferredheight = height;
+	deferredstate = DeferredState::Ready;
+	return true;
+#else
+	(void) width;
+	(void) height;
+	return false;
+#endif
+}
+
+bool gVKRenderEngine::resizeDeferredLighting(int width, int height) {
+#ifdef GVK_VULKAN
+	if(width <= 0 || height <= 0) return false;
+	if(deferredstate == DeferredState::Uninitialized) return setupDeferredLighting(width, height);
+	if(deferredstate == DeferredState::GeometryActive) {
+		gLogw("gVKRenderEngine") << "Ignoring deferred resize during an active geometry pass.";
+		return false;
+	}
+	if(deferredwidth == width && deferredheight == height) return true;
+	return setupDeferredLighting(width, height);
+#else
+	(void) width;
+	(void) height;
+	return false;
+#endif
+}
+
+bool gVKRenderEngine::beginDeferredGeometryPass() {
+#ifdef GVK_VULKAN
+	if(deferredstate == DeferredState::Uninitialized) {
+		gLoge("gVKRenderEngine") << "Call gDeferredLight::setup() before enable().";
+		return false;
+	}
+	if(deferredstate == DeferredState::GeometryActive) {
+		gLogw("gVKRenderEngine") << "Deferred geometry pass is already active.";
+		return false;
+	}
+	if(vkcontext == nullptr || !vkcontext->isFrameActive()) {
+		gLoge("gVKRenderEngine") << "Deferred geometry must begin inside an active Vulkan frame.";
+		return false;
+	}
+	if(deferredresources == nullptr) {
+		gLoge("gVKRenderEngine") << "Deferred resources are unavailable; call setup() again.";
+		return false;
+	}
+
+	// Preserve every draw issued before enable(), then close an offscreen target if
+	// the application left one bound. The G-buffer pass owns the command buffer
+	// until renderLightingPass() or disable() ends it.
+	flushQueuedDraws();
+	endOffscreenPass();
+	boundframebuffer = gFbo::defaultfbo;
+	// A screen pass can still own batched 2D vertices even after every queued mesh
+	// has been recorded. Commit them before gvkBeginDeferredPass closes that pass.
+	gvkFlush2DBatch(*vkcontext);
+	if(!gvkBeginDeferredPass(*vkcontext, *deferredresources)) {
+		gLoge("gVKRenderEngine") << "Could not begin the deferred geometry render pass.";
+		return false;
+	}
+	deferredstate = DeferredState::GeometryActive;
+	return true;
+#else
+	return false;
+#endif
+}
+
+bool gVKRenderEngine::renderDeferredLightingPass() {
+#ifdef GVK_VULKAN
+	if(deferredstate != DeferredState::GeometryActive) {
+		gLoge("gVKRenderEngine") << "Deferred lighting requires an active geometry pass.";
+		return false;
+	}
+
+	// Geometry queued since beginDeferredGeometryPass belongs inside the G-buffer.
+	flushQueuedDraws();
+	gvkEndDeferredPass(*vkcontext);
+	deferredstate = DeferredState::Ready;
+
+	// A scene with no geometry still needs a current frame's Scene set, while a
+	// normal deferred frame already wrote it when its first mesh was queued.
+	if(!sceneuniformswritten) {
+		updateSceneUniforms();
+		sceneuniformswritten = true;
+	}
+	if(!ensureWhiteTexture()) return false;
+	VkDescriptorSet shadowset = vkcontext->getShadowDescriptorSet();
+	if(shadowset == VK_NULL_HANDLE) {
+		auto white = vktextures.find(whitetextureid);
+		if(white == vktextures.end() || white->second == nullptr) return false;
+		shadowset = white->second->descriptorset;
+	}
+	VkDescriptorSet gbuffer = gvkGetDeferredDescriptorSet(*deferredresources,
+			vkcontext->getCurrentFrame());
+	if(!gvkDrawDeferredLighting(*vkcontext, gbuffer, shadowset)) return false;
+	// Match OpenGL's post-lighting depth blit. Failure is non-fatal: the lit image
+	// is complete, but later forward 3D geometry cannot share its depth (notably
+	// the explicitly out-of-scope multisampled G-buffer case).
+	gvkRestoreDeferredDepth(*vkcontext, *deferredresources);
+	return true;
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::endDeferredLighting() {
+	if(deferredstate != DeferredState::GeometryActive) return;
+	flushQueuedDraws();
+#ifdef GVK_VULKAN
+	if(vkcontext != nullptr) gvkEndDeferredPass(*vkcontext);
+#endif
+	deferredstate = DeferredState::Ready;
+}
+
+void gVKRenderEngine::releaseDeferredLighting() {
+	if(deferredstate == DeferredState::GeometryActive) endDeferredLighting();
+	deferredstate = DeferredState::Uninitialized;
+#ifdef GVK_VULKAN
+	if(vkcontext != nullptr && deferredresources != nullptr && !vkcontext->isFrameActive()) {
+		vkDeviceWaitIdle(*vkcontext->getDevice());
+		gvkDestroyDeferredLightingPipeline(*vkcontext);
+		gvkDestroyDeferredGeometryPipeline(*vkcontext);
+		gvkDestroyDeferredResources(*vkcontext, deferredresources);
+	}
+#endif
+	// Keep the dimensions while destruction is deferred at a mid-frame release, so
+	// setup with the same size can safely reuse those resources in that frame.
+	if(deferredresources == nullptr) {
+		deferredwidth = 0;
+		deferredheight = 0;
+	}
+}
+
+bool gVKRenderEngine::isDeferredGeometryPassActive() const {
+	return deferredstate == DeferredState::GeometryActive;
 }
 
 bool gVKRenderEngine::allocateShadowMap(int width, int height) {

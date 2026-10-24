@@ -40,6 +40,7 @@
 
 class gBaseWindow;
 struct gVKContext;
+struct gVKDeferredResources;
 
 // How many frames the CPU may prepare while the GPU is still busy with earlier ones.
 inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
@@ -82,6 +83,10 @@ bool gvkClearDepthNow(gVKContext& ctx);
 bool gvkCreateGraphicsPipelines(gVKContext& ctx);
 bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
+bool gvkCreateDeferredGeometryPipeline(gVKContext& ctx, VkRenderPass renderpass);
+void gvkDestroyDeferredGeometryPipeline(gVKContext& ctx);
+bool gvkCreateDeferredLightingPipeline(gVKContext& ctx);
+void gvkDestroyDeferredLightingPipeline(gVKContext& ctx);
 bool gvkCreateDrawResources(gVKContext& ctx);
 bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity);
 void gvkDestroyMeshArena(gVKContext& ctx);
@@ -92,6 +97,12 @@ void gvkDestroyShadowPipeline(gVKContext& ctx);
 void gvkDestroyShadowResources(gVKContext& ctx);
 bool gvkBeginShadowPass(gVKContext& ctx);
 void gvkEndShadowPass(gVKContext& ctx);
+gVKDeferredResources* gvkCreateDeferredResources(gVKContext& ctx,
+		uint32_t width, uint32_t height);
+void gvkDestroyDeferredResources(gVKContext& ctx, gVKDeferredResources*& resources);
+bool gvkBeginDeferredPass(gVKContext& ctx, gVKDeferredResources& resources);
+void gvkEndDeferredPass(gVKContext& ctx);
+bool gvkRestoreDeferredDepth(gVKContext& ctx, gVKDeferredResources& resources);
 bool gvkCreateUniformResources(gVKContext& ctx);
 void gvkDestroyUniformResources(gVKContext& ctx);
 bool gvkAppendSceneUniformChunk(gVKContext& ctx, int framei);
@@ -202,6 +213,10 @@ struct gVKContext {
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
+	friend bool gvkCreateDeferredGeometryPipeline(gVKContext&, VkRenderPass);
+	friend void gvkDestroyDeferredGeometryPipeline(gVKContext&);
+	friend bool gvkCreateDeferredLightingPipeline(gVKContext&);
+	friend void gvkDestroyDeferredLightingPipeline(gVKContext&);
 	friend void gvkDestroyPipelineCache(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
 	friend bool gvkEnsureMeshArena(gVKContext&, VkDeviceSize);
@@ -213,6 +228,11 @@ struct gVKContext {
 	friend void gvkDestroyShadowResources(gVKContext&);
 	friend bool gvkBeginShadowPass(gVKContext&);
 	friend void gvkEndShadowPass(gVKContext&);
+	friend gVKDeferredResources* gvkCreateDeferredResources(gVKContext&, uint32_t, uint32_t);
+	friend void gvkDestroyDeferredResources(gVKContext&, gVKDeferredResources*&);
+	friend bool gvkBeginDeferredPass(gVKContext&, gVKDeferredResources&);
+	friend void gvkEndDeferredPass(gVKContext&);
+	friend bool gvkRestoreDeferredDepth(gVKContext&, gVKDeferredResources&);
 	friend bool gvkCreateUniformResources(gVKContext&);
 	friend bool gvkAppendSceneUniformChunk(gVKContext&, int);
 	friend void gvkDestroyUniformResources(gVKContext&);
@@ -380,6 +400,7 @@ struct gVKContext {
 	uint32_t getShadowPushSize() const { return shadowpushsize; }
 	VkShaderStageFlags getShadowPushStages() const { return shadowpushstages; }
 	bool isShadowPassActive() const { return shadowpassactive; }
+	bool isDeferredPassActive() const { return deferredpassactive; }
 	std::vector<VkFramebuffer>* getFramebuffers() { return &framebuffers; }
 
 	// Depth attachments are private to each frame in flight.
@@ -476,6 +497,24 @@ struct gVKContext {
 	VkPipelineLayout getMesh3DPipelineLayout() { return mesh3dpipelinelayout; }
 	uint32_t getMesh3DPushSize() const { return mesh3dpushsize; }
 	VkShaderStageFlags getMesh3DPushStages() const { return mesh3dpushstages; }
+	VkPipeline getDeferredGeometryPipeline(bool lines, bool cutout) {
+		if(lines && deferredgeometry.linepipeline != VK_NULL_HANDLE) return deferredgeometry.linepipeline;
+		if(!cutout && deferredgeometry.nocutoutpipeline != VK_NULL_HANDLE) {
+			return deferredgeometry.nocutoutpipeline;
+		}
+		return deferredgeometry.pipeline;
+	}
+	VkPipelineLayout getDeferredGeometryPipelineLayout() { return deferredgeometrypipelinelayout; }
+	uint32_t getDeferredGeometryPushSize() const { return deferredgeometrypushsize; }
+	VkShaderStageFlags getDeferredGeometryPushStages() const { return deferredgeometrypushstages; }
+	VkPipeline getDeferredLightingPipeline() {
+		return deferredlighting[activepipelinevariant].pipeline;
+	}
+	VkPipelineLayout getDeferredLightingPipelineLayout() { return deferredlightingpipelinelayout; }
+	VkDescriptorSetLayout getDeferredLightingGBufferSetLayout() {
+		return deferredlightingsetlayouts.size() > 1
+				? deferredlightingsetlayouts[1] : VK_NULL_HANDLE;
+	}
 
 	VkPipeline getMesh3DPbrPipeline() { return mesh3dpbr[activepipelinevariant].pipeline; }
 	VkPipelineLayout getMesh3DPbrPipelineLayout() { return mesh3dpbrpipelinelayout; }
@@ -874,6 +913,8 @@ private:
 	// True between gvkBeginShadowPass and gvkEndShadowPass, so the draw path can
 	// tell which of the two passes it is recording into.
 	bool shadowpassactive = false;
+	// True only while the internal G-buffer geometry render pass is open.
+	bool deferredpassactive = false;
 
 	VkRenderPass renderpass = VK_NULL_HANDLE;
 	// The same pass with LOAD in place of CLEAR on colour and depth. A frame opens
@@ -965,6 +1006,17 @@ private:
 	std::vector<VkDescriptorSetLayout> mesh3dsetlayouts;
 	uint32_t mesh3dpushsize = 0;
 	VkShaderStageFlags mesh3dpushstages = 0;
+	// Classic-material MRT pipeline, created only while a G-buffer exists.
+	VkPipelineLayout deferredgeometrypipelinelayout = VK_NULL_HANDLE;
+	gVKPipelineVariants deferredgeometry;
+	std::vector<VkDescriptorSetLayout> deferredgeometrysetlayouts;
+	uint32_t deferredgeometrypushsize = 0;
+	VkShaderStageFlags deferredgeometrypushstages = 0;
+	// Fullscreen G-buffer consumer. It targets the normal screen render pass, so it
+	// keeps one pipeline per active sample-count variant just like the 2D paths.
+	VkPipelineLayout deferredlightingpipelinelayout = VK_NULL_HANDLE;
+	gVKPipelineVariants deferredlighting[GVK_PIPELINE_SAMPLE_VARIANTS];
+	std::vector<VkDescriptorSetLayout> deferredlightingsetlayouts;
 
 	// PBR variant. Its five maps share one descriptor set rather than taking one
 	// each: Vulkan only guarantees four bound sets, and scene plus five textures

@@ -10,8 +10,18 @@
 #include "gCamera.h"
 #include "gShadowMap.h"
 
+namespace {
+
+bool isVulkanRendererActive() {
+	gRenderer* activeRenderer = gRenderObject::getRenderer();
+	return activeRenderer != nullptr && activeRenderer->isVulkan();
+}
+
+}
+
 gDeferredLight::gDeferredLight() : gBufferFBO(0), positionTexture(0), normalTexture(0), albedoTexture(0), rboDepth(0), width(0), height(0),
-	renderTargetFBO(0), depthTestWasEnabled(false), geometryPassActive(false), geometryShader(nullptr), lightingShader(nullptr), quadVAO(0), quadVBO(0) {
+	renderTargetFBO(0), depthTestWasEnabled(false), geometryPassActive(false), geometryShader(nullptr), lightingShader(nullptr),
+	quadVAO(0), quadVBO(0) {
 	renderTargetViewport[0] = 0;
 	renderTargetViewport[1] = 0;
 	renderTargetViewport[2] = 0;
@@ -22,9 +32,15 @@ gDeferredLight::gDeferredLight() : gBufferFBO(0), positionTexture(0), normalText
 }
 
 gDeferredLight::~gDeferredLight() {
-	releaseGBuffer();
-	if(quadVBO != 0) glDeleteBuffers(1, &quadVBO);
-	if(quadVAO != 0) glDeleteVertexArrays(1, &quadVAO);
+	// A Vulkan window has no OpenGL context. Its deferred resources will be owned
+	// by the Vulkan backend; never try to release them through GL here.
+	if(!isVulkanRendererActive()) {
+		releaseGBuffer();
+		if(quadVBO != 0) glDeleteBuffers(1, &quadVBO);
+		if(quadVAO != 0) glDeleteVertexArrays(1, &quadVAO);
+	} else {
+		gRenderObject::getRenderer()->releaseDeferredLighting();
+	}
 	delete geometryShader;
 	delete lightingShader;
 }
@@ -32,6 +48,13 @@ gDeferredLight::~gDeferredLight() {
 void gDeferredLight::setup(int screenWidth, int screenHeight) {
 	if(screenWidth <= 0 || screenHeight <= 0) {
 		gLoge("gDeferredLight") << "Deferred rendering requires a positive render size.";
+		return;
+	}
+	if(isVulkanRendererActive()) {
+		width = screenWidth;
+		height = screenHeight;
+		geometryPassActive = false;
+		gRenderObject::getRenderer()->setupDeferredLighting(width, height);
 		return;
 	}
 
@@ -68,6 +91,13 @@ void gDeferredLight::resize(int screenWidth, int screenHeight) {
 		gLogw("gDeferredLight") << "Ignoring resize during an active geometry pass.";
 		return;
 	}
+	if(isVulkanRendererActive()) {
+		if(gRenderObject::getRenderer()->resizeDeferredLighting(screenWidth, screenHeight)) {
+			width = screenWidth;
+			height = screenHeight;
+		}
+		return;
+	}
 	if(gBufferFBO != 0 && width == screenWidth && height == screenHeight) return;
 
 	GLint previousFBO = 0;
@@ -83,6 +113,7 @@ void gDeferredLight::resize(int screenWidth, int screenHeight) {
 }
 
 void gDeferredLight::setupGBuffer() {
+	if(isVulkanRendererActive()) return;
 	//FBO
 	glGenFramebuffers(1, &gBufferFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
@@ -132,6 +163,7 @@ void gDeferredLight::setupGBuffer() {
 }
 
 void gDeferredLight::releaseGBuffer() {
+	if(isVulkanRendererActive()) return;
 	if(rboDepth != 0) glDeleteRenderbuffers(1, &rboDepth);
 	if(albedoTexture != 0) glDeleteTextures(1, &albedoTexture);
 	if(normalTexture != 0) glDeleteTextures(1, &normalTexture);
@@ -145,6 +177,10 @@ void gDeferredLight::releaseGBuffer() {
 }
 
 void gDeferredLight::restoreRenderTarget() {
+	if(isVulkanRendererActive()) {
+		geometryPassActive = false;
+		return;
+	}
 	glBindFramebuffer(GL_FRAMEBUFFER, renderTargetFBO);
 	glViewport(renderTargetViewport[0], renderTargetViewport[1], renderTargetViewport[2], renderTargetViewport[3]);
 	if(depthTestWasEnabled) glEnable(GL_DEPTH_TEST);
@@ -153,6 +189,18 @@ void gDeferredLight::restoreRenderTarget() {
 }
 
 void gDeferredLight::enable() {
+	if(isVulkanRendererActive()) {
+		gRenderer* activeRenderer = gRenderObject::getRenderer();
+		// An activated shadow map makes the Vulkan frame loop draw the canvas twice.
+		// The first traversal already owns a depth-only render pass; deferred calls in
+		// the shared canvas code belong only to the following scene traversal.
+		if(activeRenderer->isShadowPassActive()) {
+			geometryPassActive = false;
+			return;
+		}
+		geometryPassActive = activeRenderer->beginDeferredGeometryPass();
+		return;
+	}
 	if(gBufferFBO == 0) {
 		gLoge("gDeferredLight") << "Call setup() before enable().";
 		return;
@@ -189,6 +237,26 @@ void gDeferredLight::enable() {
 }
 
 void gDeferredLight::renderLightingPass(gCamera* camera, gShadowMap* shadowmap) {
+	if(isVulkanRendererActive()) {
+		gRenderer* activeRenderer = gRenderObject::getRenderer();
+		// Pair with enable()'s shadow-traversal no-op. The canvas is intentionally
+		// replayed during the scene traversal, where the real lighting pass runs.
+		if(activeRenderer->isShadowPassActive()) return;
+		if(!geometryPassActive || !activeRenderer->isDeferredGeometryPassActive()) {
+			gLoge("gDeferredLight") << "Call enable() before renderLightingPass().";
+			geometryPassActive = false;
+			return;
+		}
+		if(camera == nullptr || shadowmap == nullptr) {
+			gLoge("gDeferredLight") << "Lighting pass requires valid camera and shadow map objects.";
+			activeRenderer->endDeferredLighting();
+			geometryPassActive = false;
+			return;
+		}
+		activeRenderer->renderDeferredLightingPass();
+		geometryPassActive = false;
+		return;
+	}
 	if(!geometryPassActive) {
 		gLoge("gDeferredLight") << "Call enable() before renderLightingPass().";
 		return;
@@ -251,6 +319,11 @@ void gDeferredLight::renderLightingPass(gCamera* camera, gShadowMap* shadowmap) 
 }
 
 void gDeferredLight::disable() {
+	if(isVulkanRendererActive()) {
+		if(geometryPassActive) gRenderObject::getRenderer()->endDeferredLighting();
+		geometryPassActive = false;
+		return;
+	}
 	if(geometryPassActive) restoreRenderTarget();
 	gRenderer* renderer = gRenderObject::getRenderer();
 	renderer->getColorShader()->use();
@@ -260,6 +333,7 @@ void gDeferredLight::disable() {
 }
 
 void gDeferredLight::drawFullScreenQuad() {
+	if(isVulkanRendererActive()) return;
 	if(quadVAO == 0) {
 		//Each row: X, Y, Z (position) | U, V (Texture Coordinates)
 		float quadVertices[] = {

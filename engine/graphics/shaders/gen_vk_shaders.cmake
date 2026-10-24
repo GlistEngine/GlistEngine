@@ -35,6 +35,9 @@ set(GVK_SHADERS
 	gvkspv_image2d_frag   image_frag.glsl     fragment -
 	gvkspv_mesh3d_vert    color_vert.glsl     vertex   VULKAN3D
 	gvkspv_mesh3d_frag    color_frag.glsl     fragment VULKAN3D
+	gvkspv_deferred_geom_frag vk_deferred_geom_frag.glsl fragment -
+	gvkspv_deferred_light_vert vk_deferred_light_vert.glsl vertex -
+	gvkspv_deferred_light_frag vk_deferred_light_frag.glsl fragment -
 	gvkspv_mesh3dpbr_vert pbr_vert.glsl       vertex   -
 	gvkspv_mesh3dpbr_frag pbr_frag.glsl       fragment -
 	gvkspv_shadow3d_vert  shadowmap_vert.glsl vertex   -
@@ -140,7 +143,9 @@ foreach(i RANGE 0 ${GVK_LAST} 4)
 			set(GVK_IN_VULKAN_BLOCK OFF)
 		endif()
 		if(sourceline MATCHES "^#version[ \t]+([0-9]+)[ \t]*([a-z]*)")
-			if(GVK_IN_VULKAN_BLOCK AND GVK_STD STREQUAL "")
+			# Vulkan-only sources can state #version directly at the top; shared
+			# OpenGL/Vulkan sources still reach this first through their Vulkan block.
+			if(GVK_STD STREQUAL "")
 				set(GVK_PROFILE "${CMAKE_MATCH_2}")
 				if(GVK_PROFILE STREQUAL "")
 					set(GVK_PROFILE "core")
@@ -155,7 +160,7 @@ foreach(i RANGE 0 ${GVK_LAST} 4)
 		endif()
 	endforeach()
 	if(GVK_STD STREQUAL "")
-		message(FATAL_ERROR "${file} declares no #version inside an #if VULKAN block")
+		message(FATAL_ERROR "${file} declares no GLSL #version")
 	endif()
 	# Written beside the header rather than next to the sources, so a source tree
 	# stays clean and a stale copy cannot be mistaken for a shader.
