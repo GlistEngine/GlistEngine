@@ -128,6 +128,22 @@ gGUITextbox::gGUITextbox() {
 	hinttextcolor.set(0.6f, 0.6f, 0.6f, 1.0f);
 	hinttext.setTextColor(hinttextcolor);
 	hinttext.setTextVerticalAlignment(gGUIText::TEXTVERTICALALIGNMENT_TOP);
+
+	isbbcodeenabled = false;
+	bbcodedocdirty = true;
+	bbcodelayoutdirty = true;
+	bbcodelayoutwidth = -1;
+	bbcodelayoutfontsize = -1;
+	bbcodelayoutmultiline = false;
+	bbcodelayoutlinetopmargin = -1;
+	bbcodeboldfont = nullptr;
+	bbcodeitalicfont = nullptr;
+	bbcodebolditalicfont = nullptr;
+	bbcodecodefont = nullptr;
+	bbcodecodebgcolor.set(0.88f, 0.90f, 0.93f, 0.85f);
+	bbcodecodebgcolorset = false;
+	bbcodecodetextcolor.set(0.15f, 0.15f, 0.2f, 1.0f);
+	bbcodecodetextcolorset = false;
 }
 
 
@@ -170,10 +186,12 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 		resetCursorPosition();
 	}
 	hinttext.set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x + initx, y + hdiff, w - 2 * initx, h);
+	invalidateBBCodeDoc();
 }
 
 void gGUITextbox::setText(const std::string& text) {
 	this->text = text;
+	invalidateBBCodeDoc();
 	letterlength.clear();
 	letterpos.clear();
 	letterlength = readString(text);
@@ -209,6 +227,37 @@ std::string gGUITextbox::getText() {
 }
 
 void gGUITextbox::setSelection(int startChar, int endChar) {
+	if(shouldRenderBBCode()) {
+		ensureBBCodeLayout();
+		if(bbcodedoc.plainText.empty()) {
+			selectionmode = false;
+			isselectedall = false;
+			return;
+		}
+		int maxChar = (int)bbcodedoc.plainCharLengths.size();
+		if(startChar < 0) startChar = 0;
+		if(endChar > maxChar) endChar = maxChar;
+		if(startChar > endChar) std::swap(startChar, endChar);
+		if(startChar == endChar) {
+			selectionmode = false;
+			isselectedall = false;
+			selectionposchar1 = startChar;
+			selectionposchar2 = endChar;
+			return;
+		}
+		selectionmode = true;
+		selectionposchar1 = startChar;
+		selectionposchar2 = endChar;
+		isselectedall = (startChar == 0 && endChar == maxChar);
+		selectionposutf1 = gGUIBBCodeParser::charIndexToByteOffset(bbcodedoc, startChar);
+		selectionposutf2 = gGUIBBCodeParser::charIndexToByteOffset(bbcodedoc, endChar);
+		selectionposx1 = 0;
+		selectionposx2 = 0;
+		cursorposchar = endChar;
+		cursorposutf = selectionposutf2;
+		return;
+	}
+
 	if(text.empty()) {
 		selectionmode = false;
 		isselectedall = false;
@@ -282,6 +331,26 @@ void gGUITextbox::setSelection(int startChar, int endChar) {
 }
 
 void gGUITextbox::selectAll() {
+	if(shouldRenderBBCode()) {
+		ensureBBCodeLayout();
+		if(bbcodedoc.plainText.empty()) return;
+		isfocused = true;
+		selectionmode = true;
+		isselectedall = true;
+		selectionposchar1 = 0;
+		selectionposutf1 = 0;
+		selectionposx1 = 0;
+		selectionposchar2 = (int)bbcodedoc.plainCharLengths.size();
+		selectionposutf2 = (int)bbcodedoc.plainText.size();
+		selectionposx2 = (!bbcodelines.empty()) ? (int)bbcodelines.back().width : 0;
+		selectionboxx1 = 0;
+		selectionboxw = selectionposx2;
+		cursorposchar = selectionposchar2;
+		cursorposutf = selectionposutf2;
+		cursorposx = selectionposx2;
+		return;
+	}
+
 	if(text.empty()) return;
 
 	if(!textfont) textfont = getFont();
@@ -319,6 +388,16 @@ void gGUITextbox::selectAll() {
 
 std::string gGUITextbox::getSelectedText() {
 	if(!selectionmode) return "";
+	if(shouldRenderBBCode()) {
+		ensureBBCodeDoc();
+		if(isselectedall) return bbcodedoc.plainText;
+		int u1 = selectionposutf1;
+		int u2 = selectionposutf2;
+		if(u1 > u2) std::swap(u1, u2);
+		if(u1 < 0) u1 = 0;
+		if(u2 > (int)bbcodedoc.plainText.size()) u2 = (int)bbcodedoc.plainText.size();
+		return bbcodedoc.plainText.substr(u1, u2 - u1);
+	}
 	if(isselectedall) return text;
 	int u1 = selectionposutf1;
 	int u2 = selectionposutf2;
@@ -330,6 +409,12 @@ std::string gGUITextbox::getSelectedText() {
 
 void gGUITextbox::setEditable(bool isEditable) {
 	iseditable = isEditable;
+	if(!iseditable && isbbcodeenabled && editmode) {
+		editmode = false;
+		selectionmode = false;
+		isselectedall = false;
+		invalidateBBCodeDoc();
+	}
 }
 
 bool gGUITextbox::isEditable() {
@@ -337,7 +422,7 @@ bool gGUITextbox::isEditable() {
 }
 
 int gGUITextbox::getCursor(int x, int y) {
-	if(iseditable && x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff) return CURSOR_IBEAM;
+	if((iseditable || (isbbcodeenabled && !isdisabled)) && x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff) return CURSOR_IBEAM;
 	return CURSOR_ARROW;
 }
 
@@ -354,6 +439,7 @@ void gGUITextbox::setLineCount(int linecount) {
 		lines.clear();
 		calculateLines();
 	}
+	invalidateBBCodeLayout();
 }
 
 int gGUITextbox::getLineCount() {
@@ -390,6 +476,7 @@ void gGUITextbox::setSize(int width, int height) {
 
 	lastutf = calculateLastUtf();
 	calculateLines();
+	invalidateBBCodeLayout();
 }
 
 void gGUITextbox::setNumeric(bool command) {
@@ -424,6 +511,7 @@ void gGUITextbox::addTopMargin(int topmargin) {
 
 void gGUITextbox::setLineTopMargin(int linetopmargin) {
 	this->linetopmargin = linetopmargin;
+	invalidateBBCodeLayout();
 }
 
 void gGUITextbox::setPassword(bool isPassword) {
@@ -448,6 +536,32 @@ void gGUITextbox::update() {
 	if (editmode && !isfocused) {
 		editmode = false;
 		appmanager->hideKeyboard();
+		if(isbbcodeenabled) {
+			selectionmode = false;
+			isselectedall = false;
+			invalidateBBCodeDoc();
+		}
+	}
+	if(!editmode && isfocused && isbbcodeenabled && !iseditable) {
+		if(ctrlcpressed || commandcpressed) {
+			if(selectionmode) {
+				std::string sel = getSelectedText();
+				if(!sel.empty() && appmanager) appmanager->setClipboardString(sel);
+			}
+			ctrlcpressed = false;
+			commandcpressed = false;
+		}
+		if(ctrlapressed || commandapressed) {
+			selectAll();
+			ctrlapressed = false;
+			commandapressed = false;
+		}
+		ctrlvpressed = false;
+		ctrlxpressed = false;
+		ctrlzpressed = false;
+		commandvpressed = false;
+		commandxpressed = false;
+		commandzpressed = false;
 	}
 	if(editmode) {
 		cursorshowcounter++;
@@ -461,6 +575,9 @@ void gGUITextbox::update() {
 	if(boxw - width > 0) boxshrinked = true;
 	else if(boxw - width < 0)
 		boxexpanded = true;
+	if((boxshrinked || boxexpanded) && isbbcodeenabled) {
+		invalidateBBCodeLayout();
+	}
 	boxw = width;
 	if(textfont->getStringWidth(text.substr(firstutf, lastutf)) >= width - 2 * initx && boxshrinked && !ismultiline) {
 		if(!ismultiline && !ispassword) {
@@ -579,6 +696,36 @@ void gGUITextbox::draw() {
 	int glyphHeight = fontAscent + fontDescent;
 	int rowH = glyphHeight + linetopmargin + 4;
 	int padTop = std::max(2, linetopmargin);
+
+	if(shouldRenderBBCode()) {
+		if(text.empty() && hinttext.getHasContent()) {
+			int hinty = 0;
+			if(ismultiline) {
+				hinty = top + hdiff + padTop + fontAscent + 2 - textfont->getSize() - firsty;
+			} else {
+				hinty = top + hdiff + (totalh - textfont->getSize()) / 2 - firsty;
+			}
+			int hintx = left - firstx + initx;
+			hinttext.set(root, topparent, parent, parentslotlineno, parentslotcolumnno, hintx, hinty, width - 2 * initx, ismultiline ? rowH : totalh);
+			hinttext.draw();
+		} else {
+			drawBBCode();
+		}
+
+		if (isfocused && selectionmode && selectionposchar1 != selectionposchar2) {
+			if (!isselectionmenushown) {
+				showAndroidSelectionMenu();
+				isselectionmenushown = true;
+			}
+		} else {
+			if (isselectionmenushown) {
+				hideAndroidSelectionMenu();
+				isselectionmenushown = false;
+			}
+		}
+		renderer->setColor(&oldcolor);
+		return;
+	}
 
 	float textDrawX = left - firstx + initx;
 	if (!ismultiline && textalignment == TEXTALIGNMENT_MIDDLE) {
@@ -897,6 +1044,17 @@ void gGUITextbox::handleKeys() {
 
 void gGUITextbox::pressKey() {
 	if(isdisabled) return;
+	if(isbbcodeenabled && !iseditable) {
+		if(ctrlcpressed || commandcpressed) {
+			if(selectionmode) {
+				std::string sel = getSelectedText();
+				if(!sel.empty() && appmanager) appmanager->setClipboardString(sel);
+			}
+		} else if(ctrlapressed || commandapressed) {
+			selectAll();
+		}
+		return;
+	}
 	if((keystate & KEY_BACKSPACE) && (cursorposchar > 0 || (selectionmode && (selectionposchar1 > 0 || selectionposchar2 > 0)))) {// BACKSPACE
 		pushToStack();
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
@@ -1030,6 +1188,7 @@ void gGUITextbox::pressKey() {
 			calculateLines();
 			resetCursorPosition();
 		}
+		invalidateBBCodeDoc();
 	} else if(keystate & KEY_LEFT) {// LEFT ARROW
 		if(!shiftpressed && (selectionmode || isselectedall)) {
 			int targetChar = isselectedall ? 0 : std::min(selectionposchar1, selectionposchar2);
@@ -1372,6 +1531,7 @@ void gGUITextbox::pressKey() {
 				if(lastdrawnline > 1) lastdrawnline--;
 			}
 		}
+		invalidateBBCodeDoc();
 	} else if((keystate & KEY_ENTER)) {// ENTER
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
 			int sepc1, sepx1, sepu1, sepc2, sepx2, sepu2;
@@ -1422,6 +1582,7 @@ void gGUITextbox::pressKey() {
 			cursorposx = clickpos[1];
 			cursorposutf = clickpos[2];
 		}
+		invalidateBBCodeDoc();
 	} else if(ctrlcpressed || commandcpressed) {//ctrl c
 		if(isselectedall) {
 			appmanager->setClipboardString(text);
@@ -1499,6 +1660,7 @@ void gGUITextbox::pressKey() {
 					cursorposx = 0;
 				}
 			}
+			invalidateBBCodeDoc();
 		}
 	} else if(ctrlapressed || commandapressed) {//ctrl a
 		selectAll();
@@ -1617,6 +1779,7 @@ void gGUITextbox::pressKey() {
 				}
 			}
 		}
+		invalidateBBCodeDoc();
 	} else if(ctrlzpressed || commandzpressed) {//ctrl z
 		if(undostack.empty()) return;			 //there is nothing to be undone
 		setText(undostack.top());				 //undo changes to text
@@ -1765,6 +1928,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 	//	gLogi("Textbox") << "charPressed:" << codepoint;
 	//	gLogi("Textbox") << "cp:" << gCodepointToStr(codepoint);
 	if(isdisabled) return;
+	if(isbbcodeenabled && !iseditable) return;
 	if(codepoint == 10 || codepoint == 13 || codepoint == '\n' || codepoint == '\r') return;
 	pushToStack();
 	if(editmode) {
@@ -1867,6 +2031,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 			calculateLines();
 			resetCursorPosition();
 		}
+		invalidateBBCodeDoc();
 		if(newtext != oldtextfull) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, newtext);
 	}
 }
@@ -1932,6 +2097,118 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 	int drawbottom = drawtop + totalh;
 
 	if(x >= drawleft && x < drawright && y >= drawtop && y < drawbottom && button == 0) {
+		if(isbbcodeenabled && !ispassword && !iseditable) {
+			editmode = false;
+			isfocused = true;
+			focusedtextbox = this;
+			ensureBBCodeLayout();
+
+			firstclicktime = previousclicktime;
+			previousclicktime = clicktime;
+			clicktime = gGetSystemTimeMillis();
+
+			if(clicktime - previousclicktime <= clicktimediff) {
+				isdoubleclicked = true;
+				if(previousclicktime - firstclicktime <= clicktimediff) {
+					isdoubleclicked = false;
+					istripleclicked = true;
+				}
+			}
+
+			if(istripleclicked) {
+				selectAll();
+				istripleclicked = false;
+			} else if(isdoubleclicked) {
+				gGUIBBCodeHitResult hit = hitTestBBCode(x, y);
+				int start = hit.charIndex;
+				int end = hit.charIndex;
+				int utfStart = hit.byteOffset;
+				int utfEnd = hit.byteOffset;
+				while(start > 0 && utfStart > 0 && start - 1 < (int)bbcodedoc.plainCharLengths.size()) {
+					int prevLen = bbcodedoc.plainCharLengths[start - 1];
+					if(utfStart - prevLen < 0) break;
+					std::string ch = bbcodedoc.plainText.substr(utfStart - prevLen, prevLen);
+					if(ch.empty() || ch == " " || ch == "\n" || ch == "\r" || ch == "\t") break;
+					utfStart -= prevLen;
+					start--;
+				}
+				while(end < (int)bbcodedoc.plainCharLengths.size() && utfEnd < (int)bbcodedoc.plainText.size()) {
+					int nextLen = bbcodedoc.plainCharLengths[end];
+					if(utfEnd + nextLen > (int)bbcodedoc.plainText.size()) break;
+					std::string ch = bbcodedoc.plainText.substr(utfEnd, nextLen);
+					if(ch.empty() || ch == " " || ch == "\n" || ch == "\r" || ch == "\t") break;
+					utfEnd += nextLen;
+					end++;
+				}
+				if(start < end) {
+					setSelection(start, end);
+				} else {
+					selectionmode = false;
+					isselectedall = false;
+				}
+				isdoubleclicked = false;
+			} else {
+				gGUIBBCodeHitResult hit = hitTestBBCode(x, y);
+				if(shiftpressed) {
+					if(!selectionmode) {
+						selectionposchar1 = cursorposchar;
+						selectionposx1 = cursorposx;
+						selectionposutf1 = cursorposutf;
+						selectionmode = true;
+					}
+					selectionposchar2 = hit.charIndex;
+					selectionposx2 = (int)hit.cursorX;
+					selectionposutf2 = hit.byteOffset;
+					isselectedall = false;
+				} else {
+					cursorposchar = hit.charIndex;
+					cursorposx = (int)hit.cursorX;
+					cursorposutf = hit.byteOffset;
+					selectionposchar1 = hit.charIndex;
+					selectionposx1 = (int)hit.cursorX;
+					selectionposutf1 = hit.byteOffset;
+					selectionposchar2 = hit.charIndex;
+					selectionposx2 = (int)hit.cursorX;
+					selectionposutf2 = hit.byteOffset;
+					selectionmode = false;
+					isselectedall = false;
+				}
+			}
+
+			if(root && root->getCurrentCanvas()) {
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSED, gToStr(x), gToStr(y));
+			}
+			return;
+		}
+
+		if(isbbcodeenabled && !ispassword && iseditable && !editmode) {
+			ensureBBCodeLayout();
+			gGUIBBCodeHitResult hit = hitTestBBCode(x, y);
+			int rawByte = 0;
+			if(!bbcodedoc.plainToRawByte.empty()) {
+				int idx = std::max(0, std::min(hit.byteOffset, (int)bbcodedoc.plainToRawByte.size() - 1));
+				rawByte = bbcodedoc.plainToRawByte[idx];
+			}
+
+			editmode = true;
+			isfocused = true;
+			focusedtextbox = this;
+			cursorshowcounter = 0;
+			selectionmode = false;
+			isselectedall = false;
+			appmanager->showKeyboard();
+
+			firstclicktime = previousclicktime;
+			previousclicktime = clicktime;
+			clicktime = gGetSystemTimeMillis();
+
+			moveRawCursorToByteOffset(rawByte);
+			if(root && root->getCurrentCanvas()) {
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSED, gToStr(x), gToStr(y));
+			}
+			return;
+		}
+
 		editmode = true;
 		isfocused = true;
 		focusedtextbox = this;
@@ -2038,6 +2315,7 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 	int drawbottom = drawtop + totalh;
 
 	if(x >= drawleft && x < drawright && y >= drawtop && y < drawbottom && button == 0) {
+		isdragging = false;
 		if(root && root->getCurrentCanvas()) {
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSERELEASED, gToStr(x), gToStr(y));
 		}
@@ -2046,8 +2324,14 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 	if(!isdragging || selectionposchar1 == selectionposchar2) {
 		selectionmode = false;
 	}
+	bool wasEditMode = editmode;
 	editmode = false;
 	isdragging = false;
+	if(isbbcodeenabled && wasEditMode) {
+		selectionmode = false;
+		isselectedall = false;
+		invalidateBBCodeDoc();
+	}
 }
 
 void gGUITextbox::mouseDragged(int x, int y, int button) {
@@ -2056,6 +2340,22 @@ void gGUITextbox::mouseDragged(int x, int y, int button) {
 	int drawtop = top + hdiff - firsty;
 	int drawright = drawleft + width;
 	int drawbottom = drawtop + totalh;
+
+	if(isbbcodeenabled && !iseditable && !ispassword && isfocused && x >= drawleft && x < drawright && y >= drawtop && y < drawbottom && (button == 0 || button == 2)) {
+		if(!selectionmode) {
+			selectionposchar1 = cursorposchar;
+			selectionposx1 = cursorposx;
+			selectionposutf1 = cursorposutf;
+			selectionmode = true;
+		}
+		isselectedall = false;
+		gGUIBBCodeHitResult dragHit = hitTestBBCode(x, y);
+		selectionposchar2 = dragHit.charIndex;
+		selectionposx2 = (int)dragHit.cursorX;
+		selectionposutf2 = dragHit.byteOffset;
+		isdragging = true;
+		return;
+	}
 
 	if(editmode && x >= drawleft && x < drawright && y >= drawtop && y < drawbottom && (button == 0 || button == 2)) {
 		if(!selectionmode) startSelection();
@@ -2555,6 +2855,7 @@ void gGUITextbox::setTextFont(gFont* textFont) {
 		lastutf = calculateLastUtf();
 		if(ismultiline) calculateLines();
 	}
+	invalidateBBCodeDoc();
 }
 
 void gGUITextbox::setFont(gFont* font) {
@@ -2609,6 +2910,17 @@ void gGUITextbox::setDisabled(bool isDisabled) {
 }
 
 void gGUITextbox::setEditMode(bool editMode) {
+	if(isbbcodeenabled && !iseditable) {
+		editmode = false;
+		return;
+	}
+	if(isbbcodeenabled && editmode != editMode) {
+		editmode = editMode;
+		selectionmode = false;
+		isselectedall = false;
+		if(!editmode) invalidateBBCodeDoc();
+		return;
+	}
 	editmode = editMode;
 }
 
@@ -2619,7 +2931,16 @@ int gGUITextbox::calculateContentHeight() {
 	int fontDescent = textfont ? std::max(2, (int)std::ceil(textfont->getSize() * 0.28f)) : 3;
 	int rowH = fontAscent + fontDescent + linetopmargin + 4;
 	int padTop = std::max(2, linetopmargin);
-	return padTop * 2 + rowH * rowsnum;
+	int baseHeight = padTop * 2 + rowH * rowsnum;
+	if(shouldRenderBBCode()) {
+		ensureBBCodeLayout();
+		if(!bbcodelines.empty()) {
+			const gGUIBBCodeLayoutLine& last = bbcodelines.back();
+			int bbcodeH = padTop * 2 + (int)std::ceil(last.topY + last.lineHeight);
+			return std::max(baseHeight, bbcodeH);
+		}
+	}
+	return baseHeight;
 }
 
 void gGUITextbox::resetCursorPosition() {
@@ -2708,22 +3029,37 @@ void gGUITextbox::unfocus() {
 	if (focusedtextbox == this) {
 		focusedtextbox = nullptr;
 	}
+	if(isbbcodeenabled && editmode) {
+		editmode = false;
+		selectionmode = false;
+		isselectedall = false;
+		invalidateBBCodeDoc();
+	}
 	hideAndroidSelectionMenu();
 }
 
 void gGUITextbox::copyText() {
+	if(shouldRenderBBCode()) {
+		if(selectionmode) {
+			std::string sel = getSelectedText();
+			if(!sel.empty() && appmanager) appmanager->setClipboardString(sel);
+		}
+		return;
+	}
 	ctrlcpressed = true;
 	pressKey();
 	ctrlcpressed = false;
 }
 
 void gGUITextbox::cutText() {
+	if(isbbcodeenabled && !iseditable) return;
 	ctrlxpressed = true;
 	pressKey();
 	ctrlxpressed = false;
 }
 
 void gGUITextbox::pasteText() {
+	if(isbbcodeenabled && !iseditable) return;
 	ctrlvpressed = true;
 	pressKey();
 	ctrlvpressed = false;
@@ -2764,5 +3100,479 @@ void gGUITextbox::longPressed(int x, int y) {
 			}
 #endif
 		}
+	}
+}
+
+void gGUITextbox::enableBBCode(bool isEnabled) {
+	if(isbbcodeenabled == isEnabled) return;
+	isbbcodeenabled = isEnabled;
+	selectionmode = false;
+	isselectedall = false;
+	if(isbbcodeenabled && !iseditable) {
+		editmode = false;
+	}
+	invalidateBBCodeDoc();
+}
+
+bool gGUITextbox::isBBCodeEnabled() const {
+	return isbbcodeenabled;
+}
+
+std::string gGUITextbox::getPlainText() {
+	if(!isbbcodeenabled) return text;
+	ensureBBCodeDoc();
+	return bbcodedoc.plainText;
+}
+
+void gGUITextbox::setBBCodeBoldFont(gFont* font) {
+	bbcodeboldfont = font;
+	invalidateBBCodeLayout();
+}
+
+void gGUITextbox::setBBCodeItalicFont(gFont* font) {
+	bbcodeitalicfont = font;
+	invalidateBBCodeLayout();
+}
+
+void gGUITextbox::setBBCodeBoldItalicFont(gFont* font) {
+	bbcodebolditalicfont = font;
+	invalidateBBCodeLayout();
+}
+
+void gGUITextbox::setBBCodeCodeFont(gFont* font) {
+	bbcodecodefont = font;
+	invalidateBBCodeLayout();
+}
+
+void gGUITextbox::setBBCodeCodeBackgroundColor(const gColor& color) {
+	bbcodecodebgcolor = color;
+	bbcodecodebgcolorset = true;
+}
+
+void gGUITextbox::setBBCodeCodeTextColor(const gColor& color) {
+	bbcodecodetextcolor = color;
+	bbcodecodetextcolorset = true;
+}
+
+bool gGUITextbox::shouldRenderBBCode() const {
+	if(!isbbcodeenabled || ispassword) return false;
+	if(!iseditable) return true;
+	return !editmode;
+}
+
+void gGUITextbox::invalidateBBCodeDoc() {
+	bbcodedocdirty = true;
+	bbcodelayoutdirty = true;
+}
+
+void gGUITextbox::invalidateBBCodeLayout() {
+	bbcodelayoutdirty = true;
+}
+
+void gGUITextbox::ensureBBCodeDoc() {
+	if(!textfont) textfont = getFont();
+	int baseSize = (textfont && textfont->getSize() > 0) ? textfont->getSize() : 11;
+	if(!bbcodedocdirty && bbcodelayoutfontsize == baseSize) return;
+	bbcodedoc = gGUIBBCodeParser::parse(text, baseSize);
+	bbcodedocdirty = false;
+	bbcodelayoutdirty = true;
+}
+
+void gGUITextbox::ensureBBCodeLayout() {
+	ensureBBCodeDoc();
+	if(!textfont) textfont = getFont();
+	int baseSize = (textfont && textfont->getSize() > 0) ? textfont->getSize() : 11;
+	int availW = std::max(20, width - 2 * initx);
+	if(!bbcodelayoutdirty &&
+	   bbcodelayoutwidth == availW &&
+	   bbcodelayoutfontsize == baseSize &&
+	   bbcodelayoutmultiline == ismultiline &&
+	   bbcodelayoutlinetopmargin == linetopmargin) {
+		return;
+	}
+
+	bbcodelines = gGUIBBCodeParser::layout(
+		bbcodedoc,
+		(float)availW,
+		ismultiline,
+		(float)linetopmargin,
+		[this](const std::string& s, const gGUIBBCodeStyle& style) {
+			return measureBBCodeText(s, style);
+		},
+		[this](const gGUIBBCodeStyle& style) {
+			return measureBBCodeMetrics(style);
+		});
+
+	bbcodelayoutwidth = availW;
+	bbcodelayoutfontsize = baseSize;
+	bbcodelayoutmultiline = ismultiline;
+	bbcodelayoutlinetopmargin = linetopmargin;
+	bbcodelayoutdirty = false;
+}
+
+gFont* gGUITextbox::resolveBBCodeFont(const gGUIBBCodeStyle& style, bool& outFauxBold) {
+	outFauxBold = false;
+	gFont* baseRegular = textfont ? textfont : getFont();
+	if(!baseRegular) return nullptr;
+
+	gGUIManager* guiMgr = (appmanager != nullptr) ? appmanager->getGUIManager() : nullptr;
+	gFont* defaultFreeSans = guiMgr ? guiMgr->getFont(gGUIManager::FONT_FREESANS, gGUIManager::FONTTYPE_REGULAR) : nullptr;
+	bool isDefaultFont = (defaultFreeSans != nullptr && baseRegular == defaultFreeSans);
+
+	gFont* variantFont = baseRegular;
+	if(style.code && bbcodecodefont != nullptr) {
+		variantFont = bbcodecodefont;
+	} else if(style.bold && style.italic) {
+		if(bbcodebolditalicfont != nullptr) variantFont = bbcodebolditalicfont;
+		else if(isDefaultFont) variantFont = guiMgr->getFont(gGUIManager::FONT_FREESANS, gGUIManager::FONTTYPE_BOLDITALIC);
+	} else if(style.bold) {
+		if(bbcodeboldfont != nullptr) variantFont = bbcodeboldfont;
+		else if(isDefaultFont) variantFont = guiMgr->getFont(gGUIManager::FONT_FREESANS, gGUIManager::FONTTYPE_BOLD);
+	} else if(style.italic) {
+		if(bbcodeitalicfont != nullptr) variantFont = bbcodeitalicfont;
+		else if(isDefaultFont) variantFont = guiMgr->getFont(gGUIManager::FONT_FREESANS, gGUIManager::FONTTYPE_ITALIC);
+	}
+
+	if(!variantFont) variantFont = baseRegular;
+
+	if(style.bold && variantFont == baseRegular && bbcodeboldfont == nullptr && bbcodebolditalicfont == nullptr) {
+		outFauxBold = true;
+	}
+
+	if(style.fontSize > 0 && style.fontSize != variantFont->getSize() && variantFont->isLoaded() && !variantFont->getPath().empty() && renderer != nullptr) {
+		std::pair<std::string, int> cacheKey(variantFont->getPath(), style.fontSize);
+		auto it = bbcodesizedfonts.find(cacheKey);
+		if(it != bbcodesizedfonts.end()) {
+			return it->second ? it->second.get() : variantFont;
+		}
+		if(bbcodesizedfonts.size() < 32) {
+			std::shared_ptr<gFont> sized = std::make_shared<gFont>();
+			if(sized->load(variantFont->getPath(), style.fontSize, variantFont->isAntialised(), variantFont->getDpi())) {
+				bbcodesizedfonts[cacheKey] = sized;
+				return sized.get();
+			}
+			bbcodesizedfonts[cacheKey] = nullptr;
+		}
+	}
+
+	return variantFont;
+}
+
+float gGUITextbox::measureBBCodeText(const std::string& str, const gGUIBBCodeStyle& style) {
+	if(str.empty()) return 0.0f;
+	bool fauxBold = false;
+	gFont* f = resolveBBCodeFont(style, fauxBold);
+	if(!f) return 0.0f;
+	float w = f->getStringWidth(str);
+	if(fauxBold) w += 0.6f;
+	return w;
+}
+
+gGUIBBCodeFontMetrics gGUITextbox::measureBBCodeMetrics(const gGUIBBCodeStyle& style) {
+	gGUIBBCodeFontMetrics fm;
+	bool fauxBold = false;
+	gFont* f = resolveBBCodeFont(style, fauxBold);
+	if(f) {
+		float asc = f->getStringHeight("l");
+		if(asc <= 0.0f) asc = (f->getAscender() > 0.0f) ? f->getAscender() : (float)std::max(8, f->getSize());
+		float desc = std::max(2.0f, std::ceil(f->getSize() * 0.28f));
+		fm.ascent = asc;
+		fm.descent = desc;
+	}
+	return fm;
+}
+
+float gGUITextbox::getBBCodeSingleLineDrawX() const {
+	float baseDrawX = (float)(left - firstx + initx);
+	if(ismultiline || bbcodelines.empty()) return baseDrawX;
+	float lineW = bbcodelines[0].width;
+	float availW = std::max(0.0f, (float)(width - 2 * initx));
+	if(lineW > availW) return baseDrawX;
+	if(textalignment == TEXTALIGNMENT_MIDDLE) {
+		return (float)(left - firstx) + ((float)width - lineW) / 2.0f;
+	}
+	if(textalignment == TEXTALIGNMENT_RIGHT) {
+		return (float)(left - firstx + width - initx) - lineW;
+	}
+	return baseDrawX;
+}
+
+void gGUITextbox::drawBBCode() {
+	ensureBBCodeLayout();
+	if(bbcodelines.empty()) return;
+
+	if(!colorset) textcolor = fontcolor;
+	gColor defaultTextColor = isdisabled ? *disabledbuttonfontcolor : *textcolor;
+
+	gColor effectiveCodeBg = bbcodecodebgcolor;
+	if(!bbcodecodebgcolorset) {
+		float bgLum = textbackgroundcolor ? (0.299f * textbackgroundcolor->r + 0.587f * textbackgroundcolor->g + 0.114f * textbackgroundcolor->b) : 1.0f;
+		if(bgLum < 0.5f) {
+			effectiveCodeBg.set(0.24f, 0.26f, 0.30f, 0.90f);
+		} else {
+			effectiveCodeBg.set(0.89f, 0.91f, 0.94f, 0.90f);
+		}
+	}
+
+	gColor selColor = isfocused ? gColor(1.0f, 128.0f / 255.0f, 0.0f, 1.0f) : gColor(1.0f, 200.0f / 255.0f, 140.0f / 255.0f, 1.0f);
+
+	int selStartByte = 0;
+	int selEndByte = 0;
+	bool hasSel = false;
+	if(selectionmode && !bbcodedoc.plainText.empty()) {
+		if(isselectedall) {
+			selStartByte = 0;
+			selEndByte = (int)bbcodedoc.plainText.size();
+		} else {
+			selStartByte = std::min(selectionposutf1, selectionposutf2);
+			selEndByte = std::max(selectionposutf1, selectionposutf2);
+		}
+		selStartByte = std::max(0, std::min(selStartByte, (int)bbcodedoc.plainText.size()));
+		selEndByte = std::max(0, std::min(selEndByte, (int)bbcodedoc.plainText.size()));
+		hasSel = (selStartByte < selEndByte);
+	}
+
+	std::vector<gGUIBBCodeSelectionRect> selRects;
+	if(hasSel) {
+		selRects = gGUIBBCodeParser::computeSelectionRects(
+			bbcodelines,
+			selStartByte,
+			selEndByte,
+			[this](const std::string& s, const gGUIBBCodeStyle& style) {
+				return measureBBCodeText(s, style);
+			});
+	}
+
+	auto computeClippedRun = [&](const gGUIBBCodeLayoutRun& run, float runScreenX, float clipRight, std::string& outText, float& outWidth) -> bool {
+		if(runScreenX >= clipRight) return false;
+		if(runScreenX + run.width <= clipRight) {
+			outText = run.text;
+			outWidth = run.width;
+			return !outText.empty();
+		}
+		float avail = clipRight - runScreenX;
+		int pos = 0;
+		int bestEnd = 0;
+		float bestW = 0.0f;
+		while(pos < (int)run.text.size()) {
+			int clen = gGUIBBCodeParser::utf8CharLength(run.text, pos);
+			if(clen <= 0) break;
+			std::string cand = run.text.substr(0, (size_t)(pos + clen));
+			float cw = measureBBCodeText(cand, run.style);
+			if(cw > avail) break;
+			bestEnd = pos + clen;
+			bestW = cw;
+			pos += clen;
+		}
+		if(bestEnd <= 0) return false;
+		outText = run.text.substr(0, (size_t)bestEnd);
+		outWidth = bestW;
+		return true;
+	};
+
+	auto drawRunBackground = [&](const gGUIBBCodeLayoutRun& run, float runX, float baselineY, float drawW) {
+		if(run.style.hasBgColor) {
+			renderer->setColor(run.style.bgColor.r, run.style.bgColor.g, run.style.bgColor.b, run.style.bgColor.a);
+			gDrawRectangle(runX, baselineY - run.ascent - 1.0f, drawW, run.ascent + run.descent + 2.0f, true);
+		} else if(run.style.code) {
+			renderer->setColor(&effectiveCodeBg);
+			gDrawRectangle(runX - 1.5f, baselineY - run.ascent - 1.0f, drawW + 3.0f, run.ascent + run.descent + 2.0f, true);
+		}
+	};
+
+	auto drawRunForeground = [&](const gGUIBBCodeLayoutRun& run, const std::string& drawText, float runX, float baselineY, float drawW) {
+		bool fauxBold = false;
+		gFont* f = resolveBBCodeFont(run.style, fauxBold);
+		if(!f) return;
+
+		gColor runColor = defaultTextColor;
+		if(!isdisabled) {
+			if(run.style.hasColor) {
+				runColor.set(run.style.color.r, run.style.color.g, run.style.color.b, run.style.color.a);
+			} else if(run.style.code && bbcodecodetextcolorset) {
+				runColor = bbcodecodetextcolor;
+			}
+		}
+
+		renderer->setColor(&runColor);
+		f->drawText(drawText, runX, baselineY);
+		if(fauxBold) {
+			f->drawText(drawText, runX + 0.6f, baselineY);
+		}
+
+		float lineThick = std::max(1.0f, (float)f->getSize() / 12.0f);
+		if(run.style.underline && drawW > 0.0f) {
+			float uy = baselineY + std::max(1.5f, run.descent * 0.45f);
+			gDrawLine(runX, uy, runX + drawW, uy, lineThick);
+		}
+		if(run.style.strikethrough && drawW > 0.0f) {
+			float sy = baselineY - run.ascent * 0.35f;
+			gDrawLine(runX, sy, runX + drawW, sy, lineThick);
+		}
+	};
+
+	if(!ismultiline) {
+		const gGUIBBCodeLayoutLine& line = bbcodelines[0];
+		float textDrawX = getBBCodeSingleLineDrawX();
+		float clipRight = (float)(left - firstx + width - initx);
+		float baselineY = top + hdiff + (totalh + line.ascent - line.descent) / 2.0f - firsty;
+
+		// Pass 1: inline backgrounds ([bgcolor] / [code])
+		for(const gGUIBBCodeLayoutRun& run : line.runs) {
+			std::string clippedText;
+			float clippedW = 0.0f;
+			float runX = textDrawX + run.x;
+			if(computeClippedRun(run, runX, clipRight, clippedText, clippedW)) {
+				drawRunBackground(run, runX, baselineY, clippedW);
+			}
+		}
+
+		// Pass 2: selection highlight
+		if(!selRects.empty()) {
+			renderer->setColor(&selColor);
+			float rectY = baselineY - line.ascent - 1.0f;
+			float rectH = line.ascent + line.descent + 2.0f;
+			for(const gGUIBBCodeSelectionRect& r : selRects) {
+				float sx = textDrawX + r.x;
+				if(sx >= clipRight) continue;
+				float sw = std::min(r.w, clipRight - sx);
+				if(sw > 0.0f) {
+					gDrawRectangle(sx, rectY, sw + 1.0f, rectH, true);
+				}
+			}
+		}
+
+		// Pass 3: styled text & decorations
+		for(const gGUIBBCodeLayoutRun& run : line.runs) {
+			std::string clippedText;
+			float clippedW = 0.0f;
+			float runX = textDrawX + run.x;
+			if(computeClippedRun(run, runX, clipRight, clippedText, clippedW)) {
+				drawRunForeground(run, clippedText, runX, baselineY, clippedW);
+			}
+		}
+		return;
+	}
+
+	// Multiline BBCode rendering
+	int padTop = std::max(2, linetopmargin);
+	float originX = (float)(left - firstx + initx);
+	float originY = (float)(top + hdiff + padTop - firsty);
+	float clipRight = (float)(left - firstx + width - initx);
+	float maxBottomY = (float)(top + hdiff + totalh - padTop - firsty);
+
+	int visibleCount = 0;
+	for(size_t i = 0; i < bbcodelines.size(); ++i) {
+		const gGUIBBCodeLayoutLine& line = bbcodelines[i];
+		if(i > 0 && originY + line.topY + line.lineHeight > maxBottomY + 2.0f) break;
+		visibleCount = (int)i + 1;
+	}
+
+	// Pass 1: inline backgrounds ([bgcolor] / [code])
+	for(int i = 0; i < visibleCount; ++i) {
+		const gGUIBBCodeLayoutLine& line = bbcodelines[i];
+		float baselineY = originY + line.baselineY;
+		for(const gGUIBBCodeLayoutRun& run : line.runs) {
+			std::string clippedText;
+			float clippedW = 0.0f;
+			float runX = originX + run.x;
+			if(computeClippedRun(run, runX, clipRight, clippedText, clippedW)) {
+				drawRunBackground(run, runX, baselineY, clippedW);
+			}
+		}
+	}
+
+	// Pass 2: selection highlights
+	if(!selRects.empty()) {
+		renderer->setColor(&selColor);
+		for(const gGUIBBCodeSelectionRect& r : selRects) {
+			if(r.lineIndex < 0 || r.lineIndex >= visibleCount) continue;
+			const gGUIBBCodeLayoutLine& line = bbcodelines[r.lineIndex];
+			float sx = originX + r.x;
+			if(sx >= clipRight) continue;
+			float sw = std::min(r.w, clipRight - sx);
+			float sy = originY + line.baselineY - line.ascent - 1.0f;
+			float sh = line.ascent + line.descent + 2.0f;
+			if(sw > 0.0f) {
+				gDrawRectangle(sx, sy, sw + 1.0f, sh, true);
+			}
+		}
+	}
+
+	// Pass 3: styled text & decorations
+	for(int i = 0; i < visibleCount; ++i) {
+		const gGUIBBCodeLayoutLine& line = bbcodelines[i];
+		float baselineY = originY + line.baselineY;
+		for(const gGUIBBCodeLayoutRun& run : line.runs) {
+			std::string clippedText;
+			float clippedW = 0.0f;
+			float runX = originX + run.x;
+			if(computeClippedRun(run, runX, clipRight, clippedText, clippedW)) {
+				drawRunForeground(run, clippedText, runX, baselineY, clippedW);
+			}
+		}
+	}
+}
+
+gGUIBBCodeHitResult gGUITextbox::hitTestBBCode(int x, int y) {
+	ensureBBCodeLayout();
+	if(bbcodelines.empty()) return gGUIBBCodeHitResult{};
+
+	auto measureFn = [this](const std::string& s, const gGUIBBCodeStyle& style) {
+		return measureBBCodeText(s, style);
+	};
+
+	if(!ismultiline) {
+		float textDrawX = getBBCodeSingleLineDrawX();
+		return gGUIBBCodeParser::hitTestLine(bbcodelines[0], 0, (float)x - textDrawX, measureFn);
+	}
+
+	int padTop = std::max(2, linetopmargin);
+	float originX = (float)(left - firstx + initx);
+	float originY = (float)(top + hdiff + padTop - firsty);
+	return gGUIBBCodeParser::hitTest(bbcodelines, (float)x - originX, (float)y - originY, measureFn, 0.0f);
+}
+
+void gGUITextbox::moveRawCursorToByteOffset(int rawByte) {
+	if(!textfont) textfont = getFont();
+	if(letterlength.empty() && !text.empty()) {
+		letterlength = readString(text);
+		letterpos = calculateAllLetterPositions();
+	}
+
+	if(rawByte < 0) rawByte = 0;
+	if(rawByte > (int)text.size()) rawByte = (int)text.size();
+
+	int charIdx = 0;
+	int byteAcc = 0;
+	for(size_t i = 0; i < letterlength.size(); ++i) {
+		if(byteAcc >= rawByte) break;
+		byteAcc += letterlength[i];
+		charIdx++;
+	}
+	if(byteAcc > (int)text.size()) byteAcc = (int)text.size();
+
+	cursorposchar = charIdx;
+	cursorposutf = byteAcc;
+
+	if(ismultiline) {
+		calculateLines();
+		resetCursorPosition();
+	} else {
+		firstchar = 0;
+		firstutf = 0;
+		firstposx = 0;
+		if(textfont) {
+			int availW = std::max(20, width - 2 * initx);
+			int cx = (int)textfont->getStringWidth(gSafeSubstr(text, firstutf, std::max(0, cursorposutf - firstutf)));
+			while(cx >= availW && firstchar < cursorposchar && firstchar < (int)letterlength.size()) {
+				firstutf += letterlength[firstchar];
+				firstchar++;
+				cx = (int)textfont->getStringWidth(gSafeSubstr(text, firstutf, std::max(0, cursorposutf - firstutf)));
+			}
+			firstposx = (int)textfont->getStringWidth(gSafeSubstr(text, 0, firstutf));
+		}
+		lastutf = calculateLastUtf();
+		resetCursorPosition();
 	}
 }
