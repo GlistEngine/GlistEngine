@@ -33,5 +33,6 @@ var searchData=
   ['bindvulkanshadowmap_30',['bindVulkanShadowMap',['../classgShadowMap.html#abd5d86e298d4843bbf46d960d151b0b4',1,'gShadowMap']]],
   ['boom_31',['boom',['../classgCamera.html#a93ce55925ca244aa839fe57f547b74c8',1,'gCamera::boom()'],['../classgModel.html#a165470e3fa7342c02d5d993e1d731f1f',1,'gModel::boom()'],['../classgNode.html#aeb966c8d571f6d817c1c9298ddfc997d',1,'gNode::boom()']]],
   ['bottom_32',['bottom',['../classgRect.html#a7b0faaef44bfaac7589553e828f2200d',1,'gRect']]],
-  ['bufsubdata_33',['bufSubData',['../classgGLRenderEngine.html#a9491ba05c16ae9d0869802304d50916b',1,'gGLRenderEngine::bufSubData()'],['../classgRenderer.html#aa43f44f95f983d41cda633145f34bb68',1,'gRenderer::bufSubData()'],['../classgVKRenderEngine.html#a866361bfa2e4c29f5773364046e4e725',1,'gVKRenderEngine::bufSubData()']]]
+  ['bufsubdata_33',['bufSubData',['../classgGLRenderEngine.html#a9491ba05c16ae9d0869802304d50916b',1,'gGLRenderEngine::bufSubData()'],['../classgRenderer.html#aa43f44f95f983d41cda633145f34bb68',1,'gRenderer::bufSubData()'],['../classgVKRenderEngine.html#a866361bfa2e4c29f5773364046e4e725',1,'gVKRenderEngine::bufSubData()']]],
+  ['byteoffsettocharindex_34',['byteOffsetToCharIndex',['../classgGUIBBCodeParser.html#a72ae1649a97c86235ceac2a4ef8b886a',1,'gGUIBBCodeParser']]]
 ];

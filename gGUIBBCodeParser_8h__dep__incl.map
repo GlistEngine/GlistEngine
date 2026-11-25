@@ -1,0 +1,22 @@
+<map id="gGUIBBCodeParser.h" name="gGUIBBCodeParser.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="422,5,577,33"/>
+<area shape="rect" id="Node000002" href="$gGUITextbox_8h.html" title=" " alt="" coords="441,81,558,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="501,47,502,82,497,79,498,51"/>
+<area shape="rect" id="Node000003" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,157,183,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="425,112,168,159,166,153,427,107"/>
+<area shape="rect" id="Node000004" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="206,157,360,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="444,115,323,159,321,154,449,113"/>
+<area shape="rect" id="Node000007" href="$gGUIGrid_8h.html" title=" " alt="" coords="385,157,478,184"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="479,119,445,158,442,154,475,122"/>
+<area shape="rect" id="Node000008" href="$gGUILineGraph_8h.html" title=" " alt="" coords="502,157,633,184"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="523,118,558,157,553,156,521,123"/>
+<area shape="rect" id="Node000009" href="$gGUINumberBox_8h.html" title=" " alt="" coords="658,157,800,184"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="555,111,690,156,685,156,555,116"/>
+<area shape="rect" id="Node000010" href="$gGUITimebox_8h.html" title=" " alt="" coords="824,157,946,184"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="573,107,826,157,820,158,573,113"/>
+<area shape="rect" id="Node000005" href="$gGUIToolbar_8h.html" title=" " alt="" coords="450,232,562,260"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="338,187,469,231,464,232,337,192"/>
+<area shape="rect" id="Node000006" href="$gGUINavigation_8h.html" title=" " alt="" coords="438,308,574,336"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="508,274,508,309,504,306,504,278"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="677,189,547,234,545,229,672,190"/>
+</map>

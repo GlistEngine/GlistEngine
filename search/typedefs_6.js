@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ofstream_0',['ofstream',['../namespacefs.html#a1829457446c54ee29a9e09840504086b',1,'fs']]]
+  ['measurewidthfunc_0',['MeasureWidthFunc',['../classgGUIBBCodeParser.html#a79b7cb05c0f69dd1cf49c04f43d1e0eb',1,'gGUIBBCodeParser']]]
 ];

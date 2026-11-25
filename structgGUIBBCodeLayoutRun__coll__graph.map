@@ -1,0 +1,7 @@
+<map id="gGUIBBCodeLayoutRun" name="gGUIBBCodeLayoutRun">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,179,257"/>
+<area shape="rect" id="Node000002" href="$structgGUIBBCodeStyle.html" title=" " alt="" coords="23,128,161,156"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,170,95,229,89,228,90,173"/>
+<area shape="rect" id="Node000003" href="$structgGUIBBCodeColor.html" title=" " alt="" coords="23,5,161,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,46,95,128,89,127,91,51"/>
+</map>

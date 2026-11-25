@@ -1,0 +1,9 @@
+<map id="gGUIBBCodeParser.h" name="gGUIBBCodeParser.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="67,5,222,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,92,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,33,79,74,76,69,125,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="115,81,174,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,32,147,66,142,64,143,36"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="197,81,260,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,31,205,71,199,71,159,36"/>
+</map>

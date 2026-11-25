@@ -76,5 +76,6 @@ var searchData=
   ['istitleon_73',['istitleon',['../classgBaseGUIObject.html#a1c577519d4e3ed1ab170afcc0b194d76',1,'gBaseGUIObject']]],
   ['istoggle_74',['istoggle',['../classgGUIButton.html#a33c134f73e5732de78f195a38e2fb44d',1,'gGUIButton']]],
   ['isvisible_75',['isvisible',['../classgBaseGUIObject.html#ab3ecedb04f60e9314757a965ace054f1',1,'gBaseGUIObject']]],
-  ['isxaxislinenable_76',['isxaxislinenable',['../classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489',1,'gGUIGraph']]]
+  ['isxaxislinenable_76',['isxaxislinenable',['../classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489',1,'gGUIGraph']]],
+  ['italic_77',['italic',['../structgGUIBBCodeStyle.html#a148e747cae431b1af7b425298273b463',1,'gGUIBBCodeStyle']]]
 ];
