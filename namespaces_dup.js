@@ -1,9 +1,9 @@
 var namespaces_dup =
 [
     [ "fs", "namespacefs.html", [
-      [ "fstream", "namespacefs.html#abd38bed113ec30fc0cf304e41ee3ff12", null ],
-      [ "ifstream", "namespacefs.html#ac99ee6cbdcaf6f7e90def06726182670", null ],
-      [ "ofstream", "namespacefs.html#a6403a5197805cd4be3f1e3db86210ff2", null ]
+      [ "fstream", "namespacefs.html#ade4d422011eb28699ac276640101ad2a", null ],
+      [ "ifstream", "namespacefs.html#a17b59f13f602316018606641553d792d", null ],
+      [ "ofstream", "namespacefs.html#a1829457446c54ee29a9e09840504086b", null ]
     ] ],
-    [ "std", "namespacestd.html", null ]
+    [ "std", "namespacestd.html", "namespacestd" ]
 ];

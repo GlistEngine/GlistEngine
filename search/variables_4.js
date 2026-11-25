@@ -13,7 +13,7 @@ var searchData=
   ['depthtesttypeid_10',['depthtesttypeid',['../classgRenderer.html#af6e96ab0f9f3671bf3f3984705814588',1,'gRenderer']]],
   ['diffuse_11',['diffuse',['../structgRenderer_1_1gSceneLightData.html#ad59666c91d27300054ac3789d5b304e1',1,'gRenderer::gSceneLightData::diffuse'],['../structgRenderer_1_1gMeshSurface.html#a3afd633a20ce586abaa667bed48a9d02',1,'gRenderer::gMeshSurface::diffuse']]],
   ['diffusemapid_12',['diffusemapid',['../structgRenderer_1_1gMeshSurface.html#a3fe4572a4530fd5d36f5564bd64b8c1f',1,'gRenderer::gMeshSurface']]],
-  ['direction_13',['direction',['../structgRenderer_1_1gSceneLightData.html#aff5d90ffd9243175c358929499fc281f',1,'gRenderer::gSceneLightData::direction'],['../classgParticle.html#a7b01fd11d66e34d6dc09e1f48c1e8340',1,'gParticle::direction']]],
+  ['direction_13',['direction',['../classgParticle.html#a7b01fd11d66e34d6dc09e1f48c1e8340',1,'gParticle::direction'],['../structgRenderer_1_1gSceneLightData.html#aff5d90ffd9243175c358929499fc281f',1,'gRenderer::gSceneLightData::direction']]],
   ['directory_14',['directory',['../classgModel.html#a132fda4d09c27d33002f710a277e03dc',1,'gModel::directory'],['../classgTexture.html#aa3dba76d148d0997563770470e708845',1,'gTexture::directory']]],
   ['disabledbcolor_15',['disabledbcolor',['../classgGUIButton.html#a17f824dcb1eb2185ea197c308b159f67',1,'gGUIButton']]],
   ['disabledbuttoncolor_16',['disabledbuttoncolor',['../classgBaseGUIObject.html#a16b5d059a8fd6c396a5c6b65fdf89b5c',1,'gBaseGUIObject']]],

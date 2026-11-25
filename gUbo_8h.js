@@ -1,4 +1,4 @@
 var gUbo_8h =
 [
-    [ "gUbo< T >", "classgUbo.html", "classgUbo" ]
+    [ "gUbo&lt; T &gt;", "classgUbo.html", "classgUbo" ]
 ];

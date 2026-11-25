@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['g_0',['g',['../classgColor.html#aa0d0a5a8ef87c282f06e7af6ab446ef0',1,'gColor::g'],['../gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd',1,'g:&#160;gColor.h'],['../classgBaseParticles.html#a22900021cfeb675625c63b18cd084307',1,'gBaseParticles::g']]],
+  ['g_0',['g',['../classgBaseParticles.html#a22900021cfeb675625c63b18cd084307',1,'gBaseParticles::g'],['../classgColor.html#aa0d0a5a8ef87c282f06e7af6ab446ef0',1,'gColor::g'],['../gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd',1,'g:&#160;gColor.h']]],
   ['gizmos_1',['gizmos',['../classgCamera.html#a299b81ceac7fbbbe5680f8155925647a',1,'gCamera']]],
   ['globalambientcolor_2',['globalambientcolor',['../structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0',1,'gRenderer::gSceneLights::globalambientcolor'],['../classgRenderer.html#a228060b23d4935d44c610dffa23f6535',1,'gRenderer::globalambientcolor']]],
   ['gp_3',['gp',['../classgBaseParticles.html#afbf94e73c3be6918a7123a0908d94a95',1,'gBaseParticles']]],

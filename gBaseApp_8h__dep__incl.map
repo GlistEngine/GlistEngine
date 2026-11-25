@@ -1,21 +1,20 @@
 <map id="gBaseApp.h" name="gBaseApp.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="331,5,429,31"/>
-<area shape="rect" id="Node000002" href="$gBaseCanvas_8h.html" title=" " alt="" coords="220,79,343,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,40,292,81,289,76,344,36"/>
-<area shape="rect" id="Node000005" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="339,152,493,177"/>
-<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="389,44,416,151,411,152,384,45"/>
-<area shape="rect" id="Node000008" href="$gBasePlugin_8h.html" title=" " alt="" coords="417,79,532,104"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="408,37,461,76,458,81,405,41"/>
-<area shape="rect" id="Node000009" href="$gGUIAppThread_8h.html" title=" " alt="" coords="556,79,692,104"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="433,32,585,76,584,81,431,37"/>
-<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="314,69,369,29,373,33,318,73"/>
-<area shape="rect" id="Node000003" href="$gCanvasManager_8h.html" title=" " alt="" coords="5,152,152,177"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="237,111,112,154,111,149,235,106"/>
-<area shape="rect" id="Node000004" href="$gGUIColorPicker_8h.html" title=" " alt="" coords="176,152,315,177"/>
-<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="272,117,254,153,249,151,267,115"/>
-<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="316,108,395,149,393,154,314,113"/>
-<area shape="rect" id="Node000006" href="$gGUIToolbar_8h.html" title=" " alt="" coords="360,225,472,251"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="419,191,419,225,413,225,413,191"/>
-<area shape="rect" id="Node000007" href="$gGUINavigation_8h.html" title=" " alt="" coords="347,299,485,324"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="419,264,419,299,413,299,413,264"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="392,5,490,33"/>
+<area shape="rect" id="Node000002" href="$gBaseCanvas_8h.html" title=" " alt="" coords="217,81,339,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,41,308,83,306,78,400,38"/>
+<area shape="rect" id="Node000005" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="336,157,490,184"/>
+<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="432,45,423,82,418,122,415,158,411,155,412,122,418,80,429,49"/>
+<area shape="rect" id="Node000008" href="$gBasePlugin_8h.html" title=" " alt="" coords="432,81,545,109"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="458,44,483,81,478,80,457,49"/>
+<area shape="rect" id="Node000009" href="$gGUIAppThread_8h.html" title=" " alt="" coords="569,81,704,109"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="490,36,605,80,599,81,490,42"/>
+<area shape="rect" id="Node000003" href="$gCanvasManager_8h.html" title=" " alt="" coords="5,157,151,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,117,115,158,112,154,230,112"/>
+<area shape="rect" id="Node000004" href="$gGUIColorPicker_8h.html" title=" " alt="" coords="175,157,312,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="267,121,252,158,247,155,264,125"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="315,114,391,156,386,157,315,119"/>
+<area shape="rect" id="Node000006" href="$gGUIToolbar_8h.html" title=" " alt="" coords="357,232,468,260"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="414,198,415,233,410,230,411,202"/>
+<area shape="rect" id="Node000007" href="$gGUINavigation_8h.html" title=" " alt="" coords="344,308,481,336"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="415,274,415,309,411,306,411,278"/>
 </map>

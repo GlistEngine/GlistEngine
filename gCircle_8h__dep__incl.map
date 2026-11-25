@@ -1,5 +1,7 @@
 <map id="gCircle.h" name="gCircle.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="32,5,111,31"/>
-<area shape="rect" id="Node000002" href="$gGUILineGraph_8h.html" title=" " alt="" coords="5,79,137,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,44,74,79,69,79,69,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="144,5,222,33"/>
+<area shape="rect" id="Node000002" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,81,183,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,42,111,83,108,78,153,44"/>
+<area shape="rect" id="Node000003" href="$gGUILineGraph_8h.html" title=" " alt="" coords="207,81,338,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,41,259,81,254,80,210,46"/>
 </map>

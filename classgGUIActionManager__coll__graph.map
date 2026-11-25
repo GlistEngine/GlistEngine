@@ -1,5 +1,5 @@
 <map id="gGUIActionManager" name="gGUIActionManager">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,157,104"/>
-<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="45,5,117,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,44,84,79,79,79,79,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,157,109"/>
+<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="45,5,117,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,47,84,81,78,80,79,51"/>
 </map>

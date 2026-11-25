@@ -1,9 +1,9 @@
 <map id="gBaseSound.h" name="gBaseSound.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="71,5,186,31"/>
-<area shape="rect" id="Node000002" href="$gAssetLoader_8h.html" title=" " alt="" coords="5,79,127,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,43,78,80,74,77,107,39"/>
-<area shape="rect" id="Node000003" href="$gSound_8h.html" title=" " alt="" coords="151,79,234,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,39,184,77,180,80,146,43"/>
-<area shape="rect" id="Node000004" href="$gFmodSound_8h.html" title=" " alt="" coords="133,152,252,177"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="195,118,195,152,190,152,190,118"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="72,5,185,33"/>
+<area shape="rect" id="Node000002" href="$gAssetLoader_8h.html" title=" " alt="" coords="5,81,126,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,47,79,82,75,79,109,43"/>
+<area shape="rect" id="Node000003" href="$gSound_8h.html" title=" " alt="" coords="150,81,232,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,42,182,80,177,81,148,48"/>
+<area shape="rect" id="Node000004" href="$gFmodSound_8h.html" title=" " alt="" coords="132,157,250,184"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="193,123,193,158,189,155,189,126"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="gGUIPanel.h" name="gGUIPanel.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="224,5,325,31"/>
-<area shape="rect" id="Node000002" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,79,184,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,38,125,81,123,76,232,33"/>
-<area shape="rect" id="Node000003" href="$gGUILineGraph_8h.html" title=" " alt="" coords="209,79,341,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="277,44,277,79,272,79,272,44"/>
-<area shape="rect" id="Node000004" href="$gGUINotebook_8h.html" title=" " alt="" coords="365,79,494,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="313,34,405,76,403,81,311,39"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="222,5,323,33"/>
+<area shape="rect" id="Node000002" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,81,183,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,39,127,83,125,78,224,39"/>
+<area shape="rect" id="Node000003" href="$gGUILineGraph_8h.html" title=" " alt="" coords="207,81,338,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="275,47,275,82,270,79,271,51"/>
+<area shape="rect" id="Node000004" href="$gGUINotebook_8h.html" title=" " alt="" coords="362,81,490,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="314,37,401,81,396,81,313,43"/>
 </map>

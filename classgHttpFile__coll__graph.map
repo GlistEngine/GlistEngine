@@ -1,7 +1,7 @@
 <map id="gHttpFile" name="gHttpFile">
-<area shape="rect" id="Node000001" title=" " alt="" coords="74,93,155,119"/>
-<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="5,5,77,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,39,106,91,102,95,58,43"/>
-<area shape="rect" id="Node000003" href="$structgHttpFile_1_1ProgressData.html" title=" " alt="" coords="101,5,277,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,43,127,95,123,91,168,39"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="74,106,154,134"/>
+<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="5,5,77,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,43,107,105,102,106,58,48"/>
+<area shape="rect" id="Node000003" href="$structgHttpFile_1_1ProgressData.html" title=" " alt="" coords="101,5,277,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,45,126,107,122,103,168,46"/>
 </map>

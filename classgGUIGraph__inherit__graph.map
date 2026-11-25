@@ -1,15 +1,15 @@
 <map id="gGUIGraph" name="gGUIGraph">
-<area shape="rect" id="Node000001" title=" " alt="" coords="126,299,219,324"/>
-<area shape="rect" id="Node000006" href="$classgGUICandleStickChart.html" title=" " alt="" coords="5,372,172,397"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="150,335,104,374,101,370,147,331"/>
-<area shape="rect" id="Node000007" href="$classgGUILineGraph.html" title=" " alt="" coords="197,372,317,397"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="198,331,245,370,241,374,195,335"/>
-<area shape="rect" id="Node000002" href="$classgGUIControl.html" title=" " alt="" coords="122,225,223,251"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,264,175,299,170,299,170,264"/>
-<area shape="rect" id="Node000003" href="$classgBaseGUIObject.html" title=" " alt="" coords="109,152,237,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="175,191,175,225,170,225,170,191"/>
-<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="113,79,232,104"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="175,118,175,152,170,152,170,118"/>
-<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="137,5,209,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="175,44,175,79,170,79,170,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="124,308,217,336"/>
+<area shape="rect" id="Node000006" href="$classgGUICandleStickChart.html" title=" " alt="" coords="5,384,171,411"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="147,345,104,385,101,381,142,347"/>
+<area shape="rect" id="Node000007" href="$classgGUILineGraph.html" title=" " alt="" coords="195,384,314,411"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="198,344,242,383,237,383,196,349"/>
+<area shape="rect" id="Node000002" href="$classgGUIControl.html" title=" " alt="" coords="120,232,221,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,274,173,309,168,307,169,278"/>
+<area shape="rect" id="Node000003" href="$classgBaseGUIObject.html" title=" " alt="" coords="107,157,234,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,198,173,233,168,231,170,203"/>
+<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="112,81,229,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="172,122,173,157,168,156,170,127"/>
+<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="135,5,206,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="171,46,173,81,168,80,170,51"/>
 </map>

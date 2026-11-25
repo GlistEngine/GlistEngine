@@ -1,7 +1,7 @@
 <map id="gThread.h" name="gThread.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="99,5,185,31"/>
-<area shape="rect" id="Node000002" href="$gAssetLoader_8h.html" title=" " alt="" coords="5,79,127,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,42,80,80,77,76,118,38"/>
-<area shape="rect" id="Node000003" href="$gGUIAppThread_8h.html" title=" " alt="" coords="151,79,287,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,38,208,76,205,80,163,42"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="98,5,185,33"/>
+<area shape="rect" id="Node000002" href="$gAssetLoader_8h.html" title=" " alt="" coords="5,81,126,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,43,81,83,77,78,115,45"/>
+<area shape="rect" id="Node000003" href="$gGUIAppThread_8h.html" title=" " alt="" coords="150,81,285,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,41,207,81,201,80,165,46"/>
 </map>

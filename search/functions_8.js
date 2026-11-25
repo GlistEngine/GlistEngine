@@ -3,7 +3,7 @@ var searchData=
   ['handlecursorpos_0',['handleCursorPos',['../classgGLFWWindow.html#a629ad3f5051434c9f9dad2c716aa67d5',1,'gGLFWWindow']]],
   ['hasgamepad_1',['hasGamepad',['../classgInputPlayer.html#aa2de9b777ac76547f58fb43624f541a7',1,'gInputPlayer']]],
   ['hashorizontaloverflow_2',['hasHorizontalOverflow',['../classgGUIScrollable.html#ade42927461c422a6468e7b00f372760d',1,'gGUIScrollable']]],
-  ['hasnextpoint_3',['hasnextpoint',['../classgPath_1_1gSubPath.html#a83df54879543ffdf102738141c68ee4b',1,'gPath::gSubPath::hasNextPoint()'],['../classgPath.html#aac9271c0fa127bffa6be2f9d1a07315e',1,'gPath::hasNextPoint()']]],
+  ['hasnextpoint_3',['hasNextPoint',['../classgPath_1_1gSubPath.html#a83df54879543ffdf102738141c68ee4b',1,'gPath::gSubPath::hasNextPoint()'],['../classgPath.html#aac9271c0fa127bffa6be2f9d1a07315e',1,'gPath::hasNextPoint()']]],
   ['hasselectdata_4',['hasSelectData',['../classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba',1,'gDatabase']]],
   ['hasverticaloverflow_5',['hasVerticalOverflow',['../classgGUIScrollable.html#aef683723c6e9c5f49044ff67d2fbe427',1,'gGUIScrollable']]],
   ['hide_6',['hide',['../classgGUIDialogue.html#aa6480ead59091483d7a498f5e9f54d10',1,'gGUIDialogue::hide()'],['../classgGUIForm.html#a8c1cedd62b1d87200530bc56044ddfdf',1,'gGUIForm::hide()']]],

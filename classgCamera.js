@@ -1,7 +1,7 @@
 var classgCamera =
 [
-    [ "Frustum", "structgCamera_1_1Frustum.html", "structgCamera_1_1Frustum" ],
     [ "Plane", "structgCamera_1_1Plane.html", "structgCamera_1_1Plane" ],
+    [ "Frustum", "structgCamera_1_1Frustum.html", "structgCamera_1_1Frustum" ],
     [ "gCamera", "classgCamera.html#a123de92d20c013cc6cb4f8d820adcd7d", null ],
     [ "gCamera", "classgCamera.html#afaf5535cddab6f80170eede20f6c89b4", null ],
     [ "~gCamera", "classgCamera.html#a58c0e1b7d5707091fa27ce1c6f0c9d32", null ],

@@ -25,7 +25,7 @@ var searchData=
   ['_7egcanvasmanager_22',['~gCanvasManager',['../classgCanvasManager.html#a1ef2ce6ed8d37e338c3714473c8950de',1,'gCanvasManager']]],
   ['_7egchromaticaberration_23',['~gChromaticAberration',['../classgChromaticAberration.html#a22c8d2492aeafaa02e01d41955ddfe3d',1,'gChromaticAberration']]],
   ['_7egcircle_24',['~gCircle',['../classgCircle.html#a24efd42f4c96654983b00248559d2a2b',1,'gCircle']]],
-  ['_7egcolor_25',['~gcolor',['../gColor_8h.html#a0d369e28460bf4117da42e67bf4273b1',1,'~gColor():&#160;gColor.h'],['../classgColor.html#ad61b39128c629e6bd8959048e3b21b5e',1,'gColor::~gColor()']]],
+  ['_7egcolor_25',['~gColor',['../classgColor.html#ad61b39128c629e6bd8959048e3b21b5e',1,'gColor::~gColor()'],['../gColor_8h.html#a0d369e28460bf4117da42e67bf4273b1',1,'~gColor():&#160;gColor.h']]],
   ['_7egcoloradjustments_26',['~gColorAdjustments',['../classgColorAdjustments.html#a4b3f815df430303dbeb0a4bf90a25479',1,'gColorAdjustments']]],
   ['_7egcolorchannelmixer_27',['~gColorChannelMixer',['../classgColorChannelMixer.html#a35c5b7b5260b917bdeb55003df3cf72f',1,'gColorChannelMixer']]],
   ['_7egcolorcurves_28',['~gColorCurves',['../classgColorCurves.html#a967c1788e24c73087d2a8a05bdc84c14',1,'gColorCurves']]],

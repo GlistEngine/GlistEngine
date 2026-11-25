@@ -1,10 +1,10 @@
 var classgRenderer =
 [
-    [ "gMeshSurface", "structgRenderer_1_1gMeshSurface.html", "structgRenderer_1_1gMeshSurface" ],
-    [ "gSceneData", "structgRenderer_1_1gSceneData.html", "structgRenderer_1_1gSceneData" ],
-    [ "gSceneFogData", "structgRenderer_1_1gSceneFogData.html", "structgRenderer_1_1gSceneFogData" ],
     [ "gSceneLightData", "structgRenderer_1_1gSceneLightData.html", "structgRenderer_1_1gSceneLightData" ],
     [ "gSceneLights", "structgRenderer_1_1gSceneLights.html", "structgRenderer_1_1gSceneLights" ],
+    [ "gSceneFogData", "structgRenderer_1_1gSceneFogData.html", "structgRenderer_1_1gSceneFogData" ],
+    [ "gSceneData", "structgRenderer_1_1gSceneData.html", "structgRenderer_1_1gSceneData" ],
+    [ "gMeshSurface", "structgRenderer_1_1gMeshSurface.html", "structgRenderer_1_1gMeshSurface" ],
     [ "BlendMode", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4a", [
       [ "BLENDMODE_ALPHA", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4aa4c6509836b1bdc14fbfbb6bbbbac8d98", null ],
       [ "BLENDMODE_ADDITIVE", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4aa8131013ec82364fbaeacc7db52d79514", null ]

@@ -1,13 +1,31 @@
 <map id="gGUIBitmap.h" name="gGUIBitmap.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="86,5,199,31"/>
-<area shape="rect" id="Node000002" href="$gGUIDialogue_8h.html" title=" " alt="" coords="10,79,134,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,43,85,80,82,77,119,39"/>
-<area shape="rect" id="Node000005" href="$gGUIToolbar_8h.html" title=" " alt="" coords="161,79,273,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="166,38,207,77,203,80,163,42"/>
-<area shape="rect" id="Node000003" href="$gGUIManager_8h.html" title=" " alt="" coords="5,152,128,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,118,70,152,65,152,67,118"/>
-<area shape="rect" id="Node000004" href="$gGUIGrid_8h.html" title=" " alt="" coords="20,225,113,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="69,191,69,225,64,225,64,191"/>
-<area shape="rect" id="Node000006" href="$gGUINavigation_8h.html" title=" " alt="" coords="153,152,290,177"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="221,118,223,152,218,152,216,118"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="584,5,697,33"/>
+<area shape="rect" id="Node000002" href="$gGUIDialogue_8h.html" title=" " alt="" coords="530,81,653,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="625,44,602,82,598,79,622,48"/>
+<area shape="rect" id="Node000010" href="$gGUIToolbar_8h.html" title=" " alt="" coords="496,535,607,563"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="656,44,681,101,689,135,693,169,693,399,689,423,680,446,651,485,614,515,578,537,576,532,610,511,647,481,676,443,684,422,687,399,687,169,684,136,675,103,654,49"/>
+<area shape="rect" id="Node000003" href="$gGUIManager_8h.html" title=" " alt="" coords="520,157,641,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="589,122,585,157,580,155,586,126"/>
+<area shape="rect" id="Node000004" href="$gAppManager_8h.html" title=" " alt="" coords="382,232,504,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="541,193,469,234,466,230,545,190"/>
+<area shape="rect" id="Node000014" href="$gGUIGrid_8h.html" title=" " alt="" coords="534,232,627,260"/>
+<area shape="poly" id="edge14_Node000003_Node000014" title=" " alt="" coords="582,198,583,233,578,231,579,203"/>
+<area shape="rect" id="Node000005" href="$gBaseApp_8h.html" title=" " alt="" coords="388,308,486,336"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="442,274,440,309,435,306,439,278"/>
+<area shape="rect" id="Node000006" href="$gBaseCanvas_8h.html" title=" " alt="" coords="183,384,304,411"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="386,343,279,386,276,381,390,340"/>
+<area shape="rect" id="Node000009" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="336,459,490,487"/>
+<area shape="poly" id="edge13_Node000005_Node000009" title=" " alt="" coords="403,344,385,364,371,385,368,404,375,424,401,459,396,458,370,426,363,405,366,383,381,361,399,347"/>
+<area shape="rect" id="Node000012" href="$gBasePlugin_8h.html" title=" " alt="" coords="380,384,493,411"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="438,349,439,384,434,382,435,354"/>
+<area shape="rect" id="Node000013" href="$gGUIAppThread_8h.html" title=" " alt="" coords="517,384,652,411"/>
+<area shape="poly" id="edge12_Node000005_Node000013" title=" " alt="" coords="477,340,561,383,556,384,477,346"/>
+<area shape="rect" id="Node000007" href="$gCanvasManager_8h.html" title=" " alt="" coords="5,459,151,487"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="198,420,109,461,106,457,201,416"/>
+<area shape="rect" id="Node000008" href="$gGUIColorPicker_8h.html" title=" " alt="" coords="175,459,312,487"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="245,425,246,460,241,458,242,429"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="288,415,385,458,380,460,287,421"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="451,492,529,535,524,535,450,497"/>
+<area shape="rect" id="Node000011" href="$gGUINavigation_8h.html" title=" " alt="" coords="483,611,620,638"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="553,577,553,612,549,609,549,580"/>
 </map>

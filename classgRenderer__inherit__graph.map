@@ -1,9 +1,9 @@
 <map id="gRenderer" name="gRenderer">
-<area shape="rect" id="Node000001" title=" " alt="" coords="111,79,200,104"/>
-<area shape="rect" id="Node000003" href="$classgGLRenderEngine.html" title=" " alt="" coords="5,152,143,177"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,115,89,154,86,150,130,111"/>
-<area shape="rect" id="Node000004" href="$classgVKRenderEngine.html" title=" " alt="" coords="167,152,306,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,111,225,150,222,154,177,115"/>
-<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="119,5,191,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,44,158,79,153,79,153,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="109,81,198,109"/>
+<area shape="rect" id="Node000003" href="$classgGLRenderEngine.html" title=" " alt="" coords="5,157,142,184"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,119,89,158,86,154,125,120"/>
+<area shape="rect" id="Node000004" href="$classgVKRenderEngine.html" title=" " alt="" coords="166,157,304,184"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,117,223,156,218,156,178,122"/>
+<area shape="rect" id="Node000002" href="$classgObject.html" title=" " alt="" coords="118,5,189,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,47,156,82,151,80,152,51"/>
 </map>
