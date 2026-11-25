@@ -40,7 +40,11 @@
 
 #include "gGUIControl.h"
 #include "gGUIText.h"
+#include "gGUIBBCodeParser.h"
+#include <map>
+#include <memory>
 #include <stack>
+#include <utility>
 class gGUIManager;
 
 
@@ -283,6 +287,42 @@ public:
 	 */
 	gGUIText* getHintTextObject();
 
+	/**
+	 * Enables or disables BBCode rich-text rendering for this textbox.
+	 * Disabled by default to preserve 100% plain-text backward compatibility.
+	 *
+	 * When enabled:
+	 * - Read-only mode (setEditable(false)): always renders formatted BBCode with
+	 *   plain-text selection and clipboard copy support.
+	 * - Editable mode (setEditable(true)): renders formatted BBCode while unfocused,
+	 *   and switches to raw BBCode source editing while focused/editing.
+	 *
+	 * @param isEnabled True to enable BBCode mode, false for plain-text mode.
+	 */
+	void enableBBCode(bool isEnabled = true);
+
+	/**
+	 * Returns whether BBCode mode is enabled.
+	 *
+	 * @return True if BBCode mode is enabled, false otherwise.
+	 */
+	bool isBBCodeEnabled() const;
+
+	/**
+	 * Returns visible plain text (BBCode tags stripped when BBCode is enabled,
+	 * or raw text when BBCode is disabled).
+	 *
+	 * @return Plain visible text string.
+	 */
+	std::string getPlainText();
+
+	void setBBCodeBoldFont(gFont* font);
+	void setBBCodeItalicFont(gFont* font);
+	void setBBCodeBoldItalicFont(gFont* font);
+	void setBBCodeCodeFont(gFont* font);
+	void setBBCodeCodeBackgroundColor(const gColor& color);
+	void setBBCodeCodeTextColor(const gColor& color);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -381,6 +421,39 @@ private:
 	std::stack<int> currentlinestack, lastdrawnlinestack,linecountstack;
 
 	void pushToStack();
+
+	// BBCode rich-text state and layout cache
+	bool isbbcodeenabled;
+	bool bbcodedocdirty;
+	bool bbcodelayoutdirty;
+	int bbcodelayoutwidth;
+	int bbcodelayoutfontsize;
+	bool bbcodelayoutmultiline;
+	int bbcodelayoutlinetopmargin;
+	gGUIBBCodeDocument bbcodedoc;
+	std::vector<gGUIBBCodeLayoutLine> bbcodelines;
+	gFont* bbcodeboldfont;
+	gFont* bbcodeitalicfont;
+	gFont* bbcodebolditalicfont;
+	gFont* bbcodecodefont;
+	gColor bbcodecodebgcolor;
+	bool bbcodecodebgcolorset;
+	gColor bbcodecodetextcolor;
+	bool bbcodecodetextcolorset;
+	std::map<std::pair<std::string, int>, std::shared_ptr<gFont>> bbcodesizedfonts;
+
+	bool shouldRenderBBCode() const;
+	void invalidateBBCodeDoc();
+	void invalidateBBCodeLayout();
+	void ensureBBCodeDoc();
+	void ensureBBCodeLayout();
+	gFont* resolveBBCodeFont(const gGUIBBCodeStyle& style, bool& outFauxBold);
+	float measureBBCodeText(const std::string& str, const gGUIBBCodeStyle& style);
+	gGUIBBCodeFontMetrics measureBBCodeMetrics(const gGUIBBCodeStyle& style);
+	float getBBCodeSingleLineDrawX() const;
+	void drawBBCode();
+	gGUIBBCodeHitResult hitTestBBCode(int x, int y);
+	void moveRawCursorToByteOffset(int rawByte);
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
