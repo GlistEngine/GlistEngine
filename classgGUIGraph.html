@@ -155,6 +155,11 @@ Collaboration diagram for gGUIGraph:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:PolylineMesh" id="r_PolylineMesh"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph_1_1PolylineMesh.html">PolylineMesh</a></td></tr>
+<tr class="memitem:PolylineStroke" id="r_PolylineStroke"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgGUIGraph_1_1PolylineStroke.html">PolylineStroke</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a61adfa9e54a68eb97dc4c158c21fdf12" id="r_a61adfa9e54a68eb97dc4c158c21fdf12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61adfa9e54a68eb97dc4c158c21fdf12">gGUIGraph</a> ()</td></tr>
@@ -252,6 +257,12 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6ce94169715c465c81f2c22d82a5df6b" id="r_a6ce94169715c465c81f2c22d82a5df6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ce94169715c465c81f2c22d82a5df6b">setLabelsYForRange</a> (float rangeMinY, float rangeMaxY)</td></tr>
+<tr class="memitem:afbb26b6ab3bb1fe4c2b6eea621bfd301" id="r_afbb26b6ab3bb1fe4c2b6eea621bfd301"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbb26b6ab3bb1fe4c2b6eea621bfd301">drawPolylineStroke</a> (<a class="el" href="structgGUIGraph_1_1PolylineStroke.html">PolylineStroke</a> &amp;stroke, const <a class="el" href="classgColor.html">gColor</a> &amp;color)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:addcc9220ed70d064f37584701454b976" id="r_addcc9220ed70d064f37584701454b976"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addcc9220ed70d064f37584701454b976">buildPolylineRibbon</a> (<a class="el" href="classgGUIGraph_1_1PolylineMesh.html">PolylineMesh</a> &amp;mesh, const std::vector&lt; std::vector&lt; std::array&lt; float, 2 &gt; &gt; &gt; &amp;runs, float halfWidth, bool roundedCorners)</td></tr>
+<tr class="memitem:a27cae5c16cac30f5e6136012877fe86a" id="r_a27cae5c16cac30f5e6136012877fe86a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27cae5c16cac30f5e6136012877fe86a">buildPolylineStroke</a> (<a class="el" href="structgGUIGraph_1_1PolylineStroke.html">PolylineStroke</a> &amp;stroke, const std::vector&lt; std::vector&lt; std::array&lt; float, 2 &gt; &gt; &gt; &amp;runs, float thickness, bool roundedCorners)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -468,6 +479,84 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="addcc9220ed70d064f37584701454b976" name="addcc9220ed70d064f37584701454b976"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addcc9220ed70d064f37584701454b976">&#9670;&#160;</a></span>buildPolylineRibbon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUIGraph::buildPolylineRibbon </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgGUIGraph_1_1PolylineMesh.html">PolylineMesh</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mesh</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::vector&lt; std::array&lt; float, 2 &gt; &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>runs</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>halfWidth</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>roundedCorners</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a27cae5c16cac30f5e6136012877fe86a" name="a27cae5c16cac30f5e6136012877fe86a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27cae5c16cac30f5e6136012877fe86a">&#9670;&#160;</a></span>buildPolylineStroke()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUIGraph::buildPolylineStroke </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structgGUIGraph_1_1PolylineStroke.html">PolylineStroke</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>stroke</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::vector&lt; std::array&lt; float, 2 &gt; &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>runs</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>thickness</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>roundedCorners</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acd6d25a2d14f358027f06a36292f712e" name="acd6d25a2d14f358027f06a36292f712e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd6d25a2d14f358027f06a36292f712e">&#9670;&#160;</a></span>clear()</h2>
 
@@ -519,6 +608,35 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgGUIControl.html#aa3ddb4109386cf30d4fba5daf6046e5b">gGUIControl</a>.</p>
+
+</div>
+</div>
+<a id="afbb26b6ab3bb1fe4c2b6eea621bfd301" name="afbb26b6ab3bb1fe4c2b6eea621bfd301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbb26b6ab3bb1fe4c2b6eea621bfd301">&#9670;&#160;</a></span>drawPolylineStroke()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUIGraph::drawPolylineStroke </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structgGUIGraph_1_1PolylineStroke.html">PolylineStroke</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>stroke</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classgColor.html">gColor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>color</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -595,6 +713,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGUICandleStickChart.html#a8e492d5dab8b80f974d8bd8a3c027df1">gGUICandleStickChart</a>, and <a class="el" href="classgGUILineGraph.html#a9144d4e61f8e0be533fbf4e6017116e2">gGUILineGraph</a>.</p>
 
 </div>
 </div>
@@ -1092,6 +1212,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGUICandleStickChart.html#a237d01fe660f0d829c964b6d857b94ed">gGUICandleStickChart</a>, and <a class="el" href="classgGUILineGraph.html#a63077fc765c2cf78758fdcd713b399b5">gGUILineGraph</a>.</p>
 
 </div>
 </div>

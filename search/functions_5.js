@@ -30,7 +30,7 @@ var searchData=
   ['enablenextbutton_27',['enableNextButton',['../classgGUIPane.html#ad57ae038d5c585d9dd896e279a9ac36b',1,'gGUIPane']]],
   ['enablepoints_28',['enablePoints',['../classgGUICandleStickChart.html#abfac71948323a060efc393453930c39c',1,'gGUICandleStickChart::enablePoints()'],['../classgGUILineGraph.html#a8b91871d2e23e0552c961cac26e2b07d',1,'gGUILineGraph::enablePoints()']]],
   ['enablepreviousbutton_29',['enablePreviousButton',['../classgGUIPane.html#aa50180d91abc9a3cd9613ae7e407dbc4',1,'gGUIPane']]],
-  ['enablerange_30',['enableRange',['../classgGUIGraph.html#a7e5daf8b2ca3624f4ec04896640a26d7',1,'gGUIGraph']]],
+  ['enablerange_30',['enableRange',['../classgGUICandleStickChart.html#a8e492d5dab8b80f974d8bd8a3c027df1',1,'gGUICandleStickChart::enableRange()'],['../classgGUIGraph.html#a7e5daf8b2ca3624f4ec04896640a26d7',1,'gGUIGraph::enableRange()'],['../classgGUILineGraph.html#a9144d4e61f8e0be533fbf4e6017116e2',1,'gGUILineGraph::enableRange()']]],
   ['enableresize_31',['enableResize',['../classgGUIDialogue.html#ad797a2b24381c6090276fcc3da5f1a45',1,'gGUIDialogue']]],
   ['enableresizing_32',['enableResizing',['../classgGUISizer.html#a5c73258d352ba35ca29fafd1b0451b7e',1,'gGUISizer']]],
   ['enablescrollbars_33',['enableScrollbars',['../classgGUIScrollable.html#a6a5698aaf73204b817e93440d50fc72d',1,'gGUIScrollable']]],

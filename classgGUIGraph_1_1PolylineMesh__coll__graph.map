@@ -1,0 +1,12 @@
+<map id="gGUIGraph::PolylineMesh" name="gGUIGraph::PolylineMesh">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,333,193,361"/>
+<area shape="rect" id="Node000002" href="$classgMesh.html" title=" " alt="" coords="67,256,131,284"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,297,101,334,97,332,97,301"/>
+<area shape="rect" id="Node000003" href="$classgNode.html" title=" " alt="" coords="67,169,131,197"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,210,102,256,96,255,98,215"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="145,173,154,176,157,183,149,193,132,194,130,190,147,188,152,183,150,180,147,178"/>
+<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="40,82,158,110"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="100,123,102,169,96,168,98,128"/>
+<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="63,5,135,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="99,46,102,82,96,82,99,51"/>
+</map>

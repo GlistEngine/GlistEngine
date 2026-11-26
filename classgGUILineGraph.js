@@ -9,11 +9,14 @@ var classgGUILineGraph =
     [ "enableAutoScale", "classgGUILineGraph.html#a7c17708c74d818f9beaf4face030c942", null ],
     [ "enableFilledArea", "classgGUILineGraph.html#a4a325b56398e4c40f9775421e0866cd5", null ],
     [ "enablePoints", "classgGUILineGraph.html#a8b91871d2e23e0552c961cac26e2b07d", null ],
+    [ "enableRange", "classgGUILineGraph.html#a9144d4e61f8e0be533fbf4e6017116e2", null ],
     [ "getFilledAreaColor", "classgGUILineGraph.html#a0d7928ddb1df16b1156b89230df3f393", null ],
     [ "getLineColor", "classgGUILineGraph.html#ade386621d3080394dc924e35459ef328", null ],
+    [ "getLineThickness", "classgGUILineGraph.html#a0be4d0035e6f6a0df70722ecf2d5f4e9", null ],
     [ "getPointNum", "classgGUILineGraph.html#a4cda8291a9efbc51340df5a4d6e1a870", null ],
     [ "getPointXValue", "classgGUILineGraph.html#af956aa11c1f040a418cdd87d850d4513", null ],
     [ "getPointYValue", "classgGUILineGraph.html#a958653d1bed0cbf7f3e8966f7861b262", null ],
+    [ "getRoundedCorners", "classgGUILineGraph.html#a287fc18bf06116d5a35d0bf4515bcc05", null ],
     [ "removeFirstPointsFromLine", "classgGUILineGraph.html#a48d06470d7f209d0c37445b0512fb5ba", null ],
     [ "set", "classgGUILineGraph.html#ae1138827d400265dacc86b3199493b96", null ],
     [ "setFilledAreaColor", "classgGUILineGraph.html#af044912f53bf74c5f3ab85fb3a37fffc", null ],
@@ -27,5 +30,7 @@ var classgGUILineGraph =
     [ "setMinY", "classgGUILineGraph.html#a58eed63d42c9d207a25e18854e89fa5b", null ],
     [ "setOffset", "classgGUILineGraph.html#a372b28906f90ed4ece3abb271105e0a0", null ],
     [ "setPointValues", "classgGUILineGraph.html#ae8a421bb6450a9be2b4bd897a5146346", null ],
-    [ "setPointValues", "classgGUILineGraph.html#a9e57dabc2d1ec39d2ab715e9eb93a225", null ]
+    [ "setPointValues", "classgGUILineGraph.html#a9e57dabc2d1ec39d2ab715e9eb93a225", null ],
+    [ "setRange", "classgGUILineGraph.html#a63077fc765c2cf78758fdcd713b399b5", null ],
+    [ "setRoundedCorners", "classgGUILineGraph.html#afb0af0b1b28706c744fdc4a33914fe3a", null ]
 ];

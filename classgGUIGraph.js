@@ -1,9 +1,12 @@
 var classgGUIGraph =
 [
+    [ "PolylineMesh", "classgGUIGraph_1_1PolylineMesh.html", "classgGUIGraph_1_1PolylineMesh" ],
+    [ "PolylineStroke", "structgGUIGraph_1_1PolylineStroke.html", "structgGUIGraph_1_1PolylineStroke" ],
     [ "gGUIGraph", "classgGUIGraph.html#a61adfa9e54a68eb97dc4c158c21fdf12", null ],
     [ "~gGUIGraph", "classgGUIGraph.html#a3cc398baff44d8438fb83a30df9f589c", null ],
     [ "clear", "classgGUIGraph.html#acd6d25a2d14f358027f06a36292f712e", null ],
     [ "draw", "classgGUIGraph.html#a831c5eb3fced276e43c01bbf6d6f7c91", null ],
+    [ "drawPolylineStroke", "classgGUIGraph.html#afbb26b6ab3bb1fe4c2b6eea621bfd301", null ],
     [ "enableBackground", "classgGUIGraph.html#a02523f8f7bb9ee7a028dd0bbf9776411", null ],
     [ "enableGridlinesX", "classgGUIGraph.html#a5d0d0569a5100a9f07950aafdd1ac9d5", null ],
     [ "enableGridlinesY", "classgGUIGraph.html#aed707c32ccf671c32854eb55da910541", null ],

@@ -200,6 +200,7 @@ var hierarchy =
             [ "gCone", "classgCone.html", null ],
             [ "gCross", "classgCross.html", null ],
             [ "gCylinder", "classgCylinder.html", null ],
+            [ "gGUIGraph::PolylineMesh", "classgGUIGraph_1_1PolylineMesh.html", null ],
             [ "gLine", "classgLine.html", null ],
             [ "gMorphingMesh", "classgMorphingMesh.html", [
               [ "gSkinnedMesh", "classgSkinnedMesh.html", null ]
@@ -256,6 +257,7 @@ var hierarchy =
     [ "gVKVertexArray", "structgVKVertexArray.html", null ],
     [ "std::hash&lt; gUUID &gt;", "structstd_1_1hash_3_01gUUID_01_4.html", null ],
     [ "gCamera::Plane", "structgCamera_1_1Plane.html", null ],
+    [ "gGUIGraph::PolylineStroke", "structgGUIGraph_1_1PolylineStroke.html", null ],
     [ "gHttpFile::ProgressData", "structgHttpFile_1_1ProgressData.html", null ],
     [ "TouchInput", "structTouchInput.html", null ]
 ];

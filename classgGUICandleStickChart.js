@@ -15,6 +15,7 @@ var classgGUICandleStickChart =
     [ "enableAutoScale", "classgGUICandleStickChart.html#aff7c608359efe3c116cf4fcd995ea487", null ],
     [ "enableFilledArea", "classgGUICandleStickChart.html#a0ef59d15291a1c25c17ba2f567370845", null ],
     [ "enablePoints", "classgGUICandleStickChart.html#abfac71948323a060efc393453930c39c", null ],
+    [ "enableRange", "classgGUICandleStickChart.html#a8e492d5dab8b80f974d8bd8a3c027df1", null ],
     [ "getCandleWidth", "classgGUICandleStickChart.html#a23f71d877e1527c4896c8381e5adbae5", null ],
     [ "getFilledAreaColor", "classgGUICandleStickChart.html#a2b17a8ba850d8bdecb9cbcbd45812996", null ],
     [ "getHighColor", "classgGUICandleStickChart.html#ae7eaff4ea9d57e7c2bad4307ed11cd95", null ],
@@ -25,6 +26,7 @@ var classgGUICandleStickChart =
     [ "getPointNum", "classgGUICandleStickChart.html#a88edd62e8b064f746a93413525bc53fc", null ],
     [ "getPointXValue", "classgGUICandleStickChart.html#a0a5fe251a53a5525aee97e62be48bc22", null ],
     [ "getPointYValue", "classgGUICandleStickChart.html#af9b257162a0bde417efe764a3479161b", null ],
+    [ "getRoundedCorners", "classgGUICandleStickChart.html#a4104f5b9b20cdfceddf57e038d5f934f", null ],
     [ "isPointsEnabled", "classgGUICandleStickChart.html#af235970f061b15aae581a670372ad17f", null ],
     [ "removeFirstPointsFromLine", "classgGUICandleStickChart.html#aabbc12778cc4506f573edaf3ccf4eb01", null ],
     [ "set", "classgGUICandleStickChart.html#acfc3c41c288ddceb13d74e74516e15a9", null ],
@@ -43,6 +45,8 @@ var classgGUICandleStickChart =
     [ "setOffset", "classgGUICandleStickChart.html#a4b0fc1ec50206a2cd3df976f7212c23b", null ],
     [ "setPointValues", "classgGUICandleStickChart.html#ace80babe47008c64fac3b9f17c1df0c5", null ],
     [ "setPointValues", "classgGUICandleStickChart.html#acf79f1016694b3ec595fc4e9ded4317b", null ],
+    [ "setRange", "classgGUICandleStickChart.html#a237d01fe660f0d829c964b6d857b94ed", null ],
+    [ "setRoundedCorners", "classgGUICandleStickChart.html#a021578fc70085838e7a6e5ac7cf4b61e", null ],
     [ "updateOffset", "classgGUICandleStickChart.html#a42eb591604f715c31759146030ed913e", null ],
     [ "updatePoints", "classgGUICandleStickChart.html#a1b9abfc64d391d4cd3476525aa92639d", null ]
 ];
