@@ -20,5 +20,6 @@ var gGUIEvents_8h =
     [ "G_GUIEVENT_TREELISTEXPANDED", "gGUIEvents_8h.html#a5859a4728710bf1c788a8f82fb7aa76f", null ],
     [ "G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST", "gGUIEvents_8h.html#ae24c7f6e06ba17abb6445feb5709989b", null ],
     [ "G_GUIEVENT_TREELISTSELECTED", "gGUIEvents_8h.html#aef6977a2ac4d7a0e4c2c00776a4284d9", null ],
+    [ "G_GUIEVENT_URLCLICKED", "gGUIEvents_8h.html#a7ef53c40a1152f40c02d50f07f6264be", null ],
     [ "G_GUIEVENT_VALUECHANGED", "gGUIEvents_8h.html#af8bef976b088eb2ef874b2aff919f839", null ]
 ];

@@ -8,6 +8,7 @@ var gGUIBBCodeParser_8h =
     [ "gGUIBBCodeLayoutRun", "structgGUIBBCodeLayoutRun.html", "structgGUIBBCodeLayoutRun" ],
     [ "gGUIBBCodeLayoutLine", "structgGUIBBCodeLayoutLine.html", "structgGUIBBCodeLayoutLine" ],
     [ "gGUIBBCodeHitResult", "structgGUIBBCodeHitResult.html", "structgGUIBBCodeHitResult" ],
+    [ "gGUIBBCodeLinkHit", "structgGUIBBCodeLinkHit.html", "structgGUIBBCodeLinkHit" ],
     [ "gGUIBBCodeSelectionRect", "structgGUIBBCodeSelectionRect.html", "structgGUIBBCodeSelectionRect" ],
     [ "gGUIBBCodeParser", "classgGUIBBCodeParser.html", "classgGUIBBCodeParser" ]
 ];

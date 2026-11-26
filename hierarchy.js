@@ -47,6 +47,7 @@ var hierarchy =
     [ "gGUIBBCodeHitResult", "structgGUIBBCodeHitResult.html", null ],
     [ "gGUIBBCodeLayoutLine", "structgGUIBBCodeLayoutLine.html", null ],
     [ "gGUIBBCodeLayoutRun", "structgGUIBBCodeLayoutRun.html", null ],
+    [ "gGUIBBCodeLinkHit", "structgGUIBBCodeLinkHit.html", null ],
     [ "gGUIBBCodeParser", "classgGUIBBCodeParser.html", null ],
     [ "gGUIBBCodeSelectionRect", "structgGUIBBCodeSelectionRect.html", null ],
     [ "gGUIBBCodeSpan", "structgGUIBBCodeSpan.html", null ],

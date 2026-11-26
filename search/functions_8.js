@@ -13,5 +13,6 @@ var searchData=
   ['hidenotify_10',['hideNotify',['../classgBaseCanvas.html#ab8ad7cff194b3ea7c6788175b2a7ec40',1,'gBaseCanvas']]],
   ['hideprogressbar_11',['hideProgressBar',['../classgGUIForm.html#ae144ebfcadd2be3cb84e2071db90e0c4',1,'gGUIForm']]],
   ['hittest_12',['hitTest',['../classgGUIBBCodeParser.html#a31b2550f139a384f0c88c9a93d9b72a8',1,'gGUIBBCodeParser']]],
-  ['hittestline_13',['hitTestLine',['../classgGUIBBCodeParser.html#a3d8e37892015620d35781afbb4aa65ff',1,'gGUIBBCodeParser']]]
+  ['hittestline_13',['hitTestLine',['../classgGUIBBCodeParser.html#a3d8e37892015620d35781afbb4aa65ff',1,'gGUIBBCodeParser']]],
+  ['hittestlink_14',['hitTestLink',['../classgGUIBBCodeParser.html#a13384c713d6fa5bcef7a4445d553829f',1,'gGUIBBCodeParser']]]
 ];

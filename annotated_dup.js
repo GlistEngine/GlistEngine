@@ -71,6 +71,7 @@ var annotated_dup =
     [ "gGUIBBCodeHitResult", "structgGUIBBCodeHitResult.html", "structgGUIBBCodeHitResult" ],
     [ "gGUIBBCodeLayoutLine", "structgGUIBBCodeLayoutLine.html", "structgGUIBBCodeLayoutLine" ],
     [ "gGUIBBCodeLayoutRun", "structgGUIBBCodeLayoutRun.html", "structgGUIBBCodeLayoutRun" ],
+    [ "gGUIBBCodeLinkHit", "structgGUIBBCodeLinkHit.html", "structgGUIBBCodeLinkHit" ],
     [ "gGUIBBCodeParser", "classgGUIBBCodeParser.html", "classgGUIBBCodeParser" ],
     [ "gGUIBBCodeSelectionRect", "structgGUIBBCodeSelectionRect.html", "structgGUIBBCodeSelectionRect" ],
     [ "gGUIBBCodeSpan", "structgGUIBBCodeSpan.html", "structgGUIBBCodeSpan" ],

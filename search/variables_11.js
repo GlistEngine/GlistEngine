@@ -30,5 +30,6 @@ var searchData=
   ['root_27',['root',['../classgBaseCanvas.html#ad4479a8e080001ee5b4148e2375eb4ea',1,'gBaseCanvas::root'],['../classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6',1,'gBaseGUIObject::root']]],
   ['roughnessmapid_28',['roughnessmapid',['../structgRenderer_1_1gMeshSurface.html#aedfbca9603cf66d21ddde138a2d7540c',1,'gRenderer::gMeshSurface']]],
   ['roundedrectanglemesh_29',['roundedrectanglemesh',['../classgRenderer.html#a6237d68f0db92c4fdc6b445cef730b88',1,'gRenderer']]],
-  ['runs_30',['runs',['../structgGUIBBCodeLayoutLine.html#af06760006354d7c4b480158b6dc23b02',1,'gGUIBBCodeLayoutLine']]]
+  ['runindex_30',['runIndex',['../structgGUIBBCodeLinkHit.html#aca415e88d3e06b6ef745e6502795547a',1,'gGUIBBCodeLinkHit']]],
+  ['runs_31',['runs',['../structgGUIBBCodeLayoutLine.html#af06760006354d7c4b480158b6dc23b02',1,'gGUIBBCodeLayoutLine']]]
 ];

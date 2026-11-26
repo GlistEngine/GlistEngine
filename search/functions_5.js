@@ -8,7 +8,7 @@ var searchData=
   ['enableautoscale_5',['enableAutoScale',['../classgGUICandleStickChart.html#aff7c608359efe3c116cf4fcd995ea487',1,'gGUICandleStickChart::enableAutoScale()'],['../classgGUILineGraph.html#a7c17708c74d818f9beaf4face030c942',1,'gGUILineGraph::enableAutoScale()']]],
   ['enablebackground_6',['enableBackground',['../classgGUIGraph.html#a02523f8f7bb9ee7a028dd0bbf9776411',1,'gGUIGraph::enableBackground()'],['../classgGUITextbox.html#ab30373418b4de7a24cfbc526b93bb4ca',1,'gGUITextbox::enableBackground()']]],
   ['enablebackgroundfill_7',['enableBackgroundFill',['../classgGUIButton.html#a36bce056e4faea77f1557a6461d7e0eb',1,'gGUIButton::enableBackgroundFill()'],['../classgGUISizer.html#ae4d6d5878cde8f2173810dafe6e274c8',1,'gGUISizer::enableBackgroundFill()'],['../classgGUIToolbar.html#a82f4c76bf34ab5345f4af872034f227f',1,'gGUIToolbar::enableBackgroundFill()']]],
-  ['enablebbcode_8',['enableBBCode',['../classgGUITextbox.html#a49af19e05d6f1b853e30880f012c293f',1,'gGUITextbox']]],
+  ['enablebbcode_8',['enableBBCode',['../classgGUIText.html#ad605fbee5c4439936fae5c1fbf233086',1,'gGUIText::enableBBCode()'],['../classgGUITextbox.html#a49af19e05d6f1b853e30880f012c293f',1,'gGUITextbox::enableBBCode()']]],
   ['enableborders_9',['enableBorders',['../classgGUISizer.html#a7ab6b5531f15e0beb45e39e2d429cced',1,'gGUISizer']]],
   ['enablebottombar_10',['enableBottomBar',['../classgGUINavigation.html#ac769d55701583708ed3aab5baece2a03',1,'gGUINavigation']]],
   ['enablecontentscrolling_11',['enableContentScrolling',['../classgGUIContainer.html#a27310199847f1caef3147e595d9a9200',1,'gGUIContainer']]],

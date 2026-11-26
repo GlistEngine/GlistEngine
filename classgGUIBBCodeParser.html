@@ -105,9 +105,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af1f9f23c9157a744199975cafe031a4f" id="r_af1f9f23c9157a744199975cafe031a4f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structgGUIBBCodeDocument.html">gGUIBBCodeDocument</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1f9f23c9157a744199975cafe031a4f">parse</a> (const std::string &amp;input, int baseFontSize=11)</td></tr>
 <tr class="memitem:a09f8e702e4c23637d26a3638fe3c1f99" id="r_a09f8e702e4c23637d26a3638fe3c1f99"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09f8e702e4c23637d26a3638fe3c1f99">parseColor</a> (const std::string &amp;value, <a class="el" href="structgGUIBBCodeColor.html">gGUIBBCodeColor</a> &amp;outColor)</td></tr>
 <tr class="memitem:a9246c1aec32a7b1de8ca0353069e196b" id="r_a9246c1aec32a7b1de8ca0353069e196b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9246c1aec32a7b1de8ca0353069e196b">parseSize</a> (const std::string &amp;value, int baseFontSize, int &amp;outSize)</td></tr>
+<tr class="memitem:ab8809f4487baabcb113881d51de0180f" id="r_ab8809f4487baabcb113881d51de0180f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8809f4487baabcb113881d51de0180f">parseUrl</a> (const std::string &amp;value, std::string &amp;outUrl)</td></tr>
 <tr class="memitem:a620f7ebbe2a682d6dea610a388347f9f" id="r_a620f7ebbe2a682d6dea610a388347f9f"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a620f7ebbe2a682d6dea610a388347f9f">layout</a> (const <a class="el" href="structgGUIBBCodeDocument.html">gGUIBBCodeDocument</a> &amp;doc, float maxWidth, bool multiline, float lineTopMargin, const <a class="el" href="#a79b7cb05c0f69dd1cf49c04f43d1e0eb">MeasureWidthFunc</a> &amp;measureWidth, const <a class="el" href="#a3015d3fe4df67733b24ab9d0defc96dc">FontMetricsFunc</a> &amp;fontMetrics)</td></tr>
 <tr class="memitem:a31b2550f139a384f0c88c9a93d9b72a8" id="r_a31b2550f139a384f0c88c9a93d9b72a8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structgGUIBBCodeHitResult.html">gGUIBBCodeHitResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31b2550f139a384f0c88c9a93d9b72a8">hitTest</a> (const std::vector&lt; <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &gt; &amp;lines, float localX, float localY, const <a class="el" href="#a79b7cb05c0f69dd1cf49c04f43d1e0eb">MeasureWidthFunc</a> &amp;measureWidth, float lineOffsetX=0.0f)</td></tr>
 <tr class="memitem:a3d8e37892015620d35781afbb4aa65ff" id="r_a3d8e37892015620d35781afbb4aa65ff"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structgGUIBBCodeHitResult.html">gGUIBBCodeHitResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d8e37892015620d35781afbb4aa65ff">hitTestLine</a> (const <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &amp;line, int lineIndex, float localX, const <a class="el" href="#a79b7cb05c0f69dd1cf49c04f43d1e0eb">MeasureWidthFunc</a> &amp;measureWidth)</td></tr>
+<tr class="memitem:a13384c713d6fa5bcef7a4445d553829f" id="r_a13384c713d6fa5bcef7a4445d553829f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structgGUIBBCodeLinkHit.html">gGUIBBCodeLinkHit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13384c713d6fa5bcef7a4445d553829f">hitTestLink</a> (const std::vector&lt; <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &gt; &amp;lines, float localX, float localY, const std::vector&lt; float &gt; &amp;lineOffsetsX={})</td></tr>
 <tr class="memitem:aa0e202eda7c34ae5146390aa9f1690bb" id="r_aa0e202eda7c34ae5146390aa9f1690bb"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="structgGUIBBCodeSelectionRect.html">gGUIBBCodeSelectionRect</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0e202eda7c34ae5146390aa9f1690bb">computeSelectionRects</a> (const std::vector&lt; <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &gt; &amp;lines, int selStartByte, int selEndByte, const <a class="el" href="#a79b7cb05c0f69dd1cf49c04f43d1e0eb">MeasureWidthFunc</a> &amp;measureWidth)</td></tr>
 <tr class="memitem:a5ffd67db2ac94a6d9ce4254e3630b3f2" id="r_a5ffd67db2ac94a6d9ce4254e3630b3f2"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ffd67db2ac94a6d9ce4254e3630b3f2">utf8CharLength</a> (const std::string &amp;s, int bytePos)</td></tr>
 <tr class="memitem:a3bee763aa2c6b2aa1a2b1aab1abae57a" id="r_a3bee763aa2c6b2aa1a2b1aab1abae57a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bee763aa2c6b2aa1a2b1aab1abae57a">countUtf8Chars</a> (const std::string &amp;s, int startByte, int endByte)</td></tr>
@@ -129,6 +131,8 @@ Static Public Attributes</h2></td></tr>
 <li>[color=...]...[/color] Foreground color (#RGB, #RGBA, #RRGGBB, #RRGGBBAA, rgb(...), rgba(...), named colors)</li>
 <li>[bgcolor=...]...[/bgcolor] Background highlight color</li>
 <li>[size=...]...[/size] Font size (absolute px/pt, relative +/-delta, or percentage %)</li>
+<li>[url]...[/url] Clickable hyperlink using inner text as URL target</li>
+<li>[url=...]...[/url] Clickable hyperlink with explicit URL target and custom label</li>
 <li>[code]...[/code] Code span (disables inner BBCode parsing until [/code])</li>
 <li>[noparse]...[/noparse] Literal text span (disables inner BBCode parsing until [/noparse])</li>
 <li>[br] Explicit line break</li>
@@ -378,6 +382,45 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a13384c713d6fa5bcef7a4445d553829f" name="a13384c713d6fa5bcef7a4445d553829f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13384c713d6fa5bcef7a4445d553829f">&#9670;&#160;</a></span>hitTestLink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structgGUIBBCodeLinkHit.html">gGUIBBCodeLinkHit</a> gGUIBBCodeParser::hitTestLink </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structgGUIBBCodeLayoutLine.html">gGUIBBCodeLayoutLine</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>lines</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>localX</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>localY</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; float &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>lineOffsetsX</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a620f7ebbe2a682d6dea610a388347f9f" name="a620f7ebbe2a682d6dea610a388347f9f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a620f7ebbe2a682d6dea610a388347f9f">&#9670;&#160;</a></span>layout()</h2>
 
@@ -508,6 +551,35 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int &amp;</td>          <td class="paramname"><span class="paramname"><em>outSize</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab8809f4487baabcb113881d51de0180f" name="ab8809f4487baabcb113881d51de0180f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8809f4487baabcb113881d51de0180f">&#9670;&#160;</a></span>parseUrl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUIBBCodeParser::parseUrl </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>outUrl</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

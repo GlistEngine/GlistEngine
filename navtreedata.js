@@ -72,19 +72,20 @@ var NAVTREEINDEX =
 "classgGUIGraph.html#a5d0d0569a5100a9f07950aafdd1ac9d5",
 "classgGUIManager.html#a7b3c33f069cf019f5805327694751374",
 "classgGUIRadioButton.html#af4482b4a2a9d8af41d39a9bd0c4ba550",
-"classgGUITextbox.html#aa3747eee21e515a17c0ffb80bd769b97",
-"classgInputManager.html#acab32e5a2a41d927de1cc074930959b2",
-"classgMaterial.html#ad4351cd5c027315d97be9d82f6cf9026",
-"classgNode.html#a8ebcb2f13df4cbaab7ebac06634cb39a",
-"classgRenderer.html#a39871a3ede598b48f768af353884048b",
-"classgRenderer.html#ad57528669488f2d772b5b09ca23bf2d2",
-"classgSpline.html",
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363ae0a2088ecc13205fcb48d6f8479bcead",
-"classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424",
-"gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa2f840ab7f930dd709437fe0d8dd7d782",
-"gKeyCode_8h.html#a8d47f624e19677d2cc68c15f63a8db5e",
-"gUUID_8h_source.html",
-"structgGUIBBCodeDocument.html#aa800db25b72b61bcddbb70a46250372a"
+"classgGUITextbox.html#a1daefb94bc10cf5da30e5e6701cadd23",
+"classgImage.html#a30338f87dc86158460c014bbc2dc3795",
+"classgMaterial.html#a877ba88a0cfb5daae2647dbbc2f627de",
+"classgNode.html#a0d3a820f6eab89ba1533c6085e178681",
+"classgRenderer.html#a1e361a1662d91180059cb497fc1c5609",
+"classgRenderer.html#ac223332acbbe9c2433e750b8ccbbad6b",
+"classgSoftFocus.html#a8eb3f7a706bc499a7991c4c6b08a4bc4",
+"classgTube.html",
+"classgVbo.html#a6443dfa2ab892890d45c4e5bf0aa7f38",
+"gConstants_8h.html#a3db248bf40411e468c1c342303ffc3aa",
+"gKeyCode_8h.html#a34334e551883eff46da45d2cf54819fa",
+"gSpriteAnimator_8h.html",
+"structTouchInput.html#a00f05d6b57702224567352f0b5f540fe",
+"tinyfiledialogs_8c.html#a789b9cfa9fb2cf888db0246f9c2dca9a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
