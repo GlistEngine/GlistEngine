@@ -29,7 +29,7 @@
 
 class gBox : public gMesh {
 public:
-	gBox();
+	explicit gBox(bool isFilled = true);
 	~gBox() override;
 };
 
