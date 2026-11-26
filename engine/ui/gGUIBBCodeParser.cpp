@@ -49,7 +49,8 @@ enum class TagKind {
 	BGCOLOR,
 	SIZE,
 	CODE,
-	NOPARSE
+	NOPARSE,
+	URL
 };
 
 struct StyleFrame {
@@ -57,6 +58,8 @@ struct StyleFrame {
 	gGUIBBCodeColor color;
 	gGUIBBCodeColor bgColor;
 	int fontSize = 0;
+	std::string url;
+	int linkId = 0;
 };
 
 std::string trimAscii(const std::string& s) {
@@ -121,6 +124,11 @@ gGUIBBCodeStyle computeStyleFromStack(const std::vector<StyleFrame>& stack) {
 			break;
 		case TagKind::NOPARSE:
 			break;
+		case TagKind::URL:
+			style.hasUrl = true;
+			style.url = frame.url;
+			style.linkId = frame.linkId;
+			break;
 		}
 	}
 	return style;
@@ -136,11 +144,85 @@ bool matchTagKind(const std::string& lowerName, TagKind& outKind) {
 	if(lowerName == "size") { outKind = TagKind::SIZE; return true; }
 	if(lowerName == "code") { outKind = TagKind::CODE; return true; }
 	if(lowerName == "noparse") { outKind = TagKind::NOPARSE; return true; }
+	if(lowerName == "url") { outKind = TagKind::URL; return true; }
 	return false;
 }
 
 bool tagRequiresValue(TagKind kind) {
 	return kind == TagKind::COLOR || kind == TagKind::BGCOLOR || kind == TagKind::SIZE;
+}
+
+bool tagAcceptsOptionalValue(TagKind kind) {
+	return kind == TagKind::URL;
+}
+
+// Finds a case-insensitive closing [/url] tag (allowing optional inner whitespace) starting at startPos.
+size_t findClosingUrlTag(const std::string& input, size_t startPos) {
+	const size_t n = input.size();
+	size_t i = startPos;
+	while(i < n) {
+		size_t open = input.find('[', i);
+		if(open == std::string::npos) return std::string::npos;
+		size_t close = std::string::npos;
+		for(size_t k = open + 1; k < n; ++k) {
+			if(input[k] == ']') {
+				close = k;
+				break;
+			}
+			if(input[k] == '[' || input[k] == '\n' || input[k] == '\r') {
+				break;
+			}
+		}
+		if(close == std::string::npos) {
+			i = open + 1;
+			continue;
+		}
+		std::string inner = trimAscii(input.substr(open + 1, close - open - 1));
+		if(!inner.empty() && inner[0] == '/') {
+			std::string name = toLowerAscii(trimAscii(inner.substr(1)));
+			if(name == "url") {
+				return open;
+			}
+		}
+		i = close + 1;
+	}
+	return std::string::npos;
+}
+
+// Extracts candidate plain text between [url] and [/url], skipping known inline BBCode tags without recursion.
+std::string extractUrlCandidateText(const std::string& input, size_t startPos, size_t endPos) {
+	std::string out;
+	out.reserve(endPos > startPos ? (endPos - startPos) : 0);
+	size_t pos = startPos;
+	while(pos < endPos) {
+		if(input[pos] == '[') {
+			size_t close = std::string::npos;
+			for(size_t k = pos + 1; k < endPos; ++k) {
+				if(input[k] == ']') {
+					close = k;
+					break;
+				}
+				if(input[k] == '[' || input[k] == '\n' || input[k] == '\r') {
+					break;
+				}
+			}
+			if(close != std::string::npos) {
+				std::string inner = trimAscii(input.substr(pos + 1, close - pos - 1));
+				std::string body = inner;
+				if(!body.empty() && body[0] == '/') body = trimAscii(body.substr(1));
+				size_t eq = body.find('=');
+				std::string name = toLowerAscii(trimAscii(eq == std::string::npos ? body : body.substr(0, eq)));
+				TagKind dummy;
+				if(name == "br" || matchTagKind(name, dummy)) {
+					pos = close + 1;
+					continue;
+				}
+			}
+		}
+		out.push_back(input[pos]);
+		pos++;
+	}
+	return out;
 }
 
 // Finds a case-insensitive literal closing tag (e.g. "[/code]" or "[/noparse]") starting at pos.
@@ -474,12 +556,70 @@ bool gGUIBBCodeParser::parseSize(const std::string& rawValue, int baseFontSize, 
 	return true;
 }
 
+bool gGUIBBCodeParser::parseUrl(const std::string& rawValue, std::string& outUrl) {
+	std::string v = trimAscii(stripQuotes(trimAscii(rawValue)));
+	if(v.empty()) return false;
+
+	// Reject control characters and embedded whitespace.
+	for(unsigned char c : v) {
+		if(c <= 0x20 || c == 0x7F) return false;
+	}
+
+	// Check for scheme before any '/', '?', '#'.
+	size_t colonPos = std::string::npos;
+	for(size_t i = 0; i < v.size(); ++i) {
+		char c = v[i];
+		if(c == ':') {
+			colonPos = i;
+			break;
+		}
+		if(c == '/' || c == '?' || c == '#') {
+			break;
+		}
+	}
+
+	if(colonPos != std::string::npos) {
+		std::string scheme = toLowerAscii(v.substr(0, colonPos));
+		if(scheme == "http" || scheme == "https" || scheme == "ftp" || scheme == "ftps") {
+			if(v.size() <= colonPos + 3 || v.compare(colonPos, 3, "://") != 0) {
+				return false;
+			}
+			std::string rest = v.substr(colonPos + 3);
+			if(rest.empty() || rest[0] == '/' || rest[0] == '?' || rest[0] == '#') {
+				return false;
+			}
+			outUrl = scheme + "://" + rest;
+			return true;
+		}
+		if(scheme == "mailto") {
+			std::string rest = v.substr(colonPos + 1);
+			if(rest.empty()) return false;
+			outUrl = "mailto:" + rest;
+			return true;
+		}
+		// Reject unsafe or unsupported schemes (javascript:, data:, file:, etc.).
+		return false;
+	}
+
+	// Allow bare www.<host> shorthand and normalize to https://www.<host>.
+	std::string lower = toLowerAscii(v);
+	if(lower.rfind("www.", 0) == 0 && v.size() > 4) {
+		char next = v[4];
+		if(next == '.' || next == '/' || next == '?' || next == '#') return false;
+		outUrl = "https://" + v;
+		return true;
+	}
+
+	return false;
+}
+
 gGUIBBCodeDocument gGUIBBCodeParser::parse(const std::string& input, int baseFontSize) {
 	gGUIBBCodeDocument doc;
 	if(baseFontSize <= 0) baseFontSize = 11;
 
 	std::vector<StyleFrame> stack;
 	gGUIBBCodeStyle currentStyle;
+	int nextLinkId = 0;
 	size_t pos = 0;
 	const size_t n = input.size();
 
@@ -595,7 +735,7 @@ gGUIBBCodeDocument gGUIBBCodeParser::parse(const std::string& input, int baseFon
 			pos = closeBracket + 1;
 			continue;
 		}
-		if(!tagRequiresValue(kind) && hasParam) {
+		if(!tagRequiresValue(kind) && !tagAcceptsOptionalValue(kind) && hasParam) {
 			appendTextToDoc(doc, input.substr(openBracket, closeBracket - openBracket + 1),
 				static_cast<int>(openBracket), static_cast<int>(closeBracket + 1), currentStyle);
 			pos = closeBracket + 1;
@@ -613,6 +753,21 @@ gGUIBBCodeDocument gGUIBBCodeParser::parse(const std::string& input, int baseFon
 		} else if(kind == TagKind::SIZE) {
 			int currentBase = (currentStyle.fontSize > 0) ? currentStyle.fontSize : baseFontSize;
 			valid = parseSize(tagParam, currentBase, frame.fontSize);
+		} else if(kind == TagKind::URL) {
+			if(hasParam) {
+				valid = parseUrl(tagParam, frame.url);
+			} else {
+				size_t closeUrlPos = findClosingUrlTag(input, closeBracket + 1);
+				if(closeUrlPos == std::string::npos) {
+					valid = false;
+				} else {
+					std::string candidate = extractUrlCandidateText(input, closeBracket + 1, closeUrlPos);
+					valid = parseUrl(candidate, frame.url);
+				}
+			}
+			if(valid) {
+				frame.linkId = ++nextLinkId;
+			}
 		}
 
 		if(!valid) {
@@ -796,6 +951,7 @@ std::vector<gGUIBBCodeLayoutLine> gGUIBBCodeParser::layout(
 
 	for(const InlineToken& tok : tokens) {
 		if(tok.type == InlineTokenType::NEWLINE) {
+			lines.back().endedWithHardBreak = true;
 			lines.push_back(makeEmptyLine(tok.plainEndByte));
 			continue;
 		}
@@ -955,6 +1111,59 @@ gGUIBBCodeHitResult gGUIBBCodeParser::hitTest(
 	}
 
 	return hitTestLine(lines[targetLine], targetLine, localX - lineOffsetX, measureWidth);
+}
+
+gGUIBBCodeLinkHit gGUIBBCodeParser::hitTestLink(
+	const std::vector<gGUIBBCodeLayoutLine>& lines,
+	float localX,
+	float localY,
+	const std::vector<float>& lineOffsetsX) {
+	gGUIBBCodeLinkHit result;
+	if(lines.empty()) return result;
+
+	for(size_t i = 0; i < lines.size(); ++i) {
+		const gGUIBBCodeLayoutLine& line = lines[i];
+		if(localY < line.topY || localY >= line.topY + line.lineHeight) {
+			continue;
+		}
+
+		float offsetX = (i < lineOffsetsX.size()) ? lineOffsetsX[i] : 0.0f;
+		float x = localX - offsetX;
+
+		for(size_t r = 0; r < line.runs.size(); ++r) {
+			const gGUIBBCodeLayoutRun& run = line.runs[r];
+			if(!run.style.hasUrl || run.width <= 0.0f) continue;
+			if(x >= run.x && x <= run.x + run.width) {
+				float runTop = std::max(line.topY, line.baselineY - run.ascent - 2.0f);
+				float runBottom = std::min(line.topY + line.lineHeight, line.baselineY + run.descent + 3.0f);
+				if(localY < runTop || localY > runBottom) continue;
+
+				result.hit = true;
+				result.linkId = run.style.linkId;
+				result.url = run.style.url;
+				result.lineIndex = static_cast<int>(i);
+				result.runIndex = static_cast<int>(r);
+
+				// Reconstruct full visible label for this link occurrence (including multi-run or wrapped links).
+				int lastLineIdx = -1;
+				for(size_t li = 0; li < lines.size(); ++li) {
+					for(const gGUIBBCodeLayoutRun& lr : lines[li].runs) {
+						if(lr.style.hasUrl && lr.style.linkId == result.linkId) {
+							if(lastLineIdx >= 0 && lastLineIdx != static_cast<int>(li) && !result.displayText.empty() && result.displayText.back() != ' ' && !lr.text.empty() && lr.text.front() != ' ') {
+								result.displayText.push_back(' ');
+							}
+							result.displayText += lr.text;
+							lastLineIdx = static_cast<int>(li);
+						}
+					}
+				}
+				return result;
+			}
+		}
+		break;
+	}
+
+	return result;
 }
 
 std::vector<gGUIBBCodeSelectionRect> gGUIBBCodeParser::computeSelectionRects(
