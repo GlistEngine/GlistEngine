@@ -19,6 +19,7 @@ gGUICandleStickChart::gGUICandleStickChart() {
 	pointsenabled = false;
 	isfilledarea = false;
 	isautoscaled = false;
+	roundedcorners = false;
 	linethickness = 1.0f;
 	needsupdate = false;
 	hascustomoffset = false;
@@ -68,11 +69,10 @@ void gGUICandleStickChart::ensureLineColorSlot(int lineIndex) {
 }
 
 void gGUICandleStickChart::clearLineGeometryCache() {
-	for (auto& line : cachedlines) {
-		line.clear();
+	for (auto& stroke : cachedstrokes) {
+		stroke.clear();
 	}
-	cachedlines.clear();
-	linesmap.clear();
+	cachedstrokes.clear();
 
 	for (auto& circle : cachedcircles) {
 		circle.clear();
@@ -120,6 +120,16 @@ void gGUICandleStickChart::setLabelCountX(int labelCount) {
 
 void gGUICandleStickChart::setLabelCountY(int labelCount) {
 	gGUIGraph::setLabelCountY(labelCount);
+	needsupdate = true;
+}
+
+void gGUICandleStickChart::enableRange(bool isRangeEnabled) {
+	gGUIGraph::enableRange(isRangeEnabled);
+	needsupdate = true;
+}
+
+void gGUICandleStickChart::setRange(float rangeStart, float rangeEnd) {
+	gGUIGraph::setRange(rangeStart, rangeEnd);
 	needsupdate = true;
 }
 
@@ -403,6 +413,17 @@ float gGUICandleStickChart::getLineThickness() const {
 	return linethickness;
 }
 
+void gGUICandleStickChart::setRoundedCorners(bool isRounded) {
+	if (roundedcorners != isRounded) {
+		roundedcorners = isRounded;
+		needsupdate = true;
+	}
+}
+
+bool gGUICandleStickChart::getRoundedCorners() const {
+	return roundedcorners;
+}
+
 void gGUICandleStickChart::enableAutoScale(bool isEnabled) {
 	isautoscaled = isEnabled;
 	if (isautoscaled) {
@@ -475,29 +496,23 @@ void gGUICandleStickChart::drawOverlayLines() {
 		int pointcount = static_cast<int>(graphlines[i].size());
 		if (pointcount == 0) continue;
 
-		renderer->setColor(getLineColor(i));
-		bool skipped = true;
-		for (int j = 0; j < pointcount; j++) {
-			if (rangeenabled) {
-				if (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
-					skipped = true;
-					continue;
+		gColor linecolor = getLineColor(i);
+		if (i < static_cast<int>(cachedstrokes.size())) {
+			drawPolylineStroke(cachedstrokes[i], linecolor);
+		}
+
+		if (pointsenabled) {
+			renderer->setColor(linecolor);
+			for (int j = 0; j < pointcount; j++) {
+				if (rangeenabled) {
+					if (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
+						continue;
+					}
 				}
-			}
-			if (pointsenabled) {
 				auto cit = circlesmap.find(hash(i, j));
 				if (cit != circlesmap.end() && cit->second < cachedcircles.size()) {
 					cachedcircles[cit->second].draw();
 				}
-			}
-			if (skipped) {
-				skipped = false;
-				continue;
-			}
-
-			auto lit = linesmap.find(hash(i, j));
-			if (lit != linesmap.end() && lit->second < cachedlines.size()) {
-				cachedlines[lit->second].draw();
 			}
 		}
 	}
@@ -550,48 +565,44 @@ void gGUICandleStickChart::updatePoints() {
 
 	int linecount = static_cast<int>(graphlines.size());
 	int totalpoints = 0;
-	int totalsegments = 0;
 	for (int i = 0; i < linecount; i++) {
 		int pointcount = static_cast<int>(graphlines[i].size());
 		totalpoints += pointcount;
-		if (pointcount > 1) totalsegments += pointcount - 1;
 		for (int j = 0; j < pointcount; j++) {
 			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / lengthx;
 			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / lengthy;
 		}
 	}
 
-	// Resize cached line primitives to match total segment count
-	int linediff = static_cast<int>(cachedlines.size()) - totalsegments;
-	if (linediff > 0) {
-		for (int i = 0; i < linediff; i++) {
-			gLine& line = cachedlines.back();
-			line.clear();
-			cachedlines.pop_back();
-		}
-	} else {
-		for (int i = 0; i < -linediff; i++) {
-			cachedlines.push_back(gLine());
-		}
+	// Resize cached polyline strokes to match line count without copying gMesh instances
+	while (static_cast<int>(cachedstrokes.size()) > linecount) {
+		cachedstrokes.back().clear();
+		cachedstrokes.pop_back();
+	}
+	while (static_cast<int>(cachedstrokes.size()) < linecount) {
+		cachedstrokes.emplace_back();
 	}
 
-	linesmap.clear();
-	size_t segIndex = 0;
 	for (int i = 0; i < linecount; i++) {
 		int pointcount = static_cast<int>(graphlines[i].size());
-		for (int j = 1; j < pointcount; j++) {
-			if (segIndex >= cachedlines.size()) break;
-			float x1 = graphlines[i][j - 1][2];
-			float y1 = graphlines[i][j - 1][3];
-			float x2 = graphlines[i][j][2];
-			float y2 = graphlines[i][j][3];
-			if (std::abs(x2 - x1) < 1e-6f && std::abs(y2 - y1) < 1e-6f) continue;
+		std::vector<std::vector<std::array<float, 2>>> runs;
+		std::vector<std::array<float, 2>> currentrun;
 
-			cachedlines[segIndex].setThickness(linethickness);
-			cachedlines[segIndex].setPoints(x1, y1, x2, y2);
-			linesmap[hash(i, j)] = segIndex;
-			segIndex++;
+		for (int j = 0; j < pointcount; j++) {
+			if (rangeenabled && (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend)) {
+				if (currentrun.size() >= 2) {
+					runs.push_back(std::move(currentrun));
+				}
+				currentrun.clear();
+				continue;
+			}
+			currentrun.push_back({graphlines[i][j][2], graphlines[i][j][3]});
 		}
+		if (currentrun.size() >= 2) {
+			runs.push_back(std::move(currentrun));
+		}
+
+		buildPolylineStroke(cachedstrokes[i], runs, linethickness, roundedcorners);
 	}
 
 	if (!pointsenabled) {

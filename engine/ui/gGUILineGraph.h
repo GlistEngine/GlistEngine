@@ -97,6 +97,16 @@ public:
 	void setLabelCountY(int labelCount) override;
 
 	/**
+	 * Enables or disables drawing only data within the configured X range.
+	 */
+	void enableRange(bool isRangeEnabled) override;
+
+	/**
+	 * Configures the visible X range when range filtering is enabled.
+	 */
+	void setRange(float rangeStart, float rangeEnd) override;
+
+	/**
 	 * Enables or disables drawing circles/points at the data coordinates.
 	 */
 	void enablePoints(bool arePointsEnabled);
@@ -187,26 +197,45 @@ public:
 	void setLineThickness(float thickness);
 
 	/**
+	 * Gets the configured thickness of the line segments on the graph.
+	 */
+	float getLineThickness() const;
+
+	/**
+	 * Enables or disables rounded corners and edge smoothing on graph lines.
+	 * Disabled (false) by default for sharp, unsmoothed corners.
+	 */
+	void setRoundedCorners(bool isRounded);
+
+	/**
+	 * Returns whether rounded corners and edge smoothing are enabled on graph lines.
+	 */
+	bool getRoundedCorners() const;
+
+	/**
 	 * Enables or disables auto-scaling of the Y axis tightly to the actual min/max data range.
 	 */
 	void enableAutoScale(bool isEnabled);
 private:
 	static const int linecolornum = 6;
+	static gColor defaultLineColor(int lineIndex);
+	void ensureLineColorSlot(int lineIndex);
+	void clearGeometryCache();
 	void drawGraph() override;
 	void updatePoints();
 	void updateOffset();
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
-	std::vector<gLine> cachedlines;
+	std::deque<PolylineStroke> cachedstrokes;
 	std::vector<gCircle> cachedcircles;
-	std::unordered_map<uint64_t, gLine*> linesmap;
-	std::unordered_map<uint64_t, gCircle*> circlesmap;
-	gColor linecolors[linecolornum];
-	gColor filledcolors[linecolornum];
+	std::unordered_map<uint64_t, size_t> circlesmap;
+	std::vector<gColor> linecolors;
+	std::vector<gColor> filledcolors;
 
 	bool pointsenabled;
 	bool isfilledarea;
 	bool isautoscaled;
+	bool roundedcorners;
 	float linethickness;
 	bool needsupdate = false;
 	int offsetleft;
@@ -215,7 +244,7 @@ private:
 	int offsetbottom;
 
 
-	uint64_t hash(uint32_t a, uint32_t b) {
+	uint64_t hash(uint32_t a, uint32_t b) const {
 		return ((uint64_t)a << 32) | b;
 	}
 };

@@ -8,25 +8,27 @@
 
 #include "gGUILineGraph.h"
 #include "gGUISlider.h"
+#include <algorithm>
+#include <cmath>
+#include <limits>
 
 gGUILineGraph::gGUILineGraph() {
 	title = "Graph";
 	pointsenabled = true;
 	isfilledarea = false;
 	isautoscaled = false;
+	roundedcorners = false;
 	linethickness = 1.0f;
 	floatlabelsyenabled = true;// Y values are frequently sub-integer (e.g. forex rates); whole-number-only labels would collapse a narrow range to one repeated number
 
-	linecolors[0] = {0.20f, 0.20f, 0.96f};
-	linecolors[1] = {0.96f, 0.46f, 0.55f};
-	linecolors[2] = {0.62f, 0.80f, 0.41f};
-	linecolors[3] = {0.47f, 0.63f, 0.96f};
-	linecolors[4] = {0.87f, 0.68f, 0.40f};
-	linecolors[5] = {0.73f, 0.60f, 0.96f};
-
+	linecolors.reserve(linecolornum);
+	filledcolors.reserve(linecolornum);
 	for (int i = 0; i < linecolornum; i++) {
-		filledcolors[i] = linecolors[i];
-		filledcolors[i].a = 0.15f;
+		gColor lc = defaultLineColor(i);
+		linecolors.push_back(lc);
+		gColor fc = lc;
+		fc.a = 0.15f;
+		filledcolors.push_back(fc);
 	}
 
 	offsetleft = 0;
@@ -38,13 +40,69 @@ gGUILineGraph::gGUILineGraph() {
 gGUILineGraph::~gGUILineGraph() {
 }
 
+gColor gGUILineGraph::defaultLineColor(int lineIndex) {
+	static const gColor palette[linecolornum] = {
+		{0.20f, 0.20f, 0.96f},
+		{0.96f, 0.46f, 0.55f},
+		{0.62f, 0.80f, 0.41f},
+		{0.47f, 0.63f, 0.96f},
+		{0.87f, 0.68f, 0.40f},
+		{0.73f, 0.60f, 0.96f}
+	};
+	int safeindex = lineIndex % linecolornum;
+	if (safeindex < 0) safeindex += linecolornum;
+	return palette[safeindex];
+}
+
+void gGUILineGraph::ensureLineColorSlot(int lineIndex) {
+	if (lineIndex < 0) return;
+	while (static_cast<int>(linecolors.size()) <= lineIndex) {
+		int idx = static_cast<int>(linecolors.size());
+		gColor lc = defaultLineColor(idx);
+		linecolors.push_back(lc);
+		gColor fc = lc;
+		fc.a = 0.15f;
+		filledcolors.push_back(fc);
+	}
+}
+
+void gGUILineGraph::clearGeometryCache() {
+	for (auto& stroke : cachedstrokes) {
+		stroke.clear();
+	}
+	cachedstrokes.clear();
+
+	for (auto& circle : cachedcircles) {
+		circle.clear();
+	}
+	cachedcircles.clear();
+	circlesmap.clear();
+}
+
 void gGUILineGraph::enableFilledArea(bool isEnabled) {
 	isfilledarea = isEnabled;
 }
 
 void gGUILineGraph::setLineThickness(float thickness) {
-	linethickness = thickness;
-	needsupdate = true;
+	if (thickness > 0.0f) {
+		linethickness = thickness;
+		needsupdate = true;
+	}
+}
+
+float gGUILineGraph::getLineThickness() const {
+	return linethickness;
+}
+
+void gGUILineGraph::setRoundedCorners(bool isRounded) {
+	if (roundedcorners != isRounded) {
+		roundedcorners = isRounded;
+		needsupdate = true;
+	}
+}
+
+bool gGUILineGraph::getRoundedCorners() const {
+	return roundedcorners;
 }
 
 void gGUILineGraph::enableAutoScale(bool isEnabled) {
@@ -91,52 +149,86 @@ void gGUILineGraph::setLabelCountY(int labelCount) {
 	needsupdate = true;
 }
 
+void gGUILineGraph::enableRange(bool isRangeEnabled) {
+	gGUIGraph::enableRange(isRangeEnabled);
+	needsupdate = true;
+}
+
+void gGUILineGraph::setRange(float rangeStart, float rangeEnd) {
+	gGUIGraph::setRange(rangeStart, rangeEnd);
+	needsupdate = true;
+}
+
 void gGUILineGraph::enablePoints(bool arePointsEnabled) {
 	pointsenabled = arePointsEnabled;
+	needsupdate = true;
 }
 
 void gGUILineGraph::setLineColor(int lineIndex, gColor lineColor) {
+	if (lineIndex < 0) return;
+	ensureLineColorSlot(lineIndex);
 	linecolors[lineIndex] = lineColor;
 }
 
 gColor gGUILineGraph::getLineColor(int lineIndex) {
-	return linecolors[lineIndex];
+	if (lineIndex < 0) return gColor(0.0f, 0.0f, 0.0f, 0.0f);
+	if (lineIndex < static_cast<int>(linecolors.size())) {
+		return linecolors[lineIndex];
+	}
+	return defaultLineColor(lineIndex);
 }
 
 void gGUILineGraph::setFilledAreaColor(int lineIndex, gColor fillColor) {
-	if (lineIndex >= 0 && lineIndex < linecolornum) {
-		filledcolors[lineIndex] = fillColor;
-	}
+	if (lineIndex < 0) return;
+	ensureLineColorSlot(lineIndex);
+	filledcolors[lineIndex] = fillColor;
 }
 
 gColor gGUILineGraph::getFilledAreaColor(int lineIndex) {
-	if (lineIndex >= 0 && lineIndex < linecolornum) {
+	if (lineIndex < 0) return gColor(0.0f, 0.0f, 0.0f, 0.0f);
+	if (lineIndex < static_cast<int>(filledcolors.size())) {
 		return filledcolors[lineIndex];
 	}
-	return gColor(0.0f, 0.0f, 0.0f, 0.0f);
+	gColor fc = defaultLineColor(lineIndex);
+	fc.a = 0.15f;
+	return fc;
 }
 
 void gGUILineGraph::addLine() {
+	int newindex = static_cast<int>(graphlines.size());
+	ensureLineColorSlot(newindex);
 	std::deque<std::array<float, 4>> newline;
 	graphlines.push_back(newline);
+	needsupdate = true;
 }
 
 void gGUILineGraph::addData(int lineIndex, std::deque<std::array<float, 2>> dataToAdd) {
-	int datasize = dataToAdd.size();
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return;
+	int datasize = static_cast<int>(dataToAdd.size());
 	for (int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
 }
 
 void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
-	if (graphlines.size() - 1 < lineIndex) return;
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return;
 	if (x < smallestvaluex) setMinX(x);
-	if (x > largestvaluex) setMaxX(x);
+	if (x > largestvaluex || maxx < minx) setMaxX(x);
 	if (y < smallestvaluey) setMinY(y);
-	if (y > largestvaluey) setMaxY(y);
+	if (y > largestvaluey || maxy < miny) setMaxY(y);
 	setLabelCountX(getLabelCountX());
 	setLabelCountY(getLabelCountY());
-	int pointcount = graphlines[lineIndex].size();
+
+	float lengthx = maxx - minx;
+	if (std::abs(lengthx) < 1e-6f) lengthx = 1.0f;
+	float lengthy = maxy - miny;
+	if (std::abs(lengthy) < 1e-6f) lengthy = 1.0f;
+
+	float px = axisx1 + axisxw * (x - minx) / lengthx;
+	float py = axisy2 - axisyh * (y - miny) / lengthy;
+
+	int pointcount = static_cast<int>(graphlines[lineIndex].size());
 	if (pointcount == 0) {
-		graphlines[lineIndex].push_back({x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
+		graphlines[lineIndex].push_back({x, y, px, py});
+		needsupdate = true;
 		return;
 	}
 	int index = 0;
@@ -145,56 +237,58 @@ void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
 		index--;
 		break;
 	}
-	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
+	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, px, py});
+	needsupdate = true;
 }
 
 void gGUILineGraph::setPointValues(int lineIndex, int pointIndex, float newX, float newY) {
-	if (graphlines.size() - 1 < lineIndex) return;
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return;
+	if (pointIndex <= 0 || pointIndex > static_cast<int>(graphlines[lineIndex].size())) return;
 	if (newX < smallestvaluex) setMinX(newX);
-	if (newX > largestvaluex) setMaxX(newX);
+	if (newX > largestvaluex || maxx < minx) setMaxX(newX);
 	if (newY < smallestvaluey) setMinY(newY);
-	if (newY > largestvaluey) setMaxY(newY);
+	if (newY > largestvaluey || maxy < miny) setMaxY(newY);
 	setLabelCountX(getLabelCountX());
 	setLabelCountY(getLabelCountY());
-	int pointcount = graphlines[lineIndex].size();
-	int index = 0;
-	while (index < pointcount) {
-		if (graphlines[lineIndex][index++][0] < newX) continue;
-		index--;
-		break;
-	}
-	graphlines[lineIndex][pointIndex - 1] = {newX, newY, axisx1 + axisxw * (newX - minx) / (maxx - minx), axisy2 - axisyh * (newY - miny) / (maxy - miny)};
+
+	float lengthx = maxx - minx;
+	if (std::abs(lengthx) < 1e-6f) lengthx = 1.0f;
+	float lengthy = maxy - miny;
+	if (std::abs(lengthy) < 1e-6f) lengthy = 1.0f;
+
+	graphlines[lineIndex][pointIndex - 1] = {newX, newY, axisx1 + axisxw * (newX - minx) / lengthx, axisy2 - axisyh * (newY - miny) / lengthy};
+	needsupdate = true;
 }
 
 void gGUILineGraph::setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY) {
-	if (graphlines.size() - 1 < lineIndex) return;
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return;
 	if (newX < smallestvaluex) {
 		setMinX(newX);
 	}
-	if (newX > largestvaluex) {
+	if (newX > largestvaluex || maxx < minx) {
 		setMaxX(newX);
 	}
 	if (newY < smallestvaluey) {
 		setMinY(newY);
 	}
-	if (newY > largestvaluey) {
+	if (newY > largestvaluey || maxy < miny) {
 		setMaxY(newY);
 	}
 	setLabelCountX(getLabelCountX());
 	setLabelCountY(getLabelCountY());
-	int pointcount = graphlines[lineIndex].size();
-	int index = 0;
-	while (index < pointcount) {
-		if (graphlines[lineIndex][index++][0] < newX) continue;
-		index--;
-		break;
-	}
+
+	float lengthx = maxx - minx;
+	if (std::abs(lengthx) < 1e-6f) lengthx = 1.0f;
+	float lengthy = maxy - miny;
+	if (std::abs(lengthy) < 1e-6f) lengthy = 1.0f;
+
+	int pointcount = static_cast<int>(graphlines[lineIndex].size());
 	for (int i = 0; i < pointcount; i++) {
 		if (graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
 			graphlines[lineIndex][i][0] = newX;
 			graphlines[lineIndex][i][1] = newY;
-			graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / (maxx - minx);
-			graphlines[lineIndex][i][3] = axisy2 - axisyh * (newY - miny) / (maxy - miny);
+			graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / lengthx;
+			graphlines[lineIndex][i][3] = axisy2 - axisyh * (newY - miny) / lengthy;
 		}
 	}
 	needsupdate = true;
@@ -211,13 +305,13 @@ void gGUILineGraph::drawGraph() {
 
 	gColor oldcolor = *renderer->getColor();
 
-	int linecount = graphlines.size();
+	int linecount = static_cast<int>(graphlines.size());
 	for (int i = 0; i < linecount; i++) {
-		int pointcount = graphlines[i].size();
+		int pointcount = static_cast<int>(graphlines[i].size());
 
 		// Draw filled area if enabled
 		if (isfilledarea && pointcount > 1) {
-			renderer->setColor(filledcolors[i % linecolornum]);
+			renderer->setColor(getFilledAreaColor(i));
 
 			float bottomY = axisy2;
 			for (int j = 1; j < pointcount; j++) {
@@ -238,31 +332,25 @@ void gGUILineGraph::drawGraph() {
 			}
 		}
 
-		renderer->setColor(linecolors[i % linecolornum]);
-		bool skipped = true;
-		for (int j = 0; j < pointcount; j++) {
-			if (rangeenabled) {
-				if (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
-					skipped = true;
-					continue;
-				}
-			}
-			if (pointsenabled) {
-				size_t index = hash(i, j);
-				gCircle* circle = circlesmap[index];
-				if (circle) {
-					circle->draw();
-				}
-			}
-			if (skipped) {
-				skipped = false;
-				continue;
-			}
+		// Draw continuous joined polyline stroke for this series
+		gColor linecolor = getLineColor(i);
+		if (i < static_cast<int>(cachedstrokes.size())) {
+			drawPolylineStroke(cachedstrokes[i], linecolor);
+		}
 
-			size_t index = hash(i, j);
-			gLine* line = linesmap[index];
-			if (line) {
-				line->draw();
+		// Draw point markers if enabled
+		if (pointsenabled && pointcount > 0) {
+			renderer->setColor(linecolor);
+			for (int j = 0; j < pointcount; j++) {
+				if (rangeenabled) {
+					if (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
+						continue;
+					}
+				}
+				auto cit = circlesmap.find(hash(i, j));
+				if (cit != circlesmap.end() && cit->second < cachedcircles.size()) {
+					cachedcircles[cit->second].draw();
+				}
 			}
 		}
 	}
@@ -271,6 +359,16 @@ void gGUILineGraph::drawGraph() {
 }
 
 void gGUILineGraph::updatePoints() {
+	int linecount = static_cast<int>(graphlines.size());
+	int totalpoints = 0;
+	for (int i = 0; i < linecount; i++) {
+		totalpoints += static_cast<int>(graphlines[i].size());
+	}
+
+	if (totalpoints == 0) {
+		clearGeometryCache();
+		return;
+	}
 
 	float rawMin = smallestvaluey;
 	float rawMax = largestvaluey;
@@ -297,56 +395,51 @@ void gGUILineGraph::updatePoints() {
 
 	setLabelsYForRange(miny, maxy);
 
-	int linecount = graphlines.size();
-	int points = 0;
+	float lengthx = maxx - minx;
+	if (std::abs(lengthx) < 1e-6f) lengthx = 1.0f;
+	float lengthy = maxy - miny;
+	if (std::abs(lengthy) < 1e-6f) lengthy = 1.0f;
+
 	for (int i = 0; i < linecount; i++) {
-		int pointcount = graphlines[i].size();
+		int pointcount = static_cast<int>(graphlines[i].size());
 		for (int j = 0; j < pointcount; j++) {
-			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / (maxx - minx);
-			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / (maxy - miny);
-			points++;
+			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / lengthx;
+			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / lengthy;
 		}
 	}
 
-	// resize the cached lines, create or destroy them as necessary
-	int diff = cachedlines.size() - points;
-	if (diff > 0) {
-		// we have too many lines, so we destroy the last ones
-		for (int i = 0; i < diff; i++) {
-			gLine& line = cachedlines.back();
-			cachedlines.pop_back();
-			line.clear();
-		}
-	} else {
-		// we need more lines, so we create them
-		for (int i = 0; i < -diff; i++) {
-			cachedlines.push_back(gLine());
-		}
+	// Resize cached polyline strokes to match line count without copying gMesh instances
+	while (static_cast<int>(cachedstrokes.size()) > linecount) {
+		cachedstrokes.back().clear();
+		cachedstrokes.pop_back();
+	}
+	while (static_cast<int>(cachedstrokes.size()) < linecount) {
+		cachedstrokes.emplace_back();
 	}
 
-	// update the lines
-	linesmap.clear();// clears the cached index to line pointer map
-
-	auto lineit = cachedlines.begin();
-	// iterate over all lines, and update the points
 	for (int i = 0; i < linecount; i++) {
-		int pointcount = graphlines[i].size();
-		for (int j = 1; j < pointcount; j++) {
-			if (lineit == cachedlines.end()) {
-				// no cached lines left, this should not happen as we have already resized the cache
-				// but kept here forsafety, it would crash otherwise
-				break;
-			}
-			lineit->setThickness(linethickness);
-			lineit->setPoints(graphlines[i][j - 1][2], graphlines[i][j - 1][3], graphlines[i][j][2], graphlines[i][j][3]);
-			linesmap[hash(i, j)] = &*lineit;
+		int pointcount = static_cast<int>(graphlines[i].size());
+		std::vector<std::vector<std::array<float, 2>>> runs;
+		std::vector<std::array<float, 2>> currentrun;
 
-			lineit++;// get the next line from the list
+		for (int j = 0; j < pointcount; j++) {
+			if (rangeenabled && (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend)) {
+				if (currentrun.size() >= 2) {
+					runs.push_back(std::move(currentrun));
+				}
+				currentrun.clear();
+				continue;
+			}
+			currentrun.push_back({graphlines[i][j][2], graphlines[i][j][3]});
 		}
+		if (currentrun.size() >= 2) {
+			runs.push_back(std::move(currentrun));
+		}
+
+		buildPolylineStroke(cachedstrokes[i], runs, linethickness, roundedcorners);
 	}
 
 	if (!pointsenabled) {
-		// clear everything
 		for (auto& item : cachedcircles) {
 			item.clear();
 		}
@@ -355,70 +448,62 @@ void gGUILineGraph::updatePoints() {
 		return;
 	}
 
-	// resize the cached circles, create or destroy them as necessary
-	diff = cachedcircles.size() - points;
+	// Resize cached circles to match total point count
+	int diff = static_cast<int>(cachedcircles.size()) - totalpoints;
 	if (diff > 0) {
-		// we have too many lines, so we destroy the last ones
 		for (int i = 0; i < diff; i++) {
 			gCircle& circle = cachedcircles.back();
-			cachedcircles.pop_back();
 			circle.clear();
+			cachedcircles.pop_back();
 		}
 	} else {
-		// we need more circles, so we create them
 		for (int i = 0; i < -diff; i++) {
 			cachedcircles.push_back(gCircle());
 		}
 	}
 
-	// update the circles
-	circlesmap.clear();// clears the cached index to line pointer map
-
-	auto circleit = cachedcircles.begin();
-	// iterate over all circles, and update the poitns
+	circlesmap.clear();
+	size_t circleindex = 0;
 	for (int i = 0; i < linecount; i++) {
-		int pointcount = graphlines[i].size();
-		for (int j = 1; j < pointcount; j++) {
-			if (circleit == cachedcircles.end()) {
-				// no cached circles left, this should not happen as we have already resized the cache
-				// but kept here forsafety, it would crash otherwise
-				break;
-			}
-			circleit->setPoints(graphlines[i][j][2], graphlines[i][j][3], 5, true, 64);
-			circlesmap[hash(i, j)] = &*circleit;
-
-			circleit++;// get the next circle from the list
+		int pointcount = static_cast<int>(graphlines[i].size());
+		for (int j = 0; j < pointcount; j++) {
+			if (circleindex >= cachedcircles.size()) break;
+			cachedcircles[circleindex].setPoints(graphlines[i][j][2], graphlines[i][j][3], 5, true, 64);
+			circlesmap[hash(i, j)] = circleindex;
+			circleindex++;
 		}
 	}
 }
 
 void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
-	if (!graphlines.empty()) {
-		if (graphlines[lineIndex].size() >= pointNumLimit) {
-			for (int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
-		}
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return;
+	if (pointNumLimit <= 0) return;
+	if (static_cast<int>(graphlines[lineIndex].size()) >= pointNumLimit) {
+		for (int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
+		needsupdate = true;
 	}
 }
 
 int gGUILineGraph::getPointNum(int lineIndex) {
-	return graphlines[lineIndex].size();
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return 0;
+	return static_cast<int>(graphlines[lineIndex].size());
 }
 
 float gGUILineGraph::getPointXValue(int lineIndex, int pointIndex) {
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return 0.0f;
+	if (pointIndex < 0 || pointIndex >= static_cast<int>(graphlines[lineIndex].size())) return 0.0f;
 	return graphlines[lineIndex][pointIndex][0];
 }
 
 float gGUILineGraph::getPointYValue(int lineIndex, int pointIndex) {
+	if (lineIndex < 0 || lineIndex >= static_cast<int>(graphlines.size())) return 0.0f;
+	if (pointIndex < 0 || pointIndex >= static_cast<int>(graphlines[lineIndex].size())) return 0.0f;
 	return graphlines[lineIndex][pointIndex][1];
 }
 
 void gGUILineGraph::clear() {
 	graphlines.clear();
-
-	cachedlines.clear();
-	cachedcircles.clear();
-	linesmap.clear();
-	circlesmap.clear();
+	clearGeometryCache();
 
 	smallestvaluex = std::numeric_limits<float>::max();
 	largestvaluex = std::numeric_limits<float>::lowest();

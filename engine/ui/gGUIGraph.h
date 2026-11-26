@@ -41,6 +41,8 @@
 #define UI_GGUIGRAPH_H_
 
 #include "gGUIControl.h"
+#include "gMesh.h"
+#include <array>
 
 /**
  * This is a base class for all Graph classes. Developers can use the child classes
@@ -109,6 +111,43 @@ protected:
 	 * computes its own miny/maxy (e.g. an autoscaled line graph) keep the drawn labels in sync.
 	 */
 	void setLabelsYForRange(float rangeMinY, float rangeMaxY);
+
+	class PolylineMesh : public gMesh {
+	public:
+		PolylineMesh() {
+			isprojection2d = true;
+			setDrawMode(gMesh::DRAWMODE_TRIANGLES);
+		}
+
+		PolylineMesh(const PolylineMesh& other) : gMesh(other) {
+			isprojection2d = true;
+			setDrawMode(gMesh::DRAWMODE_TRIANGLES);
+		}
+
+		void setRibbonVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices) {
+			isprojection2d = true;
+			setDrawMode(gMesh::DRAWMODE_TRIANGLES);
+			setVertices(vertices, indices);
+		}
+	};
+
+	struct PolylineStroke {
+		PolylineMesh coremesh;
+		PolylineMesh fringemesh;
+		bool hascore = false;
+		bool hasfringe = false;
+
+		void clear() {
+			hascore = false;
+			hasfringe = false;
+			coremesh.clear();
+			fringemesh.clear();
+		}
+	};
+
+	static bool buildPolylineRibbon(PolylineMesh& mesh, const std::vector<std::vector<std::array<float, 2>>>& runs, float halfWidth, bool roundedCorners);
+	static void buildPolylineStroke(PolylineStroke& stroke, const std::vector<std::vector<std::array<float, 2>>>& runs, float thickness, bool roundedCorners);
+	void drawPolylineStroke(PolylineStroke& stroke, const gColor& color);
 
 private:
 	void drawBackground();
