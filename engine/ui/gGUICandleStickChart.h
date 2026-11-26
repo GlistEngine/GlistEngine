@@ -98,6 +98,16 @@ public:
 	 */
 	void setLabelCountY(int labelCount) override;
 
+	/**
+	 * Enables or disables drawing only data within the configured X range.
+	 */
+	void enableRange(bool isRangeEnabled) override;
+
+	/**
+	 * Configures the visible X range when range filtering is enabled.
+	 */
+	void setRange(float rangeStart, float rangeEnd) override;
+
 	void setHighColor(gColor highColor);
 	gColor getHighColor();
 	void setLowColor(gColor lowColor);
@@ -222,6 +232,17 @@ public:
 	float getLineThickness() const;
 
 	/**
+	 * Enables or disables rounded corners and edge smoothing on overlay lines.
+	 * Disabled (false) by default for sharp, unsmoothed corners.
+	 */
+	void setRoundedCorners(bool isRounded);
+
+	/**
+	 * Returns whether rounded corners and edge smoothing are enabled on overlay lines.
+	 */
+	bool getRoundedCorners() const;
+
+	/**
 	 * Enables or disables auto-scaling of the Y axis tightly to the actual min/max data range
 	 * across both candlesticks and overlay lines.
 	 */
@@ -247,9 +268,8 @@ private:
 	float candlew;
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
-	std::vector<gLine> cachedlines;
+	std::deque<PolylineStroke> cachedstrokes;
 	std::vector<gCircle> cachedcircles;
-	std::unordered_map<uint64_t, size_t> linesmap;
 	std::unordered_map<uint64_t, size_t> circlesmap;
 	std::vector<gColor> linecolors;
 	std::vector<gColor> filledcolors;
@@ -257,6 +277,7 @@ private:
 	bool pointsenabled;
 	bool isfilledarea;
 	bool isautoscaled;
+	bool roundedcorners;
 	float linethickness;
 	bool needsupdate;
 	bool hascustomoffset;

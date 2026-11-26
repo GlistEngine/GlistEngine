@@ -6,6 +6,9 @@
  */
 
 #include "gGUIGraph.h"
+#include <algorithm>
+#include <cmath>
+#include <memory>
 
 gGUIGraph::gGUIGraph() {
 	axisx1 = 0;
@@ -384,4 +387,254 @@ int gGUIGraph::countDigits(int number) {
 }
 
 void gGUIGraph::clear() {
+}
+
+bool gGUIGraph::buildPolylineRibbon(PolylineMesh& mesh, const std::vector<std::vector<std::array<float, 2>>>& runs, float halfWidth, bool roundedCorners) {
+	if (runs.empty() || halfWidth <= 0.0f) {
+		mesh.clear();
+		return false;
+	}
+
+	const float pi = 3.14159265358979323846f;
+	auto verts = std::make_shared<std::vector<gVertex>>();
+	auto inds = std::make_shared<std::vector<gIndex>>();
+
+	auto pushVert = [&](float x, float y) -> gIndex {
+		gVertex v;
+		v.position = glm::vec3(x, y, 0.0f);
+		gIndex idx = static_cast<gIndex>(verts->size());
+		verts->push_back(v);
+		return idx;
+	};
+
+	auto emitArcFan = [&](float cx, float cy, float startX, float startY, float endX, float endY, float angle1, float delta, int steps) {
+		gIndex center = pushVert(cx, cy);
+		gIndex prev = pushVert(cx + startX * halfWidth, cy + startY * halfWidth);
+		for (int s = 1; s <= steps; s++) {
+			gIndex next = 0;
+			if (s == steps) {
+				next = pushVert(cx + endX * halfWidth, cy + endY * halfWidth);
+			} else {
+				float t = static_cast<float>(s) / static_cast<float>(steps);
+				float angle = angle1 + delta * t;
+				next = pushVert(cx + std::cos(angle) * halfWidth, cy + std::sin(angle) * halfWidth);
+			}
+			inds->push_back(center);
+			inds->push_back(prev);
+			inds->push_back(next);
+			prev = next;
+		}
+	};
+
+	for (const auto& rawrun : runs) {
+		std::vector<std::array<float, 2>> clean;
+		clean.reserve(rawrun.size());
+		for (const auto& pt : rawrun) {
+			if (!std::isfinite(pt[0]) || !std::isfinite(pt[1])) {
+				continue;
+			}
+			if (clean.empty()) {
+				clean.push_back(pt);
+			} else {
+				float dx = pt[0] - clean.back()[0];
+				float dy = pt[1] - clean.back()[1];
+				if (dx * dx + dy * dy > 1e-4f) {
+					clean.push_back(pt);
+				}
+			}
+		}
+
+		if (clean.size() < 2) {
+			continue;
+		}
+
+		const size_t n = clean.size();
+		const size_t segcount = n - 1;
+		std::vector<std::array<float, 2>> dirs(segcount);
+		std::vector<std::array<float, 2>> norms(segcount);
+
+		for (size_t i = 0; i < segcount; i++) {
+			float dx = clean[i + 1][0] - clean[i][0];
+			float dy = clean[i + 1][1] - clean[i][1];
+			float len = std::sqrt(dx * dx + dy * dy);
+			if (len < 1e-6f) len = 1.0f;
+			float ux = dx / len;
+			float uy = dy / len;
+			dirs[i] = {ux, uy};
+			norms[i] = {-uy, ux};
+		}
+
+		// Emit true-width segment quads
+		for (size_t i = 0; i < segcount; i++) {
+			float nx = norms[i][0] * halfWidth;
+			float ny = norms[i][1] * halfWidth;
+
+			float x0 = clean[i][0];
+			float y0 = clean[i][1];
+			float x1 = clean[i + 1][0];
+			float y1 = clean[i + 1][1];
+
+			gIndex aL = pushVert(x0 + nx, y0 + ny);
+			gIndex aR = pushVert(x0 - nx, y0 - ny);
+			gIndex bL = pushVert(x1 + nx, y1 + ny);
+			gIndex bR = pushVert(x1 - nx, y1 - ny);
+
+			inds->push_back(aL);
+			inds->push_back(bL);
+			inds->push_back(bR);
+			inds->push_back(aL);
+			inds->push_back(bR);
+			inds->push_back(aR);
+		}
+
+		// Emit interior corner joins (rounded arc fans when enabled, sharp miter/bevel by default)
+		for (size_t k = 1; k + 1 < n; k++) {
+			float cross = dirs[k - 1][0] * dirs[k][1] - dirs[k - 1][1] * dirs[k][0];
+			float dot = dirs[k - 1][0] * dirs[k][0] + dirs[k - 1][1] * dirs[k][1];
+			if (std::fabs(cross) < 1e-4f && dot > 0.0f) {
+				continue;
+			}
+
+			float cx = clean[k][0];
+			float cy = clean[k][1];
+
+			if (roundedCorners) {
+				float o1x = 0.0f;
+				float o1y = 0.0f;
+				float o2x = 0.0f;
+				float o2y = 0.0f;
+				float angle1 = 0.0f;
+				float delta = 0.0f;
+
+				if (std::fabs(cross) < 1e-4f) {
+					// 180-degree reversal: semicircular cap bulging along incoming direction
+					o1x = norms[k - 1][0];
+					o1y = norms[k - 1][1];
+					o2x = -o1x;
+					o2y = -o1y;
+					angle1 = std::atan2(o1y, o1x);
+					float rot90x = -o1y;
+					float rot90y = o1x;
+					delta = (rot90x * dirs[k - 1][0] + rot90y * dirs[k - 1][1] >= 0.0f) ? pi : -pi;
+				} else {
+					// In Y-down coordinates with norm=(-dy, dx), cross > 0 turns clockwise => outer corner is -norm
+					float side = (cross > 0.0f) ? -1.0f : 1.0f;
+					o1x = norms[k - 1][0] * side;
+					o1y = norms[k - 1][1] * side;
+					o2x = norms[k][0] * side;
+					o2y = norms[k][1] * side;
+					angle1 = std::atan2(o1y, o1x);
+					float angle2 = std::atan2(o2y, o2x);
+					delta = angle2 - angle1;
+					while (delta > pi) delta -= 2.0f * pi;
+					while (delta < -pi) delta += 2.0f * pi;
+				}
+
+				int steps = std::max(2, static_cast<int>(std::ceil(std::fabs(delta) / (pi / 6.0f))));
+				emitArcFan(cx, cy, o1x, o1y, o2x, o2y, angle1, delta, steps);
+			} else {
+				if (std::fabs(cross) < 1e-4f) {
+					continue;
+				}
+
+				float side = (cross > 0.0f) ? -1.0f : 1.0f;
+				float o1x = norms[k - 1][0] * side;
+				float o1y = norms[k - 1][1] * side;
+				float o2x = norms[k][0] * side;
+				float o2y = norms[k][1] * side;
+
+				float bx = o1x + o2x;
+				float by = o1y + o2y;
+				float blen = std::sqrt(bx * bx + by * by);
+				float dothalf = (blen > 1e-5f) ? ((bx * o1x + by * o1y) / blen) : 0.0f;
+
+				gIndex center = pushVert(cx, cy);
+				gIndex pPrev = pushVert(cx + o1x * halfWidth, cy + o1y * halfWidth);
+				gIndex pNext = pushVert(cx + o2x * halfWidth, cy + o2y * halfWidth);
+
+				if (dothalf > 0.5f) {
+					float ux = bx / blen;
+					float uy = by / blen;
+					float miterdist = halfWidth / dothalf;
+					gIndex pMiter = pushVert(cx + ux * miterdist, cy + uy * miterdist);
+
+					inds->push_back(center);
+					inds->push_back(pPrev);
+					inds->push_back(pMiter);
+					inds->push_back(center);
+					inds->push_back(pMiter);
+					inds->push_back(pNext);
+				} else {
+					inds->push_back(center);
+					inds->push_back(pPrev);
+					inds->push_back(pNext);
+				}
+			}
+		}
+
+		// Emit rounded end-caps when rounded corners are enabled
+		if (roundedCorners) {
+			float s1x = norms[0][0];
+			float s1y = norms[0][1];
+			float soutx = -dirs[0][0];
+			float souty = -dirs[0][1];
+			float sangle = std::atan2(s1y, s1x);
+			float srot90x = -s1y;
+			float srot90y = s1x;
+			float sdelta = (srot90x * soutx + srot90y * souty >= 0.0f) ? pi : -pi;
+			emitArcFan(clean.front()[0], clean.front()[1], s1x, s1y, -s1x, -s1y, sangle, sdelta, 4);
+
+			float e1x = norms.back()[0];
+			float e1y = norms.back()[1];
+			float eoutx = dirs.back()[0];
+			float eouty = dirs.back()[1];
+			float eangle = std::atan2(e1y, e1x);
+			float erot90x = -e1y;
+			float erot90y = e1x;
+			float edelta = (erot90x * eoutx + erot90y * eouty >= 0.0f) ? pi : -pi;
+			emitArcFan(clean.back()[0], clean.back()[1], e1x, e1y, -e1x, -e1y, eangle, edelta, 4);
+		}
+	}
+
+	if (inds->empty()) {
+		mesh.clear();
+		return false;
+	}
+
+	mesh.setRibbonVertices(verts, inds);
+	return true;
+}
+
+void gGUIGraph::buildPolylineStroke(PolylineStroke& stroke, const std::vector<std::vector<std::array<float, 2>>>& runs, float thickness, bool roundedCorners) {
+	if (runs.empty() || thickness <= 0.0f) {
+		stroke.clear();
+		return;
+	}
+
+	if (roundedCorners) {
+		float targetwidth = std::max(0.75f, thickness);
+		float corehalf = std::max(0.36f, targetwidth * 0.5f - std::min(0.20f, targetwidth * 0.06f));
+		float fringehalf = corehalf + 0.40f;
+		stroke.hascore = buildPolylineRibbon(stroke.coremesh, runs, corehalf, true);
+		stroke.hasfringe = buildPolylineRibbon(stroke.fringemesh, runs, fringehalf, true);
+	} else {
+		float halfwidth = std::max(0.5f, thickness * 0.5f);
+		stroke.hascore = buildPolylineRibbon(stroke.coremesh, runs, halfwidth, false);
+		stroke.hasfringe = false;
+		stroke.fringemesh.clear();
+	}
+}
+
+void gGUIGraph::drawPolylineStroke(PolylineStroke& stroke, const gColor& color) {
+	if (renderer == nullptr) return;
+	if (stroke.hasfringe) {
+		gColor fringecolor = color;
+		fringecolor.a = color.a * 0.24f;
+		renderer->setColor(fringecolor);
+		stroke.fringemesh.draw();
+	}
+	if (stroke.hascore) {
+		renderer->setColor(color);
+		stroke.coremesh.draw();
+	}
 }
