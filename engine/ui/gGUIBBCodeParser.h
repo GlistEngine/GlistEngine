@@ -63,7 +63,10 @@ struct gGUIBBCodeStyle {
 	gGUIBBCodeColor color;
 	bool hasBgColor = false;
 	gGUIBBCodeColor bgColor;
-	int fontSize = 0; // 0 = inherit textbox base font size
+	int fontSize = 0; // 0 = inherit base font size
+	bool hasUrl = false;
+	std::string url;
+	int linkId = 0;
 
 	bool operator==(const gGUIBBCodeStyle& other) const {
 		return bold == other.bold &&
@@ -75,7 +78,10 @@ struct gGUIBBCodeStyle {
 			(!hasColor || color == other.color) &&
 			hasBgColor == other.hasBgColor &&
 			(!hasBgColor || bgColor == other.bgColor) &&
-			fontSize == other.fontSize;
+			fontSize == other.fontSize &&
+			hasUrl == other.hasUrl &&
+			linkId == other.linkId &&
+			(!hasUrl || url == other.url);
 	}
 	bool operator!=(const gGUIBBCodeStyle& other) const {
 		return !(*this == other);
@@ -130,6 +136,7 @@ struct gGUIBBCodeLayoutLine {
 	int plainEndByte = 0;
 	int plainStartChar = 0;
 	int plainEndChar = 0;
+	bool endedWithHardBreak = false;
 };
 
 struct gGUIBBCodeHitResult {
@@ -137,6 +144,15 @@ struct gGUIBBCodeHitResult {
 	int byteOffset = 0;
 	int lineIndex = 0;
 	float cursorX = 0.0f;
+};
+
+struct gGUIBBCodeLinkHit {
+	bool hit = false;
+	int linkId = 0;
+	std::string url;
+	std::string displayText;
+	int lineIndex = -1;
+	int runIndex = -1;
 };
 
 struct gGUIBBCodeSelectionRect {
@@ -158,6 +174,8 @@ struct gGUIBBCodeSelectionRect {
  *  - [color=...]...[/color] Foreground color (#RGB, #RGBA, #RRGGBB, #RRGGBBAA, rgb(...), rgba(...), named colors)
  *  - [bgcolor=...]...[/bgcolor] Background highlight color
  *  - [size=...]...[/size]  Font size (absolute px/pt, relative +/-delta, or percentage %)
+ *  - [url]...[/url]        Clickable hyperlink using inner text as URL target
+ *  - [url=...]...[/url]    Clickable hyperlink with explicit URL target and custom label
  *  - [code]...[/code]      Code span (disables inner BBCode parsing until [/code])
  *  - [noparse]...[/noparse] Literal text span (disables inner BBCode parsing until [/noparse])
  *  - [br]                  Explicit line break
@@ -176,6 +194,7 @@ public:
 
 	static bool parseColor(const std::string& value, gGUIBBCodeColor& outColor);
 	static bool parseSize(const std::string& value, int baseFontSize, int& outSize);
+	static bool parseUrl(const std::string& value, std::string& outUrl);
 
 	static std::vector<gGUIBBCodeLayoutLine> layout(
 		const gGUIBBCodeDocument& doc,
@@ -197,6 +216,12 @@ public:
 		int lineIndex,
 		float localX,
 		const MeasureWidthFunc& measureWidth);
+
+	static gGUIBBCodeLinkHit hitTestLink(
+		const std::vector<gGUIBBCodeLayoutLine>& lines,
+		float localX,
+		float localY,
+		const std::vector<float>& lineOffsetsX = {});
 
 	static std::vector<gGUIBBCodeSelectionRect> computeSelectionRects(
 		const std::vector<gGUIBBCodeLayoutLine>& lines,

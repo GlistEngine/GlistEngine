@@ -27,6 +27,16 @@
 #include <shellapi.h>
 #include <iomanip>
 #endif
+#if defined(LINUX) || defined(APPLE)
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
+#if defined(APPLE)
+#include <TargetConditionals.h>
+#endif
+#if defined(EMSCRIPTEN)
+#include <emscripten.h>
+#endif
 
 
 bool gLog::isloggingenabled = true;
@@ -316,8 +326,69 @@ uint64_t gGetRAMSizeUsedbyGE() {
 
 
 void gOpenUrlInDefaultBrowser(std::string url) {
+	// Trim surrounding whitespace and validate safe schemes before invoking OS launcher.
+	size_t start = 0;
+	while(start < url.size() && std::isspace(static_cast<unsigned char>(url[start]))) start++;
+	size_t end = url.size();
+	while(end > start && std::isspace(static_cast<unsigned char>(url[end - 1]))) end--;
+	url = url.substr(start, end - start);
+	if(url.empty()) return;
+
+	for(unsigned char c : url) {
+		if(c <= 0x20 || c == 0x7F) return;
+	}
+
+	std::string lowerUrl = url;
+	for(char& c : lowerUrl) {
+		c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+	}
+	bool allowedScheme =
+		lowerUrl.rfind("http://", 0) == 0 ||
+		lowerUrl.rfind("https://", 0) == 0 ||
+		lowerUrl.rfind("mailto:", 0) == 0 ||
+		lowerUrl.rfind("ftp://", 0) == 0 ||
+		lowerUrl.rfind("ftps://", 0) == 0;
+	if(!allowedScheme) return;
+
 #if defined(WIN32)
-	ShellExecute(0, 0, url.c_str(), 0, 0, 1);
+	ShellExecuteA(0, "open", url.c_str(), 0, 0, SW_SHOWNORMAL);
+#elif defined(LINUX)
+	pid_t pid = fork();
+	if(pid == 0) {
+		pid_t grandchild = fork();
+		if(grandchild == 0) {
+			setsid();
+			execlp("xdg-open", "xdg-open", url.c_str(), static_cast<char*>(nullptr));
+			_exit(127);
+		}
+		_exit(0);
+	} else if(pid > 0) {
+		int status = 0;
+		waitpid(pid, &status, 0);
+	}
+#elif defined(APPLE)
+#if defined(TARGET_OS_OSX) && TARGET_OS_OSX
+	pid_t pid = fork();
+	if(pid == 0) {
+		pid_t grandchild = fork();
+		if(grandchild == 0) {
+			setsid();
+			execlp("open", "open", url.c_str(), static_cast<char*>(nullptr));
+			_exit(127);
+		}
+		_exit(0);
+	} else if(pid > 0) {
+		int status = 0;
+		waitpid(pid, &status, 0);
+	}
+#endif
+#elif defined(EMSCRIPTEN)
+	EM_ASM({
+		var u = UTF8ToString($0);
+		if(typeof window !== 'undefined' && window.open) {
+			window.open(u, '_blank', 'noopener,noreferrer');
+		}
+	}, url.c_str());
 #endif
 	return;
 }

@@ -3389,6 +3389,13 @@ void gGUITextbox::drawBBCode() {
 		if(!isdisabled) {
 			if(run.style.hasColor) {
 				runColor.set(run.style.color.r, run.style.color.g, run.style.color.b, run.style.color.a);
+			} else if(run.style.hasUrl) {
+				float bgLum = textbackgroundcolor ? (0.299f * textbackgroundcolor->r + 0.587f * textbackgroundcolor->g + 0.114f * textbackgroundcolor->b) : 1.0f;
+				if(bgLum < 0.5f) {
+					runColor.set(0.392f, 0.710f, 0.965f, 1.0f);
+				} else {
+					runColor.set(0.082f, 0.396f, 0.753f, 1.0f);
+				}
 			} else if(run.style.code && bbcodecodetextcolorset) {
 				runColor = bbcodecodetextcolor;
 			}
@@ -3401,7 +3408,7 @@ void gGUITextbox::drawBBCode() {
 		}
 
 		float lineThick = std::max(1.0f, (float)f->getSize() / 12.0f);
-		if(run.style.underline && drawW > 0.0f) {
+		if((run.style.underline || run.style.hasUrl) && drawW > 0.0f) {
 			float uy = baselineY + std::max(1.5f, run.descent * 0.45f);
 			gDrawLine(runX, uy, runX + drawW, uy, lineThick);
 		}
